@@ -33,6 +33,7 @@
             /* --- Accent colors for other versions --- */
             --gnome-color: #e06c75; /* Red */
             --storm-color: #61afef; /* Blue */
+            --flasher-color: #f39c12; /* Orange for the flasher tool */
 
             /* --- Documentation Viewer Palette --- */
             --doc-bg: #212121;
@@ -70,10 +71,9 @@
         .box-header { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--acreetion-box-border); background-color: #333; }
         .box-header h2 { font-size: 1.5rem; color: var(--acreetion-text-bright); font-weight: 700; }
         .box-body { padding: 1.5rem; }
-        #cinnamon .box-header h2 { color: var(--acreetion-green); }
+        .box-body h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; }
         .article-content a:not(.btn) { color: var(--acreetion-green); text-decoration: none; font-weight: 500; }
         .article-content a:not(.btn):hover { text-decoration: underline; }
-        .article-content h3 { font-size: 1.2rem; color: var(--acreetion-green); margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; }
         .article-content p, .article-content li { color: var(--acreetion-text); margin-bottom: 1rem; }
         .article-content ul { padding-left: 20px; }
         
@@ -118,31 +118,18 @@
         .btn-cinnamon { background-color: var(--acreetion-green); }
         .btn-gnome { background-color: var(--gnome-color); }
         .btn-storm { background-color: var(--storm-color); }
-        
-        /* --- ACCENT COLORS FOR FORKS --- */
-        #gnome .box-header h2 { color: var(--gnome-color); }
-        #stormos .box-header h2 { color: var(--storm-color); }
-        
-        /* --- DOWNLOAD DROPDOWN --- */
-        .download-dropdown summary { cursor: pointer; outline: none; color: var(--acreetion-text); font-weight: 500; }
-        .download-dropdown summary:hover { color: var(--acreetion-text-bright); }
-        .download-dropdown .dropdown-content { padding-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 10px; }
+        .btn-flasher { background-color: var(--flasher-color); }
 
-        /* --- MODAL OVERLAYS (Docs, IRC, WIP) --- */
-        .modal-overlay {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 1000;
-            overflow-y: auto;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
+        /* --- ACCENT COLORS --- */
+        #about .box-header h2 { color: var(--acreetion-green); }
+        #about h3 { color: var(--acreetion-green); }
+        #easy-install .box-header h2 { color: var(--flasher-color); }
+        #manual-downloads .box-header h2 { color: var(--acreetion-green); }
+        #manual-downloads h3:first-of-type { margin-top: 0; }
+        #manual-downloads .download-options-group { margin-bottom: 2rem; }
+        
+        /* --- MODAL OVERLAYS --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto; align-items: center; justify-content: center; padding: 1rem; }
         .modal-overlay.visible { display: flex; }
         .modal-box { position: relative; cursor: default; background-color: var(--doc-content-bg); border: 1px solid var(--acreetion-box-border); padding: 2rem 3rem; max-width: 700px; }
         .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background-color: var(--gnome-color); color: black; font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; line-height: 40px; text-align: center; }
@@ -157,15 +144,13 @@
         .doc-sidebar a:hover { background-color: #3a3a3a; color: var(--acreetion-text-bright); }
         .doc-sidebar a.active { background-color: var(--acreetion-green); color: black; font-weight: 700; }
         #doc-main-content { padding: 2rem 3rem; overflow-y: auto; max-height: 85vh; }
-        #doc-main-content h1 { font-size: 2rem; color: var(--acreetion-text-bright); border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        #doc-main-content h2 { font-size: 1.5rem; color: var(--acreetion-text-bright); margin-top: 2rem; border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        #doc-main-content h3 { font-size: 1.2rem; color: var(--acreetion-text-bright); margin-top: 1.5rem; }
-        #doc-main-content p { color: var(--acreetion-text); }
+        #doc-main-content h1, #doc-main-content h2, #doc-main-content h3 { color: var(--acreetion-text-bright); border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        #doc-main-content h1 { font-size: 2rem; }
+        #doc-main-content h2 { font-size: 1.5rem; margin-top: 2rem; }
+        #doc-main-content h3 { font-size: 1.2rem; margin-top: 1.5rem; }
+        #doc-main-content p, #doc-main-content li { color: var(--acreetion-text); }
         #doc-main-content a { color: var(--doc-link-color); }
-        #doc-main-content ul { color: var(--acreetion-text); padding-left: 20px; }
-        
-        /* --- IRC & WIP VIEWERS --- */
-        #wip-viewer h2 { color: var(--gnome-color); }
+        #doc-main-content ul { padding-left: 20px; }
         
         /* --- FOOTER & RESPONSIVE --- */
         .page-footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid var(--acreetion-box-border); color: #777; font-size: 0.9rem; }
@@ -195,9 +180,9 @@
                 <span class="logo-text">Acreetion<span>OS</span></span>
             </a>
             <nav class="main-nav">
-                <a href="#cinnamon">Cinnamon (Main)</a>
-                <a href="#gnome">GNOME</a>
-                <a href="#stormos">StormOS</a>
+                <a href="#about">About</a>
+                <a href="#easy-install">Easy Install</a>
+                <a href="#manual-downloads">Downloads</a>
                 <a href="#" data-modal-target="#documentation-viewer">Documentation</a>
             </nav>
         </div>
@@ -205,8 +190,8 @@
 
     <div class="page-wrapper">
         <main class="content-feed">
-            <article id="cinnamon" class="content-box">
-                <div class="box-header"><h2>AcreetionOS: Your Arch-based Desktop</h2></div>
+            <article id="about" class="content-box">
+                <div class="box-header"><h2>Welcome to AcreetionOS</h2></div>
                 <div class="box-body">
                     <div class="article-content">
                         <div class="article-logo-cluster">
@@ -222,7 +207,7 @@
 `""`          `""`
                             </pre>
                         </div>
-                        <p>Welcome to <strong>AcreetionOS</strong>, an approachable and user-friendly distribution based on the powerful <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">Arch Linux</a> core. We aim to make the Arch ecosystem accessible to a wider audience by providing a stable, pre-configured desktop experience with our flagship <strong>Cinnamon</strong> edition.</p>
+                        <p><strong>AcreetionOS</strong> is an approachable and user-friendly distribution based on the powerful <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">Arch Linux</a> core. We aim to make the Arch ecosystem accessible to a wider audience by providing a stable, pre-configured desktop experience.</p>
                         <p>This project is made possible by the incredible work of the Arch Linux developers. We simply add a layer of convenience and testing to an already fantastic base.</p>
                         <h3>Core Principles</h3>
                         <ul>
@@ -230,44 +215,48 @@
                             <li><strong>User-Friendly:</strong> We provide a graphical installer and sensible defaults to get you up and running quickly.</li>
                             <li><strong>Arch Power:</strong> You retain full access to the AUR. AcreetionOS is still Arch Linux under the hood.</li>
                         </ul>
-                        <h3>Get Started</h3>
-                        <p>To get started, simply download the latest ISO from our site and follow the included installation guide.</p>
-                        <div class="download-options-group" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px;">
-                            <a href="https://darrengames.ddns.net:1500/acreetion/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Direct)</a>
-                            <a href="https://archive.org/download/acreetion-os-1.0-x-86-64/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Mirror)</a>
-                            <a href="https://darrengames.ddns.net:1500/AcreetionOS-1.0-x86_64.iso.torrent" class="btn btn-cinnamon">Download Cinnamon ISO (Torrent)</a>
-                            <a href="https://archive.org/download/acreetion-os-1.0-x-86-64/acreetion-os-1.0-x-86-64_archive.torrent" class="btn btn-cinnamon">Download Cinnamon ISO (Torrent)</a>
-                            <a href="https://fosstorrents.com/thankyou/?name=acreetionos-linux&cat=Latest%20Editions&id=0&hybrid=0" class="btn btn-cinnamon">Download Cinnamon ISO (FOSSTorrent Mirror)</a>
-                        </div>
                     </div>
                 </div>
             </article>
 
-            <article id="gnome" class="content-box">
-                <div class="box-header"><h2>AcreetionOS GNOME Edition</h2></div>
-                <div class="box-body">
-                    <p style="margin: 0 0 1rem 0; color: var(--acreetion-text);">For users who prefer a minimalist, gesture-driven workflow, the official GNOME Edition is also available.</p>
-                    <div class="download-options-group" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px;">
-                            <a href="https://darrengames.ddns.net:1500/acreetion/GNOME/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Direct)</a>
-                            <a href="https://archive.org/download/acreetion-os-gnome-1.0-x-86-64/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Mirror)</a>
-                           <!--  <a href="https://darrengames.ddns.net:1500/AcreetionOS-1.0-x86_64.iso.torrent" class="btn btn-gnome">Download ISO (Torrent)</a> -->
-                            <a href="https://archive.org/download/acreetion-os-gnome-1.0-x-86-64/acreetion-os-gnome-1.0-x-86-64_archive.torrent" class="btn btn-gnome">Download GNOME ISO (Torrent) </a>
-                           <!-- <a href="https://fosstorrents.com/thankyou/?name=acreetionos-linux&cat=Latest%20Editions&id=0&hybrid=0" class="btn btn-gnome">Download ISO (FOSSTorrent Mirror)</a> -->
-                    </div>
-                </div>
-            </article>
-
-            <article id="stormos" class="content-box">
-                <div class="box-header"><h2>Sister Project: StormOS</h2></div>
+            <article id="easy-install" class="content-box">
+                <div class="box-header"><h2>The Easy Way: AcreetionOS USB Flasher</h2></div>
                  <div class="box-body">
-                    <p style="margin: 0 0 1rem 0; color: var(--acreetion-text);">Explore our bleeding-edge sister project focused on gaming performance and experimental features.</p>
-                    <details class="download-dropdown">
-                        <summary>Show Download Options</summary>
-                        <div class="dropdown-content">
-                            <a href="https://darrengames.ddns.net:1500/stormos/stormos-1.0.iso" class="btn btn-storm">Download StormOS ISO</a>
-                            <a href="https://sourceforge.net/projects/hackman-linux/files/latest/download" class="btn btn-storm">Download StormOS ISO (Mirror)</a>
-                        </div>
-                    </details>
+                    <p style="color: var(--acreetion-text);">This is the <strong>recommended method for all users</strong>. Our utility makes creating a bootable USB drive simple. Download the flasher for your current OS, then grab an ISO file from the manual download section below to write to your USB stick.</p>
+                    <div class="download-options-group" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS%20USB%20Flasher-1.0.0.AppImage" class="btn btn-flasher">Download Flasher for Linux (.AppImage)</a>
+                        <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS_USB_Flasher_Setup_1.0.0.exe" class="btn btn-flasher">Download Flasher for Windows (.exe)</a>
+                    </div>
+                </div>
+            </article>
+            
+            <article id="manual-downloads" class="content-box">
+                <div class="box-header"><h2>Manual Downloads (ISO Files)</h2></div>
+                <div class="box-body">
+                    <p style="color: var(--acreetion-text); margin-bottom: 1.5rem;">Use these links to download an ISO file directly. This is for users who want to use their own flashing tool (like BalenaEtcher, Rufus, etc.) or for other purposes.</p>
+                    
+                    <h3 style="color: var(--acreetion-green);">Cinnamon Edition (Main)</h3>
+                    <p style="color: var(--acreetion-text);">The flagship AcreetionOS experience with the Cinnamon desktop. Stable, familiar, and powerful.</p>
+                    <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/acreetion/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Direct)</a>
+                        <a href="https://archive.org/download/acreetion-os-1.0-x-86-64/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Mirror)</a>
+                        <a href="https://darrengames.ddns.net:1500/AcreetionOS-1.0-x86_64.iso.torrent" class="btn btn-cinnamon">Download Cinnamon ISO (Torrent)</a>
+                    </div>
+
+                    <h3 style="color: var(--gnome-color);">GNOME Edition</h3>
+                    <p style="color: var(--acreetion-text);">A modern, minimalist workflow with the GNOME desktop.</p>
+                    <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/acreetion/GNOME/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Direct)</a>
+                        <a href="https://archive.org/download/acreetion-os-gnome-1.0-x-86-64/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Mirror)</a>
+                        <a href="https://archive.org/download/acreetion-os-gnome-1.0-x-86-64/acreetion-os-gnome-1.0-x-86-64_archive.torrent" class="btn btn-gnome">Download GNOME ISO (Torrent) </a>
+                    </div>
+
+                    <h3 style="color: var(--storm-color);">Sister Project: StormOS</h3>
+                     <p style="color: var(--acreetion-text);">A bleeding-edge sister project focused on gaming performance and experimental features.</p>
+                    <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/stormos/stormos-1.0.iso" class="btn btn-storm">Download StormOS ISO</a>
+                        <a href="https://sourceforge.net/projects/hackman-linux/files/latest/download" class="btn btn-storm">Download StormOS ISO (Mirror)</a>
+                    </div>
                 </div>
             </article>
         </main>
@@ -281,9 +270,9 @@
                 <div class="box-header"><h2>Documentation</h2></div>
                 <div class="box-body">
                     <ul class="sidebar-nav">
+                        <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="installation.md">Installation Guide</a></li>
                         <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="philosophy.md">Project Philosophy</a></li>
                         <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="flavours.md">Our Flavours</a></li>
-                        <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="installation.md">Installation Guide</a></li>
                         <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="development.md">Development Notes</a></li>
                     </ul>
                 </div>
@@ -324,24 +313,10 @@
             <button class="modal-close-btn" title="Close">×</button>
             <h2>Arch Linux IRC Channels</h2>
             <p>Connect with the community in real-time on the Libera.Chat IRC network.</p>
-            <h3>Connection Details</h3>
-            <p>Use your favorite IRC client (like HexChat, irssi, etc.) to connect with the following details:</p>
             <pre><code>Server: irc.libera.chat
 Port: 6697 (SSL)</code></pre>
-            <h3>Main Channels</h3>
-            <p>Once connected, you can join the main channels:</p>
-            <pre><code>/join #archlinux
-/join #archlinux-support</code></pre>
-            <p style="margin-top: 1.5rem;">Alternatively, use the Libera.Chat web client for a quick connection:</p>
+            <p>Once connected, you can join the main channels: <code>#archlinux</code> and <code>#archlinux-support</code>.</p>
             <a href="https://web.libera.chat/#archlinux" class="btn btn-cinnamon" target="_blank" rel="noopener noreferrer">Join #archlinux (Web Client)</a>
-        </div>
-    </div>
-     <div id="wip-viewer" class="modal-overlay">
-        <div class="modal-box">
-            <button class="modal-close-btn" title="Close">×</button>
-            <h2>Work In Progress</h2>
-            <p>The AcreetionOS GNOME Edition is currently under active development.</p>
-            <p>Please check back soon for an official ISO release. You can follow our progress on the project Discord server.</p>
         </div>
     </div>
 
@@ -351,6 +326,11 @@ Port: 6697 (SSL)</code></pre>
             // --- DATA STORE ---
             const docs = [
                 {
+                    id: 'installation.md',
+                    title: 'Installation Guide',
+                    content: `# Installation Guide\n\nWelcome to AcreetionOS! This guide will walk you through the entire installation process using the recommended method.\n\n## Step 1: Get the Tools\n\nFirst, you need two things from our website:\n\n1.  The **AcreetionOS USB Flasher**.\n2.  The **AcreetionOS ISO file** for the edition you want (e.g., Cinnamon).\n\n## Step 2: Create a Bootable USB Drive\n\nUse the **AcreetionOS USB Flasher** to write the downloaded ISO file to a USB drive (8GB or larger is recommended). Our tool is designed to be straightforward and is the recommended way to create your installation media.\n\n## Step 3: Boot from the USB Drive\n\nRestart your computer and tell it to boot from the USB drive. You will likely need to press a special key like **F2, F10, F12, DEL, or ESC** during startup to open the boot menu.\n\n## Step 4: Follow the Guided Installer\n\nOnce you boot from the USB, the Calamares installer should start automatically. It will guide you through partitioning, selecting your keyboard layout, and creating a user account. Just follow the on-screen prompts.\n\n## Step 5: First Boot & Updates\n\nAfter the installation finishes, reboot your computer and remove the USB drive. You can now log into your new AcreetionOS desktop! You can update packages using **Pamac**, the graphical package manager, which also includes easy access to the AUR.\n\nCongratulations on your new AcreetionOS installation!`
+                },
+                 {
                     id: 'philosophy.md',
                     title: 'Project Philosophy',
                     content: `# Project Philosophy\n\nAcreetionOS is guided by the same principles that make Arch Linux great, but with a focus on providing a stable and user-friendly desktop experience out-of-the-box.\n\n### What We Are\n\nAcreetionOS **is** an Arch Linux fork made for people to ease into the Arch Linux space. It'sdesigned to be a user-friendly entry point into the powerful Arch ecosystem, providing a stable, pre-configured experience that holds your hand just enough to get you started comfortably.\n\nWhile the Arch Wiki is an invaluable resource, we encourage new users to seek help first from our own community channels, like our Discord server. We are here to support you.`
@@ -361,14 +341,9 @@ Port: 6697 (SSL)</code></pre>
                     content: `# Our Flavours\n\nAcreetionOS is offered in multiple editions, or "flavours", which share the same stable Arch Linux base but provide different desktop environments.\n\n## AcreetionOS Cinnamon\n\nThis is our main edition. It is an Arch Linux flavour with the Cinnamon desktop, offering a traditional, feature-rich experience that is comfortable and powerful.\n\n*   **Source Code:** You can find the source code on GitHub at [https://github.com/cobra3282000/AcreetionOS](https://github.com/cobra3282000/AcreetionOS).\n\n## AcreetionOS GNOME\n\nThis is our flavour for the GNOME desktop. It's perfect for users who enjoy a modern, minimalist workflow focused on gestures and simplicity.\n\n*   **Source Code:** The link for the GNOME edition will be added later when the project is ready.`
                 },
                 {
-                    id: 'installation.md',
-                    title: 'Installation Guide',
-                    content: `# Installation Guide\n\nWelcome to AcreetionOS! This guide will walk you through the entire installation process.\n\n## 1. Download the AcreetionOS ISO\n\nAn ISO file is a disk image that contains the entire operating system. Grab the latest ISO file from the main page.\n\n## 2. Create a Bootable USB Drive\n\nNext, you need to write the ISO file to a USB drive (at least 8GB is recommended). We recommend using a graphical tool like <a href="https://www.balena.io/etcher/" target="_blank" rel="noopener noreferrer">BalenaEtcher</a>, which is available for Windows, macOS, and Linux.\n\n## 3. Boot from the USB Drive\n\nRestart your computer and tell it to boot from the USB drive. You will need to press a key like **F2, F10, F12, DEL, or ESC** during startup to enter the boot menu.\n\n## 4. Follow the Guided Installer\n\nOn boot, the Calamares installer will start up automatically. Just go through the installer and select the software you want, your keyboard layout, username, password, etc. The installer is very straightforward and will guide you through each step.\n\nIf you run into any issues during the installation, there is a debug button in Calamares that can help provide more information.\n\n## 5. First Boot & Updates\n\nAfter the installation is complete, reboot your computer and remove the USB drive. You can update packages via **Pamac**, a GUI package manager that's easy to use! :)\n\nPamac has AUR support as well, giving you access to thousands of community-submitted packages with the click of a button.\n\nCongratulations, your AcreetionOS installation is complete!`
-                },
-                {
                     id: 'development.md',
                     title: 'Development Notes',
-                    content: `# Development Notes\n\nThis section contains important technical information for developers, testers, and advanced users who want to understand the inner workings of AcreetionOS.\n\n## Graphics Drivers\n\nProper graphics driver support is essential for a smooth desktop experience.\n\n### Mesa (Intel & AMD)\n\nThe AcreetionOS live ISO includes the open-source **Mesa** driver stack out of the box. This provides excellent support for most Intel and AMD GPUs and ensures that the system can boot on a wide variety of hardware without issue.\n\n### NVIDIA (Proprietary)\n\nDue to their proprietary nature and the need to build specific kernel modules, the official NVIDIA drivers are **not** included in the live environment. We highly recommend installing them immediately after the main OS installation is complete for the best performance on NVIDIA hardware.\n\nYou can install them easily using Pamac or by running the following command in a terminal:\n\n<pre><code>sudo pacman -S nvidia-dkms</code></pre>\n\nUsing \`nvidia-dkms\` is recommended as it will automatically rebuild the driver when your kernel is updated, preventing boot issues.\n\n### Legacy NVIDIA (390xx Series)\n\nFor users with older NVIDIA cards that are no longer supported by the latest drivers, we have packaged the legacy 390xx series drivers. If you have an older machine, you will need to install these drivers instead.\n\n**Important:** Before installing, please verify that the 390xx driver is the last version that supports your specific GPU. You can check this on the NVIDIA website or by searching online. Installing the incorrect driver may cause display issues.\n\nYou can install them using Pamac (the graphical package manager) or by running the following command in a terminal:\n\n<pre><code>sudo pacman -S nvidia-390xx-utils nvidia-390xx-dkms nvidia-settings</code></pre>\n\n## Kernel Management\n\nOur primary goal is stability. The default kernel in AcreetionOS is a slightly delayed version of the latest Arch Linux kernel. This one-week delay gives us a buffer to test for and react to any major upstream issues, providing a more reliable rolling-release experience.\n\nAdvanced users who need the absolute latest kernel can switch to the standard Arch kernel at any time:\n\n<pre><code>sudo pacman -S linux</code></pre>\n\nOther kernels, such as \`linux-lts\` (Long Term Support) or \`linux-zen\` (optimized for performance), are also available in the official repositories.\n\n## Contributing\n\nWant to help? The best way to start is by joining our Discord and checking out the source code on GitHub. We welcome bug reports, feature requests, and pull requests!`
+                    content: `# Development Notes\n\nThis section contains important technical information for developers, testers, and advanced users who want to understand the inner workings of AcreetionOS.\n\n## Graphics Drivers\n\nProper graphics driver support is essential for a smooth desktop experience.\n\n### Mesa (Intel & AMD)\n\nThe AcreetionOS live ISO includes the open-source **Mesa** driver stack out of the box. This provides excellent support for most Intel and AMD GPUs and ensures that the system can boot on a wide variety of hardware without issue.\n\n### NVIDIA (Proprietary)\n\nDue to their proprietary nature, the official NVIDIA drivers are **not** included in the live environment. We highly recommend installing them immediately after the main OS installation is complete for the best performance on NVIDIA hardware.\n\nYou can install them easily using Pamac or by running the following command:\n\n<pre><code>sudo pacman -S nvidia-dkms</code></pre>\n\nUsing \`nvidia-dkms\` is recommended as it will automatically rebuild the driver when your kernel is updated, preventing boot issues.`
                 }
             ];
 
@@ -394,52 +369,37 @@ Port: 6697 (SSL)</code></pre>
             };
 
             // --- INITIALIZATION ---
-
-            // 1. Populate the documentation sidebar navigation inside the modal
-            docList.innerHTML = ''; // Clear any placeholders
+            docList.innerHTML = ''; 
             docs.forEach(doc => {
-                const li = document.createElement('li');
                 const a = document.createElement('a');
                 a.href = '#';
                 a.textContent = doc.title;
                 a.dataset.docName = doc.id;
-                li.appendChild(a);
-                docList.appendChild(li);
+                docList.appendChild(document.createElement('li')).appendChild(a);
             });
 
-            // 2. Set up listeners for all modal triggers
             modalTriggers.forEach(trigger => {
                 trigger.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const modalId = trigger.dataset.modalTarget;
-                    const modal = document.querySelector(modalId);
+                    const modal = document.querySelector(trigger.dataset.modalTarget);
                     if (modal) {
-                        // If it's the doc viewer, figure out which doc to show
                         if (modal === docViewer) {
                             const specificDoc = trigger.dataset.docName;
-                            renderDoc(specificDoc || docs[0].id); // Show specific doc or default to first
+                            renderDoc(specificDoc || docs[0].id);
                         }
                         openModal(modal);
                     }
                 });
             });
 
-            // 3. Set up listeners for closing modals
             modals.forEach(modal => {
-                // Clicking the dark background
                 modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        closeModal(modal);
-                    }
+                    if (e.target === modal) closeModal(modal);
                 });
-                // Clicking the dedicated close button
                 const closeBtn = modal.querySelector('.modal-close-btn');
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', () => closeModal(modal));
-                }
+                if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
             });
 
-            // 4. Set up listener for the documentation sidebar inside the modal
             docList.addEventListener('click', (e) => {
                 if (e.target.tagName === 'A') {
                     e.preventDefault();
