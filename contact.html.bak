@@ -1,0 +1,322 @@
+<!-- Made by AcreetionOS Team, Love you all: Natalie <3 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support & Contact // AcreetionOS</title>
+
+    <!-- IMPORTANT: This adds the logo to your browser tab (favicon) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="acreetionoslogo.png">
+
+    <!-- Fonts & Icons -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    </style>
+    <!-- Using a simple, embedded SVG for icons to avoid external dependencies -->
+
+    <!-- Internal Stylesheet -->
+    <style>
+        :root {
+            --acreetion-green: #2ecc71;
+            --acreetion-blue: #3498db;
+            --acreetion-orange: #f39c12;
+            --acreetion-purple: #9b59b6;
+            --acreetion-body-bg: #1c1c1c;
+            --acreetion-panel-bg: #111111;
+            --acreetion-box-bg: #2a2a2a;
+            --acreetion-box-border: #444444;
+            --acreetion-text-bright: #d1d1d1;
+            --acreetion-text: #a9a9a9;
+            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--acreetion-body-bg);
+            color: var(--acreetion-text-bright);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        .page-header { background-color: var(--acreetion-panel-bg); border-bottom: 4px solid var(--acreetion-green); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0.75rem 2rem; }
+        .logo { display: flex; align-items: center; gap: 1rem; font-family: var(--font-sans); font-size: 2rem; font-weight: 700; color: var(--acreetion-text-bright); text-decoration: none; }
+        .logo-img { height: 45px; }
+        .logo-text span { color: var(--acreetion-green); }
+        .main-nav a { color: var(--acreetion-text); text-decoration: none; margin-left: 2rem; font-weight: 500; transition: color 0.2s; }
+        .main-nav a:hover, .main-nav a.active { color: var(--acreetion-text-bright); }
+
+        /* --- MAIN LAYOUT (2-Column) --- */
+        .page-wrapper {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .main-column { display: flex; flex-direction: column; gap: 2rem; }
+        .sidebar-column { display: flex; flex-direction: column; gap: 2rem; }
+
+        /* --- CONTENT BOX STYLE --- */
+        .content-box { background-color: var(--acreetion-box-bg); border: 1px solid var(--acreetion-box-border); border-radius: 4px; }
+        .box-header { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--acreetion-box-border); background-color: #333; }
+        .box-header h2, .box-header h3 { font-size: 1.2rem; color: var(--acreetion-text-bright); font-weight: 700; display: flex; align-items: center; gap: 0.75rem; }
+        .box-header .icon { width: 20px; height: 20px; fill: var(--acreetion-green); }
+        .box-body { padding: 1.5rem; }
+        .box-body p { color: var(--acreetion-text); margin-bottom: 1rem; }
+        .box-body a { color: var(--acreetion-green); text-decoration: none; font-weight: 500; }
+        .box-body a:hover { text-decoration: underline; }
+        .box-body .btn { display: inline-block; background-color: var(--acreetion-green); color: black; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; font-weight: 700; transition: filter 0.2s; }
+        .box-body .btn:hover { filter: brightness(1.1); }
+
+        /* --- CONTACT & RECOMMENDATION LISTS --- */
+        .styled-list { list-style: none; padding: 0; }
+        .styled-list li { padding: 1rem 0; border-bottom: 1px solid var(--acreetion-box-border); }
+        .styled-list li:last-child { border-bottom: none; }
+        .list-item-title { display: block; font-size: 1.1rem; font-weight: 700; color: var(--acreetion-text-bright); }
+        .list-item-desc { display: block; font-size: 0.9rem; color: var(--acreetion-text); margin-bottom: 0.5rem; }
+        .list-item-desc strong { color: var(--acreetion-text-bright); font-weight: 500; }
+        
+        /* --- SIDEBAR RESOURCE LIST --- */
+        .resource-list { list-style: none; padding: 0; }
+        .resource-list li { margin-bottom: 0.5rem; }
+        .resource-list a {
+            display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 4px;
+            text-decoration: none; color: var(--acreetion-text-bright); transition: background-color 0.2s;
+        }
+        .resource-list a:hover { background-color: #3a3a3a; }
+        .resource-list .icon { width: 24px; height: 24px; fill: var(--acreetion-green); flex-shrink: 0; }
+        .resource-list .resource-info { display: flex; flex-direction: column; }
+        .resource-list .resource-title { font-weight: 700; }
+        .resource-list .resource-desc { font-size: 0.9rem; color: var(--acreetion-text); }
+        
+        #ai-support .box-header h2, #ai-support .icon { color: var(--acreetion-blue); fill: var(--acreetion-blue); }
+        #bug-reports .box-header h2, #bug-reports .icon { color: var(--acreetion-orange); fill: var(--acreetion-orange); }
+        #bug-reports .btn { background-color: var(--acreetion-orange); }
+        #credits .box-header h2, #credits .icon { color: var(--acreetion-purple); fill: var(--acreetion-purple); }
+
+
+        /* --- FOOTER --- */
+        .page-footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid var(--acreetion-box-border); color: #777; font-size: 0.9rem; }
+        .page-footer p { color: #777; margin-bottom: 0.5rem; }
+        .page-footer a { color: var(--acreetion-green); text-decoration: none; }
+        .page-footer a:hover { text-decoration: underline; }
+        
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 1024px) { .page-wrapper { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 1rem; }
+            .main-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .main-nav a { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SVG ICONS DEFINITION -->
+    <svg width="0" height="0" style="position:absolute">
+      <symbol id="icon-email" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></symbol>
+      <symbol id="icon-team" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></symbol>
+      <symbol id="icon-arch" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
+      <symbol id="icon-ai" viewBox="0 0 24 24"><path d="M19.1,4.9C15.2,1,8.8,1,4.9,4.9S1,15.2,4.9,19.1s8.9,3.9,12.8,0l1.4-1.4l-1.4-1.4l-1.4,1.4C10.6,20.5,5.5,15.4,8.9,8.9 C12.3,5.5,17.4,10.6,14.1,14.1l1.4,1.4l1.4-1.4l1.4,1.4C23,15.2,23,8.8,19.1,4.9z M7.5,13.5C6.7,13.5,6,12.8,6,12s0.7-1.5,1.5-1.5 s1.5,0.7,1.5,1.5S8.3,13.5,7.5,13.5z M12,9c-0.8,0-1.5-0.7-1.5-1.5S11.2,6,12,6s1.5,0.7,1.5,1.5S12.8,9,12,9z M16.5,13.5 c-0.8,0-1.5-0.7-1.5-1.5s0.7-1.5,1.5-1.5s1.5,0.7,1.5,1.5S17.3,13.5,16.5,13.5z"/></symbol>
+      <symbol id="icon-discord" viewBox="0 0 24 24"><path d="M20.3,3.7C18.8,3,17.2,2.5,15.5,2.2c-0.3,0.5-0.6,1-0.8,1.5C13.2,3.3,11.7,3,10.1,3 C8.6,3,7.1,3.3,5.7,3.7C5.4,3.2,5.1,2.7,4.8,2.2C3.1,2.5,1.5,3,0,3.7c-0.1,2.5-0.2,4.9,0.2,7.3c1.2,1.8,2.8,3.2,4.7,4.2 c-0.3-0.5-0.6-1-0.8-1.5c-0.2-0.2-0.3-0.5-0.5-0.7c-1.2-0.6-2.2-1.4-3-2.4c0.1-0.1,0.2-0.2,0.3-0.3c3.6,2.2,7.8,2.2,11.4,0 c0.1,0.1,0.2,0.2,0.3,0.3c-0.8,1-1.8,1.8-3,2.4c-0.1,0.2-0.3,0.5-0.5,0.7c-0.2,0.5-0.5,1-0.8,1.5c1.9-1,3.5-2.4,4.7,4.2 C20.5,8.6,20.4,6.2,20.3,3.7z M8.6,13.7c-1,0-1.8-0.8-1.8-1.8s0.8-1.8,1.8-1.8s1.8,0.8,1.8,1.8S9.6,13.7,8.6,13.7z M15.4,13.7 c-1,0-1.8-0.8-1.8-1.8s0.8-1.8,1.8-1.8s1.8,0.8,1.8,1.8S16.4,13.7,15.4,13.7z"/></symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></symbol>
+      <symbol id="icon-bug" viewBox="0 0 24 24"><path d="M20 8h-2.81c-.45-1.77-2.03-3-3.87-3A4.01 4.01 0 0 0 9.32 8H4v2h2.08c1.07 2.37 3.33 4 5.92 4s4.85-1.63 5.92-4H20V8zm-6 8h-4v-2h4v2zm-2-4c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></symbol>
+      <symbol id="icon-github" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.1-1.46-1.1-1.46-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.25-.26-4.6-1.12-4.6-5 0-1.1.39-2 .9-2.7-.09-.26-.39-1.27.09-2.67 0 0 .85-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33s1.7.11 2.5.33c1.9-1.29 2.75-1.02 2.75-1.02.48 1.4.18 2.41.09 2.67.51.7.9 1.6.9 2.7 0 3.88-2.35 4.74-4.6 5 .36.31.68.92.68 1.85v2.72c0 .27.18.58.69.48C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></symbol>
+      <symbol id="icon-matrix" viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 14h16v2H4v-2zm0-7h2v2H4v-2zm4 0h2v2H8v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/></symbol>
+      <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+    </svg>
+
+    <header class="page-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img">
+                <span class="logo-text">Acreetion<span>OS</span></span>
+            </a>
+            <nav class="main-nav">
+                <a href="index.html">Home</a>
+                <a href="contact.html" class="active">Contact & Support</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <main class="main-column">
+            <!-- Bug Reports Box -->
+            <div id="bug-reports" class="content-box">
+                <div class="box-header">
+                    <h2>
+                        <svg class="icon"><use xlink:href="#icon-bug"/></svg>
+                        Bug Reports & Feature Requests
+                    </h2>
+                </div>
+                <div class="box-body">
+                    <p>Found a problem or have a great idea? The <strong>official way</strong> to submit feedback is through GitHub Issues. This helps us track everything in one place.</p>
+                    <p>Please file your report in the correct project repository below. Before you report, check if a similar issue already exists and provide as much detail as possible (logs, screenshots, etc.).</p>
+                    <div>
+                        <a href="https://github.com/AcreetionOS-Linux/AcreetionOS/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D" target="_blank" rel="noopener noreferrer" class="btn">Bug Report (Cinnamon)</a>
+                        <a href="https://github.com/AcreetionOS-Linux/AcreetionOS-GNOME/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D" target="_blank" rel="noopener noreferrer" class="btn">Bug Report (GNOME)</a>
+                    </div>
+                    <div>
+                        <a href="https://github.com/AcreetionOS-Linux/AcreetionOS/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D" target="_blank" rel="noopener noreferrer" class="btn">Feature Request (Cinnamon)</a>
+                        <a href="https://github.com/AcreetionOS-Linux/AcreetionOS-GNOME/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D" target="_blank" rel="noopener noreferrer" class="btn">Feature Request (GNOME)</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Contact Box -->
+            <div class="content-box">
+                <div class="box-header">
+                    <h2>
+                        <svg class="icon"><use xlink:href="#icon-team"/></svg>
+                        Meet the Team
+                    </h2>
+                </div>
+                <div class="box-body">
+                    <p>For project-level discussions like partnerships or other official matters, you can reach the team directly. <strong>Please do not use email for bug reports or general support.</strong></p>
+                    <ul class="styled-list">
+                        <li>
+                            <span class="list-item-title">Darren Clift</span>
+                            <span class="list-item-desc">AcreetionOS Main Developer, AcreetionOS GNOME Secondary Developer, Mirror Maintainer</span>
+                            <a href="mailto:cobra3282000@live.com">cobra3282000@live.com</a>
+                        </li>
+                        <li>
+                            <span class="list-item-title">Natalie Spiva</span>
+                            <span class="list-item-desc">AcreetionOS GNOME Main Developer, AcreetionOS Secondary Developer, Mirror Maintainer, Flasher, Fingerprint & Face ID Maintainer</span>
+                            <a href="mailto:sprungles.me@proton.me">sprungles.me@proton.me</a>
+                        </li>
+                        <li>
+                            <span class="list-item-title">General Project Inquiries</span>
+                            <span class="list-item-desc">For partnerships and official communication</span>
+                            <a href="mailto:acreetionos@gmail.com">acreetionos@gmail.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+             <!-- Credits Box -->
+            <div id="credits" class="content-box">
+                <div class="box-header">
+                    <h2>
+                        <svg class="icon"><use xlink:href="#icon-heart"/></svg>
+                        Credits & Special Thanks
+                    </h2>
+                </div>
+                <div class="box-body">
+                    <p>This project stands on the shoulders of giants. We are immensely grateful to the following people and projects for their foundational work and collaboration.</p>
+                     <ul class="styled-list">
+                        <li>
+                            <span class="list-item-title">Core Technologies & Assets</span>
+                            <span class="list-item-desc">
+                                <strong>Arch Linux:</strong> For providing the powerful, flexible base that makes AcreetionOS possible. <br>
+                                <strong>ArchPenguin:</strong> For the original AcreetionOS logo concept.
+                            </span>
+                        </li>
+                        <li>
+                            <span class="list-item-title">Collaborators & Naming</span>
+                            <span class="list-item-desc">
+                                <strong>Ben Fitzpatrick:</strong> For his excellent work on our sister project, StormOS, and his collaboration with our team. <br>
+                                <strong>Ddubs:</strong> For coming up with the AcreetionOS name.
+                            </span>
+                        </li>
+                        <li>
+                            <span class="list-item-title">AI Assistants</span>
+                             <span class="list-item-desc">
+                                For their tireless help in development, we thank the teams behind <strong>Google's Gemini/Gemma</strong>, <strong>Anthropic's Claude</strong>, and <strong>OpenAI's ChatGPT</strong>.
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar-column">
+            <!-- Documentation Box -->
+            <div class="content-box">
+                <div class="box-header">
+                    <h2>
+                        <svg class="icon"><use xlink:href="#icon-book"/></svg>
+                        Project Documentation
+                    </h2>
+                </div>
+                <div class="box-body">
+                    <p>We are actively working on building a dedicated AcreetionOS wiki. In the meantime, the legendary <strong>Arch Wiki</strong> is the best resource for almost any question, as AcreetionOS is built directly on Arch.</p>
+                    <p>For updates on our wiki's progress, please check our Discord server.</p>
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://wiki.archlinux.org/" target="_blank" rel="noopener noreferrer">
+                                <svg class="icon"><use xlink:href="#icon-arch"/></svg>
+                                <div class="resource-info">
+                                    <span class="resource-title">Arch Wiki</span>
+                                    <span class="resource-desc">Recommended resource for now.</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">
+                                <svg class="icon"><use xlink:href="#icon-discord"/></svg>
+                                <div class="resource-info">
+                                    <span class="resource-title">Check Wiki Status</span>
+                                    <span class="resource-desc">Join Discord for updates.</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Community Support Box -->
+            <div class="content-box">
+                <div class="box-header">
+                    <h2>
+                        <svg class="icon"><use xlink:href="#icon-discord"/></svg>
+                        Community & News
+                    </h2>
+                </div>
+                <div class="box-body">
+                    <p>Join the conversation, get live support, and follow project development.</p>
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">
+                                <svg class="icon"><use xlink:href="#icon-discord"/></svg>
+                                <div class="resource-info"><span class="resource-title">Discord Server</span><span class="resource-desc">Best for live support and community chat.</span></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/AcreetionOS-Linux" target="_blank" rel="noopener noreferrer">
+                                <svg class="icon"><use xlink:href="#icon-github"/></svg>
+                                <div class="resource-info"><span class="resource-title">GitHub</span><span class="resource-desc">Follow development and browse the code.</span></div>
+                            </a>
+                        </li>
+                         <li>
+                            <a href="https://matrix.to/#/#acreetionos:matrix.org" target="_blank" rel="noopener noreferrer">
+                                <svg class="icon"><use xlink:href="#icon-matrix"/></svg>
+                                <div class="resource-info"><span class="resource-title">Matrix</span><span class="resource-desc">For the open-source enthusiast.</span></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="page-footer">
+        <p>
+            AcreetionOS is an independent project that builds upon the solid foundation of Arch Linux.
+            <a href="https://github.com/AcreetionOS-Linux" target="_blank" rel="noopener noreferrer">Browse the Source Code on GitHub.</a>
+        </p>
+        <p>Arch Linux™ is a trademark of Judd Vinet. We are not affiliated with or endorsed by the Arch Linux project.</p>
+        <p>© 2025 AcreetionOS Project.</p>
+    </footer>
+
+</body>
+</html>

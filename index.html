@@ -1,0 +1,448 @@
+<!-- Made by AcreetionOS Team, Love you all: Natalie <3 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AcreetionOS // An Arch-based Distribution</title>
+
+    <!-- IMPORTANT: This adds the logo to your browser tab (favicon) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="acreetionoslogo.png">
+
+    <!-- Clean Sans-serif & Monospaced Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;500;700&display=swap');
+    </style>
+    <!-- Markdown Parser Library -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Internal Stylesheet -->
+    <style>
+        :root {
+            /* --- AcreetionOS Soft Dark Palette (No Blinding Whites) --- */
+            --acreetion-green: #2ecc71;
+            --acreetion-body-bg: #1c1c1c;
+            --acreetion-panel-bg: #111111;
+            --acreetion-box-bg: #2a2a2a;
+            --acreetion-box-border: #444444;
+            --acreetion-text-bright: #d1d1d1; /* Softer, non-blinding "white" */
+            --acreetion-text: #a9a9a9;       /* Softer grey for secondary text */
+            --acreetion-code-bg: rgba(46, 204, 113, 0.1);
+
+            /* --- Accent colors for other versions --- */
+            --gnome-color: #e06c75; /* Red */
+            --storm-color: #61afef; /* Blue */
+            --flasher-color: #f39c12; /* Orange for the flasher tool */
+
+            /* --- Documentation Viewer Palette --- */
+            --doc-bg: #212121;
+            --doc-content-bg: #2c2c2c;
+            --doc-link-color: #61afef;
+
+            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--acreetion-body-bg);
+            color: var(--acreetion-text-bright);
+            line-height: 1.6;
+            /* Animation styles */
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        /* Fade Out Animation Class */
+        body.fade-out {
+            animation: fadeOut 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* --- HEADER --- */
+        .page-header { background-color: var(--acreetion-panel-bg); border-bottom: 4px solid var(--acreetion-green); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0.75rem 2rem; }
+        .logo { display: flex; align-items: center; gap: 1rem; font-family: var(--font-sans); font-size: 2rem; font-weight: 700; color: var(--acreetion-text-bright); text-decoration: none; }
+        .logo-img { height: 45px; }
+        .logo-text span { color: var(--acreetion-green); }
+        .main-nav a { color: var(--acreetion-text); text-decoration: none; margin-left: 2rem; font-weight: 500; transition: color 0.2s; }
+        .main-nav a:hover { color: var(--acreetion-text-bright); }
+
+        /* --- MAIN LAYOUT (2-Column) --- */
+        .page-wrapper { display: grid; grid-template-columns: 1fr 350px; gap: 2rem; max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .content-feed { display: flex; flex-direction: column; gap: 2rem; }
+
+        /* --- ARTICLE/CONTENT BOX STYLE --- */
+        .content-box { background-color: var(--acreetion-box-bg); border: 1px solid var(--acreetion-box-border); border-radius: 4px; }
+        .box-header { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--acreetion-box-border); background-color: #333; }
+        .box-header h2 { font-size: 1.5rem; color: var(--acreetion-text-bright); font-weight: 700; }
+        .box-body { padding: 1.5rem; }
+        .box-body h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; }
+        .article-content a:not(.btn), .sidebar-box p a { color: var(--acreetion-green); text-decoration: none; font-weight: 500; }
+        .article-content a:not(.btn):hover, .sidebar-box p a:hover { text-decoration: underline; }
+        .article-content p, .article-content li { color: var(--acreetion-text); margin-bottom: 1rem; }
+        .article-content ul { padding-left: 20px; }
+        
+        .article-logo-cluster {
+            float: left;
+            margin-right: 2rem;
+            margin-bottom: 1rem;
+            width: 200px;
+        }
+        .article-logo-cluster .hero-logo-img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 1.5rem;
+        }
+        .article-logo-cluster pre {
+            font-family: var(--font-mono);
+            color: var(--acreetion-green);
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            line-height: 1;
+            font-weight: 700;
+        }
+        .article-content::after { content: ""; display: table; clear: both; }
+
+        /* --- SIDEBAR --- */
+        .sidebar-box { background-color: var(--acreetion-box-bg); }
+        .sidebar-box .box-header { background-color: #333; }
+        .sidebar-box .box-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--acreetion-text-bright); }
+        .spec-list { list-style: none; padding: 0; }
+        .spec-list li { margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--acreetion-text); }
+        .spec-list .spec-title { color: var(--acreetion-text-bright); font-weight: 700; min-width: 80px; display: inline-block; }
+        .sidebar-nav { list-style: none; padding: 0; }
+        .sidebar-nav a { display: block; text-decoration: none; color: var(--acreetion-green); padding: 0.5rem 0; border-bottom: 1px solid var(--acreetion-box-border); cursor: pointer; }
+        .sidebar-nav a:hover { background-color: #3a3a3a; }
+        .sidebar-box p { color: var(--acreetion-text); padding: 0 0.2rem 1rem; }
+
+        /* --- CODE BLOCKS & BUTTONS --- */
+        code, pre { font-family: var(--font-mono); font-size: 0.9rem; }
+        code { background-color: var(--acreetion-code-bg); border: 1px solid rgba(46, 204, 113, 0.2); padding: 0.2em 0.4em; border-radius: 3px; color: var(--acreetion-text-bright); }
+        pre { background-color: var(--acreetion-panel-bg); border: 1px solid var(--acreetion-box-border); padding: 1em; overflow-x: auto; margin-top: 0.5rem; }
+        .btn { display: inline-block; color: black; text-decoration: none; padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 700; transition: all 0.2s; border: none; cursor: pointer;}
+        .btn:hover { filter: brightness(1.1); }
+        .btn-cinnamon { background-color: var(--acreetion-green); }
+        .btn-gnome { background-color: var(--gnome-color); }
+        .btn-storm { background-color: var(--storm-color); }
+        .btn-flasher { background-color: var(--flasher-color); }
+
+        /* --- ACCENT COLORS --- */
+        #about .box-header h2 { color: var(--acreetion-green); }
+        #about h3 { color: var(--acreetion-green); }
+        #easy-install .box-header h2 { color: var(--flasher-color); }
+        #manual-downloads .box-header h2 { color: var(--acreetion-green); }
+        #manual-downloads h3:first-of-type { margin-top: 0; }
+        #manual-downloads .download-options-group { margin-bottom: 2rem; }
+        
+        /* --- MODAL OVERLAYS --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.visible { display: flex; }
+        .modal-box { position: relative; cursor: default; background-color: var(--doc-content-bg); border: 1px solid var(--acreetion-box-border); padding: 2rem 3rem; max-width: 700px; }
+        .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background-color: var(--gnome-color); color: black; font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; line-height: 40px; text-align: center; }
+        .modal-box h2 { color: var(--acreetion-green); }
+        
+        /* --- DOCUMENTATION VIEWER --- */
+        .doc-container { display: grid; grid-template-columns: 250px 1fr; gap: 2rem; width: 90%; max-width: 1400px; background-color: var(--doc-bg); border: 1px solid var(--acreetion-box-border); position: relative; cursor: default; }
+        .doc-sidebar { background-color: var(--acreetion-box-bg); padding: 1.5rem; }
+        .doc-sidebar h3 { color: var(--acreetion-text-bright); border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; }
+        .doc-sidebar ul { list-style: none; padding: 0; margin-top: 1rem; }
+        .doc-sidebar a { display: block; color: var(--acreetion-text); text-decoration: none; padding: 0.5rem; border-radius: 3px; cursor: pointer; }
+        .doc-sidebar a:hover { background-color: #3a3a3a; color: var(--acreetion-text-bright); }
+        .doc-sidebar a.active { background-color: var(--acreetion-green); color: black; font-weight: 700; }
+        #doc-main-content { padding: 2rem 3rem; overflow-y: auto; max-height: 85vh; }
+        #doc-main-content h1, #doc-main-content h2, #doc-main-content h3 { color: var(--acreetion-text-bright); border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        #doc-main-content h1 { font-size: 2rem; }
+        #doc-main-content h2 { font-size: 1.5rem; margin-top: 2rem; }
+        #doc-main-content h3 { font-size: 1.2rem; margin-top: 1.5rem; }
+        #doc-main-content p, #doc-main-content li { color: var(--acreetion-text); }
+        #doc-main-content a { color: var(--doc-link-color); }
+        #doc-main-content ul { padding-left: 20px; }
+        
+        /* --- FOOTER & RESPONSIVE --- */
+        .page-footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid var(--acreetion-box-border); color: #777; font-size: 0.9rem; }
+        .page-footer p { color: #777; margin-bottom: 0.5rem; }
+        .page-footer a { color: var(--acreetion-green); text-decoration: none; }
+        .page-footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 1024px) {
+            .page-wrapper, .doc-container { grid-template-columns: 1fr; }
+            .sidebar, .doc-sidebar { order: -1; }
+            .doc-container { width: 95%; max-height: 95vh; }
+        }
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 1rem; }
+            .main-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .main-nav a { margin-left: 0; }
+            .article-logo-cluster { float: none; display: block; text-align: center; margin: 0 auto 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <div class="header-content">
+            <a href="index.html" class="logo transition-link">
+                <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img">
+                <span class="logo-text">Acreetion<span>OS</span></span>
+            </a>
+            <nav class="main-nav">
+                <a href="#about">About</a>
+                <a href="#easy-install">Easy Install</a>
+                <a href="#manual-downloads">Downloads</a>
+                <a href="#" data-modal-target="#documentation-viewer">Documentation</a>
+                <a href="contact.html" class="transition-link">Contact & Support</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <main class="content-feed">
+            <article id="about" class="content-box">
+                <div class="box-header"><h2>Welcome to AcreetionOS</h2></div>
+                <div class="box-body">
+                    <div class="article-content">
+                        <div class="article-logo-cluster">
+                            <img src="logo.png" alt="AcreetionOS Main Logo" class="hero-logo-img">
+                            <pre>
+      /\
+     /  \
+    /`'.,\
+   /   ,'.\
+  /   ,.'  \
+ /   ,.'    \
+/   ,.'      \
+`""`          `""`
+                            </pre>
+                        </div>
+                        <p><strong>AcreetionOS</strong> is an approachable and user-friendly distribution based on the powerful <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">Arch Linux</a> core. We aim to make the Arch ecosystem accessible to a wider audience by providing a stable, pre-configured desktop experience.</p>
+                        <p>This project is made possible by the incredible work of the Arch Linux developers. We simply add a layer of convenience and testing to an already fantastic base.</p>
+                        <h3>Core Principles</h3>
+                        <ul>
+                            <li><strong>Stability:</strong> Unlike pure Arch, we hold back packages for a week of testing. This provides a buffer against potential upstream issues.</li>
+                            <li><strong>User-Friendly:</strong> We provide a graphical installer and sensible defaults to get you up and running quickly.</li>
+                            <li><strong>Arch Power:</strong> You retain full access to the AUR. AcreetionOS is still Arch Linux under the hood.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article id="easy-install" class="content-box">
+                <div class="box-header"><h2>The Easy Way: AcreetionOS USB Flasher</h2></div>
+                 <div class="box-body">
+                    <p style="color: var(--acreetion-text);">This is the <strong>recommended method for all users</strong>. Our utility makes creating a bootable USB drive simple. Download the flasher for your current OS, or if you want to do it manually grab an ISO file from the manual download section below to write to your USB stick.</p>
+                    <div class="download-options-group" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS%20USB%20Flasher-1.0.0.AppImage" class="btn btn-flasher">Download Flasher for Linux (.AppImage)</a>
+                        <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS_USB_Flasher_Setup_1.0.0.exe" class="btn btn-flasher">Download Flasher for Windows (.exe)</a>
+                    </div>
+                </div>
+            </article>
+            
+            <article id="manual-downloads" class="content-box">
+                <div class="box-header"><h2>Manual Downloads (ISO Files)</h2></div>
+                <div class="box-body">
+                    <p style="color: var(--acreetion-text); margin-bottom: 1.5rem;">Use these links to download an ISO file directly. This is for users who want to use their own flashing tool (like BalenaEtcher, Rufus, etc.) or for other purposes.</p>
+                    
+                    <h3 style="color: var(--acreetion-green);">Cinnamon Edition (Main)</h3>
+                    <p style="color: var(--acreetion-text);">The flagship AcreetionOS experience with the Cinnamon desktop. Stable, familiar, and powerful.</p>
+                    <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/acreetion/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Direct)</a>
+                        <a href="https://archive.org/download/acreetion-os-1.0-x-86-64/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Mirror)</a>
+                        <a href="https://darrengames.ddns.net:1500/AcreetionOS-1.0-x86_64.iso.torrent" class="btn btn-cinnamon">Download Cinnamon ISO (Torrent)</a>
+                    </div>
+
+                    <h3 style="color: var(--gnome-color);">GNOME Edition</h3>
+                    <p style="color: var(--acreetion-text);">A modern, minimalist workflow with the GNOME desktop.</p>
+                    <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/acreetion/GNOME/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Direct)</a>
+                        <a href="https://archive.org/download/acreetion-os-gnome-1.0-x-86-64/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Mirror)</a>
+                        <a href="https://archive.org/download/acreetion-os-gnome-1.0-x-86-64/acreetion-os-gnome-1.0-x-86-64_archive.torrent" class="btn btn-gnome">Download GNOME ISO (Torrent) </a>
+                    </div>
+
+                    <h3 style="color: var(--storm-color);">Sister Project: StormOS</h3>
+                     <p style="color: var(--acreetion-text);">A bleeding-edge sister project focused on gaming performance and experimental features.</p>
+                    <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <a href="https://darrengames.ddns.net:1500/stormos/stormos-1.0.iso" class="btn btn-storm">Download StormOS ISO</a>
+                        <a href="https://sourceforge.net/projects/hackman-linux/files/latest/download" class="btn btn-storm">Download StormOS ISO (Mirror)</a>
+                        <a href="https://archive.org/download/stormos-07-21-2025/stormos-07-21-2025.iso" class="btn btn-storm">Download StormOS ISO (Mirror)</a>
+                        <a href="https://archive.org/download/stormos-07-21-2025/stormos-07-21-2025_archive.torrent" class="btn btn-storm">Download StormOS ISO (Torrent)</a>
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <aside class="sidebar">
+            <div id="specs" class="content-box sidebar-box">
+                <div class="box-header"><h2>System Information</h2></div>
+                <div class="box-body"><ul class="spec-list"><li><span class="spec-title">OS:</span> AcreetionOS</li><li><span class="spec-title">Base:</span> Arch Linux</li><li><span class="spec-title">DE (Main):</span> Cinnamon</li><li><span class="spec-title">DE (Alt):</span> GNOME</li><li><span class="spec-title">Kernel:</span> Rolling (Delayed)</li><li><span class="spec-title">Arch:</span> x86_64</li></ul></div>
+            </div>
+            <div id="docs-sidebar" class="content-box sidebar-box" style="margin-top: 2rem;">
+                <div class="box-header"><h2>Documentation</h2></div>
+                <div class="box-body">
+                    <ul class="sidebar-nav">
+                        <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="installation.md">Installation Guide</a></li>
+                        <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="philosophy.md">Project Philosophy</a></li>
+                        <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="flavours.md">Our Flavours</a></li>
+                        <li><a href="#" data-modal-target="#documentation-viewer" data-doc-name="development.md">Development Notes</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="community" class="content-box sidebar-box" style="margin-top: 2rem;">
+                <div class="box-header"><h2>Community</h2></div>
+                <div class="box-body">
+                    <p>For more ways to get in touch, including bug reports and to see the full team, please see our <a href="contact.html" class="transition-link">Contact & Support page</a>.</p>
+                    <ul class="sidebar-nav">
+                        <li><a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord Server</a></li>
+                        <li><a href="https://bbs.archlinux.org/" target="_blank" rel="noopener noreferrer">Forums</a></li>
+                        <li><a href="https://lists.archlinux.org/mailman3/lists/" target="_blank" rel="noopener noreferrer">Mailing Lists</a></li>
+                        <li><a href="#" data-modal-target="#irc-viewer">IRC Channels</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="page-footer">
+        <p>AcreetionOS is an independent project that builds upon the solid foundation of Arch Linux. Visit <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">archlinux.org</a> to learn more about our base.</p>
+        <p>Arch Linux™ is a trademark of Judd Vinet.</p>
+        <p>© 2025 AcreetionOS Project.</p>
+    </footer>
+
+    <!-- MODALS -->
+    <div id="documentation-viewer" class="modal-overlay">
+        <div class="doc-container">
+            <button class="modal-close-btn" title="Close Documentation">×</button>
+            <aside class="doc-sidebar">
+                <h3>Documents</h3>
+                <ul id="doc-list"></ul>
+            </aside>
+            <main id="doc-main-content"></main>
+        </div>
+    </div>
+    <div id="irc-viewer" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close-btn" title="Close">×</button>
+            <h2>Arch Linux IRC Channels</h2>
+            <p>Connect with the community in real-time on the Libera.Chat IRC network.</p>
+            <pre><code>Server: irc.libera.chat
+Port: 6697 (SSL)</code></pre>
+            <p>Once connected, you can join the main channels: <code>#archlinux</code> and <code>#archlinux-support</code>.</p>
+            <a href="https://web.libera.chat/#archlinux" class="btn btn-cinnamon" target="_blank" rel="noopener noreferrer">Join #archlinux (Web Client)</a>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- PAGE TRANSITION LOGIC ---
+            const transitionLinks = document.querySelectorAll('.transition-link');
+            transitionLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetUrl = this.href;
+                    document.body.classList.add('fade-out');
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 500); // Should match the animation duration
+                });
+            });
+
+            // --- DATA STORE ---
+            const docs = [
+                {
+                    id: 'installation.md',
+                    title: 'Installation Guide',
+                    content: `# Installation Guide\n\nWelcome to AcreetionOS! This guide will walk you through the entire installation process using the recommended method.\n\n## Step 1: Get the Tools\n\nFirst, you need two things from our website:\n\n1.  The **AcreetionOS USB Flasher**.\n2.  The **AcreetionOS ISO file** for the edition you want (e.g., Cinnamon).\n\n## Step 2: Create a Bootable USB Drive\n\nUse the **AcreetionOS USB Flasher** to write the downloaded ISO file to a USB drive (8GB or larger is recommended). Our tool is designed to be straightforward and is the recommended way to create your installation media.\n\n## Step 3: Boot from the USB Drive\n\nRestart your computer and tell it to boot from the USB drive. You will likely need to press a special key like **F2, F10, F12, DEL, or ESC** during startup to open the boot menu.\n\n## Step 4: Follow the Guided Installer\n\nOnce you boot from the USB, the Calamares installer should start automatically. It will guide you through partitioning, selecting your keyboard layout, and creating a user account. Just follow the on-screen prompts.\n\n## Step 5: First Boot & Updates\n\nAfter the installation finishes, reboot your computer and remove the USB drive. You can now log into your new AcreetionOS desktop! You can update packages using **Pamac**, the graphical package manager, which also includes easy access to the AUR.\n\nCongratulations on your new AcreetionOS installation!`
+                },
+                 {
+                    id: 'philosophy.md',
+                    title: 'Project Philosophy',
+                    content: `# Project Philosophy\n\nAcreetionOS is guided by the same principles that make Arch Linux great, but with a focus on providing a stable and user-friendly desktop experience out-of-the-box.\n\n### What We Are\n\nAcreetionOS **is** an Arch Linux fork made for people to ease into the Arch Linux space. It'sdesigned to be a user-friendly entry point into the powerful Arch ecosystem, providing a stable, pre-configured experience that holds your hand just enough to get you started comfortably.\n\nWhile the Arch Wiki is an invaluable resource, we encourage new users to seek help first from our own community channels, like our Discord server. We are here to support you.`
+                },
+                {
+                    id: 'flavours.md',
+                    title: 'Our Flavours',
+                    content: `# Our Flavours\n\nAcreetionOS is offered in multiple editions, or "flavours", which share the same stable Arch Linux base but provide different desktop environments.\n\n## AcreetionOS Cinnamon\n\nThis is our main edition. It is an Arch Linux flavour with the Cinnamon desktop, offering a traditional, feature-rich experience that is comfortable and powerful.\n\n*   **Source Code:** You can find the source code on GitHub at [https://github.com/AcreetionOS-Linux/AcreetionOS](https://github.com/AcreetionOS-Linux/AcreetionOS).\n\n## AcreetionOS GNOME\n\nThis is our flavour for the GNOME desktop. It's perfect for users who enjoy a modern, minimalist workflow focused on gestures and simplicity.\n\n*   **Source Code:** You can find the source code on GitHub at [https://github.com/AcreetionOS-Linux/AcreetionOS-GNOME](https://github.com/AcreetionOS-Linux/AcreetionOS-GNOME).`
+                },
+                {
+                    id: 'development.md',
+                    title: 'Development Notes',
+                    content: `# Development Notes\n\nThis section contains important technical information for developers, testers, and advanced users who want to understand the inner workings of AcreetionOS.\n\n## Graphics Drivers\n\nProper graphics driver support is essential for a smooth desktop experience.\n\n### Mesa (Intel & AMD)\n\nThe AcreetionOS live ISO includes the open-source **Mesa** driver stack out of the box. This provides excellent support for most Intel and AMD GPUs and ensures that the system can boot on a wide variety of hardware without issue.\n\n### NVIDIA (Proprietary)\n\nDue to their proprietary nature, the official NVIDIA drivers are **not** included in the live environment. We highly recommend installing them immediately after the main OS installation is complete for the best performance on NVIDIA hardware.\n\nYou can install them easily using Pamac or by running the following command:\n\n<pre><code>sudo pacman -S nvidia-dkms</code></pre>\n\nUsing \`nvidia-dkms\` is recommended as it will automatically rebuild the driver when your kernel is updated, preventing boot issues.`
+                }
+            ];
+
+            // --- ELEMENT SELECTORS ---
+            const modalTriggers = document.querySelectorAll('[data-modal-target]');
+            const modals = document.querySelectorAll('.modal-overlay');
+            const docViewer = document.getElementById('documentation-viewer');
+            const docList = document.getElementById('doc-list');
+            const docMainContent = document.getElementById('doc-main-content');
+
+            // --- FUNCTIONS ---
+            const openModal = (modal) => modal.classList.add('visible');
+            const closeModal = (modal) => modal.classList.remove('visible');
+
+            const renderDoc = (docId) => {
+                const doc = docs.find(d => d.id === docId);
+                if (!doc) return;
+
+                docMainContent.innerHTML = marked.parse(doc.content);
+                docList.querySelectorAll('a').forEach(link => {
+                    link.classList.toggle('active', link.dataset.docName === docId);
+                });
+            };
+
+            // --- INITIALIZATION ---
+            docList.innerHTML = ''; 
+            docs.forEach(doc => {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = doc.title;
+                a.dataset.docName = doc.id;
+                docList.appendChild(document.createElement('li')).appendChild(a);
+            });
+
+            modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const modal = document.querySelector(trigger.dataset.modalTarget);
+                    if (modal) {
+                        if (modal === docViewer) {
+                            const specificDoc = trigger.dataset.docName;
+                            renderDoc(specificDoc || docs[0].id);
+                        }
+                        openModal(modal);
+                    }
+                });
+            });
+
+            modals.forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal(modal);
+                });
+                const closeBtn = modal.querySelector('.modal-close-btn');
+                if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
+            });
+
+            docList.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') {
+                    e.preventDefault();
+                    renderDoc(e.target.dataset.docName);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
