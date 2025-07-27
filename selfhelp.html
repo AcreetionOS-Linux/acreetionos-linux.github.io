@@ -4,1561 +4,480 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcreetionOS Info Tool</title>
-    <!-- Markdown Parser Library (needed for AI simplification) -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Fira+Code&display=swap" rel="stylesheet">
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="acreetionoslogo.png">
-
+    <!-- Vue.js Library -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         :root {
-            --acreetion-green: #2ecc71;
-            --acreetion-body-bg: #1c1c1c;
-            --acreetion-panel-bg: #111111;
-            --acreetion-box-bg: #2a2a2a;
-            --acreetion-box-border: #444444;
-            --acreetion-text-bright: #d1d1d1;
-            --acreetion-text: #a9a9a9;
-            --acreetion-accent-red: #e06c75;
-            --acreetion-accent-blue: #61afef;
-            --acreetion-shadow: rgba(46, 204, 113, 0.2);
-            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'Fira Code', monospace;
+            /* AcreetionOS Green & Grey Theme */
+            --color-bg: #222831; /* Dark Grey Background */
+            --color-text: #EEEEEE; /* Light Grey Text */
+            --color-accent-green-primary: #64CC70; /* Vibrant Green Accent */
+            --color-accent-green-secondary: #4CAF50; /* Slightly Darker Green Accent */
+            --color-card-bg: rgba(40, 44, 52, 0.75); /* Transparent Darker Grey for Cards */
+            --color-card-border: rgba(100, 204, 112, 0.4); /* Transparent Green Border */
+            --color-shadow-accent: rgba(100, 204, 112, 0.3); /* Green Shadow */
+            --color-bg-grid: rgba(100, 204, 112, 0.07); /* Very Subtle Green Grid */
         }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 10px 5px rgba(46, 204, 113, 0);
-            }
-        }
-
+        
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         body {
-            font-family: var(--font-sans);
-            background-color: var(--acreetion-body-bg);
-            color: var(--acreetion-text);
-            line-height: 1.6;
-            font-size: 16px;
-            overflow-x: hidden;
-            animation: fadeIn 1s ease-out forwards;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--color-bg); color: var(--color-text);
+            line-height: 1.7; font-size: 17px; overflow-x: hidden; animation: fadeIn 1s ease-out forwards;
         }
+        #background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-image: linear-gradient(var(--color-bg-grid) 1px, transparent 1px), linear-gradient(90deg, var(--color-bg-grid) 1px, transparent 1px);
+            background-size: 40px 40px; animation: bg-pan 60s linear infinite;
+        }
+        @keyframes bg-pan { 0% { background-position: 0 0; } 100% { background-position: -400px -400px; } }
+        
+        #app [v-cloak] { display: none; }
 
-        /* General layout */
-        .search-wrapper {
+        .search-wrapper { display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 8vh 25px 80px 25px; }
+        .search-logo { 
+            font-family: 'Orbitron', sans-serif; 
+            font-size: clamp(2rem, 6vw, 4rem); /* Adjusted font size for longer name */
+            color: var(--color-text); 
+            margin-bottom: 30px; 
+            text-align: center; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.2), 0 0 20px var(--color-accent-green-primary); 
+            line-height: 1.2; /* Adjust line height for multi-line title */
+        }
+        
+        .search-form { position: relative; width: 100%; max-width: 700px; display: flex; align-items: center; margin-bottom: 40px; }
+        #searchInput { width: 100%; padding: 18px 70px 18px 25px; font-family: 'Fira Code', monospace; font-size: 1.2em; color: var(--color-text); background-color: var(--color-card-bg); border: 2px solid var(--color-card-border); border-radius: 50px; outline: none; transition: all .3s ease; }
+        #searchInput:focus { border-color: var(--color-accent-green-primary); box-shadow: 0 0 25px var(--color-shadow-accent); }
+        #searchButton { position: absolute; right: 0px; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: linear-gradient(135deg, var(--color-accent-green-secondary), var(--color-accent-green-primary)); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .3s ease;}
+        #searchButton:hover { transform: translateY(-50%) scale(1.1); }
+        
+        .results-wrapper { width: 100%; max-width: 900px; padding: 0 25px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .result-item { 
+            background: var(--color-card-bg); 
+            border: 1px solid var(--color-card-border); 
+            padding: 25px; 
+            border-radius: 10px; 
+            position: relative; 
+            animation: fadeInResult 0.5s ease forwards; 
+            transition: transform .3s ease, box-shadow .3s ease; 
+            cursor: pointer; /* Indicate clickable */
+        }
+        .is-chromium .result-item { backdrop-filter: blur(5px); }
+        @keyframes fadeInResult { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .result-item:hover { transform: translateY(-5px); box-shadow: 0 8px 30px var(--color-shadow-accent); }
+        
+        .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .result-source-tag { font-family: 'Orbitron', sans-serif; font-size: 0.8em; padding: 4px 10px; border-radius: 5px; color: #fff; text-shadow: 0 0 5px rgba(0,0,0,0.5); }
+        .result-title-link { text-decoration: none; color: var(--color-accent-green-primary); }
+        .result-title { font-size: 1.25em; margin-bottom: 8px; line-height: 1.3; }
+        .result-item:hover .result-title-link { color: var(--color-text); text-decoration: underline; }
+        .result-snippet { font-size: 0.95em; color: var(--color-text); opacity: 0.8; }
+        .result-snippet .searchmatch { font-weight: bold; color: var(--color-accent-green-primary); background-color: rgba(100,204,112,0.1); } /* Green highlight for searchmatch */
+
+        .ai-controls { text-align: center; margin-bottom: 20px; }
+        .ai-button { font-family: 'Orbitron', sans-serif; font-size: 1em; padding: 10px 25px; border-radius: 50px; border: 2px solid var(--color-accent-green-secondary); color: var(--color-text); background: transparent; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .ai-button:hover { background: var(--color-accent-green-secondary); color: white; border-color: var(--color-accent-green-secondary); }
+
+        /* General Modal Styles (shared with AI modal) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(34, 40, 49, 0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; animation: fadeIn 0.5s forwards; }
+        .is-chromium .modal-overlay { backdrop-filter: blur(10px); }
+        .modal-box { background: var(--color-card-bg); border: 1px solid var(--color-accent-green-primary); border-radius: 15px; max-width: 600px; width: 90%; padding: 30px; text-align: center; box-shadow: 0 0 50px var(--color-shadow-accent); position: relative; }
+        .modal-box h2 { font-family: 'Orbitron', sans-serif; font-size: 1.8em; margin-bottom: 15px; color: var(--color-accent-green-primary); }
+        .modal-box p { margin-bottom: 15px; opacity: 0.9; line-height: 1.8; }
+        .modal-box strong { color: var(--color-accent-green-primary); }
+        .modal-button { margin-top: 20px; padding: 12px 20px; font-family: 'Orbitron', sans-serif; font-size: 1.1em; border: none; border-radius: 8px; background: var(--color-accent-green-primary); color: #fff; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; }
+        .modal-button:hover { transform: translateY(-3px); }
+        .countdown { margin-top: 20px; font-family: 'Fira Code', monospace; opacity: 0.7; font-size: 0.9em; }
+
+        /* Article Modal Specific Styles */
+        .article-modal-box {
+            max-width: 800px; /* Wider for article content */
+            max-height: 90vh; /* Max height to allow scrolling */
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 5vh 20px 80px 20px;
-        }
-
-        /* Header and Intro */
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            text-decoration: none;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        .logo-img {
-            height: 60px;
-        }
-        .logo-text {
-            font-family: var(--font-sans);
-            font-size: clamp(2rem, 6vw, 3rem);
-            font-weight: 700;
-            color: var(--acreetion-text-bright);
-        }
-        .logo-text span {
-            color: var(--acreetion-green);
-        }
-        .intro-text {
-            text-align: center;
-            max-width: 650px;
-            margin-bottom: 2.5rem;
-            font-size: 1.1em;
-            color: var(--acreetion-text);
-        }
-
-        /* Search Form */
-        .search-form {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-        #searchInput {
-            width: 100%;
-            padding: 16px 65px 16px 25px;
-            font-family: var(--font-mono);
-            font-size: 1.1em;
-            color: var(--acreetion-text-bright);
-            background-color: var(--acreetion-box-bg);
-            border: 1px solid var(--acreetion-box-border);
-            border-radius: 8px;
-            outline: none;
-            transition: all .3s ease;
-        }
-        #searchInput:focus {
-            border-color: var(--acreetion-green);
-            box-shadow: 0 0 15px var(--acreetion-shadow);
-        }
-        #searchButton {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 42px;
-            height: 42px;
-            background: var(--acreetion-green);
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform .2s ease, filter .2s ease;
-        }
-        #searchButton:hover {
-            transform: translateY(-50%) scale(1.05);
-            filter: brightness(1.1);
-        }
-
-        /* Page Content, Results List */
-        .page-content {
-            width: 100%;
-            max-width: 800px;
-        }
-        .results-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .result-item {
-            background: var(--acreetion-box-bg);
-            border: 1px solid var(--acreetion-box-border);
-            padding: 20px;
-            border-radius: 6px;
-            animation: fadeInResult 0.5s ease forwards;
-            transition: all .3s ease;
-            cursor: pointer;
-        }
-        @keyframes fadeInResult {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .result-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 5px 25px var(--acreetion-shadow);
-            border-color: var(--acreetion-green);
-        }
-        .result-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-        .result-source-tag {
-            font-family: var(--font-sans);
-            font-weight: 500;
-            font-size: 0.8em;
-            padding: 4px 10px;
-            border-radius: 4px;
-            color: #fff;
-        }
-        .result-title {
-            font-size: 1.2em;
-            font-weight: 500;
-            margin-bottom: 8px;
-            line-height: 1.3;
-            color: var(--acreetion-text-bright);
-        }
-        .result-item:hover .result-title {
-            color: var(--acreetion-green);
-        }
-        .result-snippet {
-            font-size: 0.95em;
-            color: var(--acreetion-text);
-        }
-        .result-snippet .searchmatch {
-            font-weight: bold;
-            color: var(--acreetion-green);
-            background-color: rgba(46, 204, 113, 0.1);
-        }
-
-        /* Article Viewer */
-        .article-viewer {
-            animation: fadeIn 0.5s ease;
-            position: relative;
-        }
-        .article-header {
-            margin-bottom: 1rem;
-        }
-        .article-title {
-            font-size: 2em;
-            font-weight: 700;
-            color: var(--acreetion-text-bright);
-            line-height: 1.3;
-            margin-bottom: 0.5rem;
-        }
-        .article-source {
-            font-size: 1em;
-            color: var(--acreetion-text);
-        }
-        .article-source a {
-            color: var(--acreetion-accent-blue);
-            text-decoration: none;
-        }
-        .article-source a:hover {
-            text-decoration: underline;
-        }
-        .article-content-body {
-            line-height: 1.7;
-        }
-        .article-content-body h2,
-        .article-content-body h3,
-        .article-content-body h4 {
-            font-weight: 500;
-            color: var(--acreetion-text-bright);
-            border-bottom: 1px solid var(--acreetion-box-border);
-            padding-bottom: 0.5rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-        .article-content-body h2 {
-            font-size: 1.5em;
-        }
-        .article-content-body h3 {
-            font-size: 1.2em;
-        }
-        .article-content-body h4 {
-            font-size: 1.1em;
-            border-bottom: none;
-        }
-        .article-content-body a {
-            color: var(--acreetion-green);
-        }
-        .article-content-body p {
-            margin-bottom: 1rem;
-        }
-        .article-content-body ul,
-        .article-content-body ol {
-            margin-bottom: 1rem;
-            padding-left: 25px;
-        }
-        .article-content-body pre {
-            font-family: var(--font-mono);
-            background-color: var(--acreetion-panel-bg);
-            border: 1px solid var(--acreetion-box-border);
-            padding: 1em;
-            overflow-x: auto;
-            margin: 1rem 0;
-            border-radius: 6px;
-            color: var(--acreetion-text-bright);
-        }
-        .article-content-body code:not(pre code) {
-            font-family: var(--font-mono);
-            background-color: rgba(46, 204, 113, 0.1);
-            border: 1px solid rgba(46, 204, 113, 0.2);
-            padding: 0.2em 0.4em;
-            border-radius: 3px;
-            color: var(--acreetion-text-bright);
-        }
-
-        /* Article Navigation */
-        .article-nav-button {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background-color: rgba(42, 42, 42, 0.8);
-            border: 1px solid var(--acreetion-box-border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.2s ease;
-        }
-        .article-nav-button:hover:not(:disabled) {
-            background-color: var(--acreetion-green);
-        }
-        .article-nav-button:hover:not(:disabled) svg {
-            stroke: black;
-        }
-        .article-nav-button:disabled {
-            opacity: 0.2;
-            cursor: not-allowed;
-        }
-        .article-nav-prev {
-            left: 20px;
-        }
-        .article-nav-next {
-            right: 20px;
-        }
-
-        /* Controls */
-        .controls-bar {
-            text-align: center;
-            margin: 0 0 20px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .control-button {
-            font-family: var(--font-sans);
-            font-weight: 500;
-            font-size: 1em;
-            padding: 10px 20px;
-            border-radius: 6px;
-            border: 1px solid var(--acreetion-green);
-            color: var(--acreetion-green);
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-        .control-button.simplify-btn {
-            border-color: var(--acreetion-accent-blue);
-            color: var(--acreetion-accent-blue);
-        }
-        .control-button.help-btn {
-            border-color: var(--acreetion-accent-red);
-            color: var(--acreetion-accent-red);
-        }
-        .control-button:hover {
-            background: var(--acreetion-green);
-            color: black;
-        }
-        .control-button.simplify-btn:hover {
-            background: var(--acreetion-accent-blue);
-            color: white;
-        }
-        .control-button.help-btn:hover {
-            background: var(--acreetion-accent-red);
-            color: white;
-        }
-        .control-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Modals, Notices, TTS, History, Contact */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(28, 28, 28, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-box {
-            background: var(--acreetion-box-bg);
-            border: 1px solid var(--acreetion-box-border);
-            border-radius: 8px;
-            max-width: 550px;
-            width: 90%;
-            padding: 30px;
             text-align: left;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
         }
-        .modal-box h2 {
-            font-family: var(--font-sans);
-            font-weight: 700;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: var(--acreetion-green);
+        .article-modal-box h2 {
             text-align: center;
-        }
-        .modal-box p {
-            margin-bottom: 15px;
-            opacity: 0.9;
-            line-height: 1.7;
-        }
-        .modal-box strong {
-            color: var(--acreetion-text-bright);
-            font-weight: 500;
-        }
-        .modal-box a {
-            color: var(--acreetion-accent-blue);
-        }
-        .modal-input {
-            width: 100%;
-            padding: 10px;
-            font-family: var(--font-mono);
-            margin-top: 10px;
-            background: var(--acreetion-panel-bg);
-            border: 1px solid var(--acreetion-box-border);
-            color: var(--acreetion-text-bright);
-            border-radius: 4px;
-        }
-        .modal-button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .modal-button {
-            padding: 12px 20px;
-            font-family: var(--font-sans);
-            font-weight: 700;
-            font-size: 1em;
-            border: none;
-            border-radius: 6px;
-            background: var(--acreetion-green);
-            color: #000;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .modal-button:hover {
-            filter: brightness(1.1);
-        }
-        .modal-button.secondary {
-            background: var(--acreetion-box-border);
-            color: var(--acreetion-text-bright);
-        }
-        .notice {
-            text-align: center;
-            padding: 60px 20px;
-            font-size: 1.1em;
-            font-family: var(--font-mono);
-            opacity: 0.7;
-        }
-        .notice-query {
-            font-weight: bold;
-            color: var(--acreetion-green);
-        }
-        .notice-error {
-            color: var(--acreetion-accent-red);
-        }
-
-        /* TTS Specific Styles */
-        #tts-master-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1001;
-            width: 50px;
-            height: 50px;
-            background-color: var(--acreetion-box-bg);
-            border: 1px solid var(--acreetion-box-border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        #tts-master-toggle.active {
-            border-color: var(--acreetion-green);
-            background-color: var(--acreetion-green);
-        }
-        #tts-master-toggle.attention {
-            animation: pulse 1.5s 3 ease-in-out;
-        }
-        .tts-article-controls {
-            background-color: var(--acreetion-box-bg);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--acreetion-box-border);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin: 0 auto 20px auto;
-            max-width: fit-content;
-        }
-
-        /* History & Contact Sections */
-        .history-section,
-        .contact-section {
-            width: 100%;
-            max-width: 800px;
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid var(--acreetion-box-border);
-            text-align: center;
-        }
-        .history-section h2,
-        .contact-section h2 {
-            font-size: 1.8em;
-            font-weight: 500;
-            color: var(--acreetion-text-bright);
-            margin-bottom: 1rem;
-        }
-        .contact-section > p {
-            max-width: 600px;
-            margin: 0 auto 2.5rem auto;
-            color: var(--acreetion-text);
-        }
-        .history-items {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
+            margin-top: 0;
             margin-bottom: 20px;
         }
-        .history-item {
-            background: var(--acreetion-box-bg);
-            border: 1px solid var(--acreetion-box-border);
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: var(--font-mono);
-            transition: all 0.2s ease;
+        .article-content {
+            flex-grow: 1;
+            overflow-y: auto; /* Enable scrolling for long content */
+            padding-right: 15px; /* Space for scrollbar */
+            line-height: 1.6;
+            font-size: 0.95em;
         }
-        .history-item:hover {
-            background-color: var(--acreetion-green);
-            color: black;
-            border-color: var(--acreetion-green);
+        .article-content::-webkit-scrollbar { width: 8px; }
+        .article-content::-webkit-scrollbar-track { background: var(--color-card-bg); border-radius: 10px; }
+        .article-content::-webkit-scrollbar-thumb { background: var(--color-accent-green-secondary); border-radius: 10px; }
+        .article-content::-webkit-scrollbar-thumb:hover { background: var(--color-accent-green-primary); }
+
+        .article-content img {
+            max-width: 100%; /* Ensure images don't overflow */
+            height: auto;
+            display: block;
+            margin: 15px auto;
+            border-radius: 5px;
         }
-        .clear-history-btn {
-            font-size: 0.9em;
-            color: var(--acreetion-accent-blue);
-            cursor: pointer;
+        .article-content a {
+            color: var(--color-accent-green-primary);
             text-decoration: none;
         }
-        .clear-history-btn:hover {
+        .article-content a:hover {
             text-decoration: underline;
         }
-        .contact-methods {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background-color: rgba(0,0,0,0.1);
         }
-        .contact-method {
-            background: var(--acreetion-box-bg);
-            border: 1px solid var(--acreetion-box-border);
-            border-radius: 8px;
-            padding: 25px;
-            max-width: 350px;
-            flex-grow: 1;
+        .article-content th, .article-content td {
+            border: 1px solid var(--color-card-border);
+            padding: 8px;
             text-align: left;
-            transition: all 0.2s ease;
         }
-        .contact-method:hover {
-            border-color: #555;
+        .article-content pre, .article-content code {
+            background-color: rgba(0,0,0,0.2);
+            padding: 5px 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em;
         }
-        .contact-method h3 {
-            font-size: 1.2em;
-            color: var(--acreetion-text-bright);
-            margin-bottom: 0.5rem;
+        .article-content pre {
+            display: block;
+            margin: 15px 0;
+            white-space: pre-wrap; /* Wrap long lines in pre tags */
+            word-wrap: break-word;
         }
-        .contact-method p {
-            font-size: 0.95em;
-            margin-bottom: 1.5rem;
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: var(--color-text);
+            cursor: pointer;
+            line-height: 1;
+            padding: 5px;
+            transition: color 0.2s ease;
         }
-        .contact-button {
-            display: inline-block;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+        .close-button:hover {
+            color: var(--color-accent-green-primary);
         }
-        .contact-button.discord {
-            background-color: #5865F2;
-            color: white;
-        }
-        .contact-button.discord:hover {
-            filter: brightness(1.1);
-        }
-        .contact-button.email {
-            background-color: var(--acreetion-box-border);
-            color: var(--acreetion-text-bright);
-        }
-        .contact-button.email:hover {
-            background-color: #555;
-        }
+
+        .external-search-section { margin-top: 40px; }
+        .external-search-section h3 { font-family: 'Orbitron'; text-align: center; margin-bottom: 20px; opacity: 0.8; font-size: 1.4em; }
+        .external-link { display: flex; align-items: center; background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 10px; padding: 15px 20px; text-decoration: none; color: var(--color-text); transition: all 0.3s ease; }
+        .external-link.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(80%); }
+        .external-link:not(.disabled):hover { border-color: var(--color-accent-green-primary); }
+        .external-link .source-name { font-family: 'Orbitron'; font-size: 1.1em; flex-shrink: 0; margin-right: 20px; }
+        .external-link .query-display { flex-grow: 1; text-align: left; font-family: 'Fira Code', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.6; }
+        .external-link .action-btn { flex-shrink: 0; margin-left: 20px; padding: 10px 20px; background-color: var(--color-accent-green-secondary); color: white; border: none; border-radius: 8px; font-family: 'Orbitron'; transition: background-color 0.3s; }
+        .external-link:hover .action-btn { background-color: var(--color-accent-green-primary); }
+        .notice { text-align: center; padding: 60px 20px; font-size: 1.1em; font-family: 'Fira Code', monospace; opacity: 0.7; }
+        .notice-query { font-weight: bold; color: var(--color-accent-green-primary); } /* Green for noticed query */
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <script>
+        (function() { document.documentElement.classList.add(navigator.userAgent.includes("Firefox") ? "is-firefox" : "is-chromium"); })();
+    </script>
 </head>
 <body>
-    <div id="app">
-        <!-- MASTER TTS TOGGLE -->
-        <button id="tts-master-toggle" title="Text to Speech not supported">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path id="tts-path-one" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                <path id="tts-path-two" style="display:none;" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-        </button>
-
-        <!-- API Key Modal -->
-        <div class="modal-overlay" id="apiKeyModal">
+    <div id="app" v-cloak>
+        <div id="background-grid"></div>
+        
+        <!-- AI Helper Modal -->
+        <div class="modal-overlay" v-if="showAiModal">
             <div class="modal-box">
-                <h2>AI Simplification Requires API Key</h2>
-                <p>To power this feature, the tool needs a <strong>Google AI API Key.</strong></p>
-                <p>You can get a <strong>free</strong> key from the Google AI Studio. Your key is saved <em>only in your browser</em> and is never shared or stored by us.</p>
-                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Click here to get your API Key →</a>
-                <input type="password" class="modal-input" id="apiKeyInput" placeholder="Paste your API key here">
-                <div class="modal-button-group">
-                    <button id="cancelApiKeyButton" class="modal-button secondary">Cancel</button>
-                    <button id="saveApiKeyButton" class="modal-button">Save & Simplify</button>
+                <h2>Transferring to Google AI Studio</h2>
+                <p>For security, this page cannot automatically run Gemini for you. Instead, we will do the next best thing:</p>
+                <p><strong>A detailed prompt has been copied to your clipboard.</strong> Simply paste it into AI Studio to get your answer.</p>
+                <div class="countdown">Redirecting in {{ countdown }} seconds...</div>
+                <button class="modal-button" @click="proceedToAi">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg>
+                    Copy & Go Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Article Viewer Modal -->
+        <div class="modal-overlay" v-if="showArticleModal">
+            <div class="modal-box article-modal-box">
+                <button class="close-button" @click="closeArticleModal">×</button>
+                <h2 v-if="currentArticle">{{ currentArticle.title }}</h2>
+                <div v-if="currentArticle" class="article-content">
+                    <div v-html="currentArticle.content"></div>
+                    <p v-if="currentArticle.external" style="margin-top: 20px; text-align: center;">
+                        <a :href="currentArticle.url" target="_blank" rel="noopener noreferrer" class="modal-button">
+                            View on {{ currentArticle.source }}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                    </p>
                 </div>
+                <div v-else class="notice">Loading article...</div>
             </div>
         </div>
 
         <main class="search-wrapper">
-            <header class="header-logo">
-                <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img">
-                <h1 class="logo-text">Info<span>Tool</span></h1>
-            </header>
-
-            <p class="intro-text" id="introText">
-                Your intelligent guide to Linux and more. Search the Arch Wiki and Wikipedia simultaneously, and simplify complex articles with a single click.
-            </p>
-
-            <form class="search-form" id="searchForm">
-                <input type="text" id="searchInput" placeholder="Search Arch Wiki & Wikipedia..." autocomplete="off">
+            <h1 class="search-logo">AcreetionOS Info Tool</h1>
+            
+            <form class="search-form" @submit.prevent="performSearch">
+                <input type="text" id="searchInput" placeholder="Search Gentoo and Microsoft Docs..." autocomplete="off" v-model="searchQuery">
                 <button type="submit" id="searchButton" aria-label="Submit search">
-                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"
-                        stroke-linejoin="round" style="width:20px;height:20px; color: black;">
-                        <path d="M16.67 16.64L21 21M19 11c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8 8 3.58 8 8Z" />
-                    </svg>
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="width:20px;height:20px; color: white;"><path d="M16.67 16.64L21 21M19 11c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8 8 3.58 8 8Z"/></svg>
                 </button>
             </form>
-
-            <div class="page-content">
-                <!-- ARTICLE VIEW -->
-                <div id="articleViewer" class="article-viewer" style="display: none;">
-                    <!-- Article Nav -->
-                    <div id="articleNavControls" style="display:none;">
-                        <button class="article-nav-button article-nav-prev" id="prevArticleButton" title="Previous Article">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                        </button>
-                        <button class="article-nav-button article-nav-next" id="nextArticleButton" title="Next Article">
-                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="controls-bar">
-                        <button id="backToResultsButton" class="control-button">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-                            Back to Results
-                        </button>
-                        <button id="simplifyButton" class="control-button simplify-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-                            Simplify with AI
-                        </button>
-                         <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer" class="control-button help-btn">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                            Ask the Developers
-                        </a>
-                    </div>
-                     <!-- TTS ARTICLE CONTROLS -->
-                    <div id="ttsArticleControls" class="tts-article-controls" style="display:none;">
-                        <button id="playPauseButton" class="control-button">
-                            <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                            <svg id="pauseIcon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-                            Play Article
-                        </button>
-                        <button id="stopButton" class="control-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-                            Stop
-                        </button>
-                    </div>
-
-                     <div id="articleStatus" class="notice" style="display: none;"></div>
-                     <header class="article-header">
-                        <h2 class="article-title" id="articleTitle"></h2>
-                        <div class="article-source" id="articleSource"></div>
-                    </header>
-                    <div class="article-content-body" id="articleContent"></div>
-                    <div class="article-content-body" id="simplifiedContent" style="display: none;"></div>
+            
+            <div class="results-wrapper">
+                <div class="ai-controls" v-if="hasSearched && !isLoading">
+                    <button @click="startAiProcess" class="ai-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                        Ask AI in Google Studio
+                    </button>
                 </div>
 
-                <!-- SEARCH VIEW -->
-                <div id="searchView">
-                    <div id="searchStatus" class="notice" style="display: none;"></div>
-                    <div id="resultsList" class="results-list">
-                        <!-- Search results will be injected here -->
+                <div v-if="isLoading" class="notice">Searching...</div>
+                
+                <template v-else-if="results.length > 0">
+                    <div v-for="(result, index) in results" 
+                         :key="result.pageid + result.sourceKey" 
+                         class="result-item" 
+                         :style="{animationDelay: index * 40 + 'ms'}"
+                         @click="openArticleModal(result)"> <!-- Added click handler -->
+                        <div class="result-header">
+                            <span class="result-source-tag" :style="{ backgroundColor: SOURCES[result.sourceKey].color }">{{ SOURCES[result.sourceKey].name }}</span>
+                        </div>
+                        <h3 class="result-title"><a :href="result.pageUrl" target="_blank" rel="noopener noreferrer" class="result-title-link" @click.stop>{{ result.title }}</a></h3>
+                        <div class="result-snippet" v-html="result.snippet"></div>
                     </div>
-                    <div id="infoMessage" class="notice">
-                        Enter a query to search Arch Wiki & Wikipedia.
-                    </div>
-                </div>
-            </div>
+                </template>
+                
+                <div v-else-if="infoMessage" class="notice" v-html="infoMessage"></div>
 
-            <!-- HISTORY & CONTACT SECTIONS -->
-            <div id="historySection" class="history-section" style="display: none;">
-                <h2>Search History</h2>
-                <div id="historyItems" class="history-items">
-                    <!-- History items will be injected here -->
-                </div>
-                <a href="#" id="clearHistoryButton" class="clear-history-btn">Clear History</a>
-            </div>
-
-            <div class="contact-section">
-                <h2>Need More Help?</h2>
-                <p>If you can't find your answer here, feel free to reach out directly to the team or the community.</p>
-                <div class="contact-methods">
-                    <div class="contact-method">
-                        <h3>Community & Live Support</h3>
-                        <p>For immediate help, discussions, or to file a support ticket, join our Discord server.</p>
-                        <a href="https://discord.gg/AJ6uuvtDXY" class="contact-button discord" target="_blank" rel="noopener noreferrer">Join Discord Server</a>
-                    </div>
-                    <div class="contact-method">
-                        <h3>Direct Email</h3>
-                        <p>For direct inquiries or if you prefer email, you can contact the development team here.</p>
-                        <a href="mailto:support@acreetionos.org" class="contact-button email">Email the Developers</a>
-                    </div>
+                <div v-if="hasSearched" class="external-search-section">
+                    <h3>External Search</h3>
+                    <p style="text-align: center; margin-bottom: 15px; font-size: 0.9em; opacity: 0.8;">
+                        Direct search API for some sources may be unavailable. Use these links to search externally.
+                    </p>
+                    <a v-for="source in externalSources" :key="source.key" :href="generateExternalUrl(source.key)" target="_blank" rel="noopener noreferrer" class="external-link" :class="{ 'disabled': !searchQuery }">
+                        <span class="source-name">{{ source.name }}</span>
+                        <span class="query-display">{{ searchQuery }}</span>
+                        <span class="action-btn">Search</span>
+                    </a>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // Self-executing anonymous function to encapsulate the application logic
-        (function() {
-            // --- CONSTANTS ---
-            const DISCORD_LINK = 'https://discord.gg/AJ6uuvtDXY';
-            const DEV_EMAIL = 'support@acreetionos.org';
+    const { createApp, ref, computed, watch } = Vue;
+
+    createApp({
+        setup() {
+            // --- DATA SOURCES ---
             const SOURCES = {
-                // Reverted Arch Wiki API to direct endpoint as per "Sprungli" example
-                arch: { name: 'Arch Wiki', api: 'https://wiki.archlinux.org/api.php', color: '#1793D1' },
-                wikipedia: { name: 'Wikipedia', api: 'https://en.wikipedia.org/w/api.php', color: '#7A7A7A' },
+                // IMPORTANT: If Arch Wiki is blocking direct API, its type is set to 'external'.
+                // This means its search results won't appear in the main list, and clicking it
+                // will direct the user to an external search engine for the wiki.
+                arch: { name: 'Arch Wiki', type: 'external', searchDomain: 'wiki.archlinux.org', color: '#28A745' }, /* Green */
+                gentoo: { name: 'Gentoo Wiki', type: 'wiki', api: 'https://wiki.gentoo.org/api.php', color: '#3A8B5F' }, /* Darker Green */
+                microsoft: { name: 'Microsoft Docs', type: 'external', searchDomain: 'learn.microsoft.com', color: '#00A391' } /* Teal Green */
             };
 
             // --- STATE MANAGEMENT ---
-            const appState = {
-                query: '',
-                results: [],
-                isLoading: false,
-                hasSearched: false,
-                searchError: '',
-                currentView: 'search', // 'search' or 'article'
-                isArticleLoading: false,
-                article: null, // { title, content, url, sourceKey }
-                currentArticleIndex: -1, // Index of the currently viewed article in the results array
-                activeArticleFetchController: null, // New: To manage active article fetch
+            const searchQuery = ref('');
+            const results = ref([]);
+            const isLoading = ref(false);
+            const hasSearched = ref(false);
+            let debounceTimer = null;
 
-                // AI Simplification
-                isSimplifying: false,
-                simplifiedContent: '',
-                isShowingSimplified: false,
-                googleApiKey: localStorage.getItem('googleApiKey') || '',
-                showApiKeyModal: false,
+            // AI Modal State
+            const showAiModal = ref(false);
+            const countdown = ref(15);
+            let countdownTimer = null;
 
-                // Text-to-Speech (TTS)
-                isTtsSupported: 'speechSynthesis' in window,
-                isTtsEnabled: localStorage.getItem('acreetionTtsEnabled') === 'true', // Default to false if not set
-                isSpeaking: false,
-                isPaused: false,
-                showTtsAttention: false,
-                ttsChunks: [],
-                currentTtsChunk: 0,
+            // Article Modal State
+            const showArticleModal = ref(false);
+            const currentArticle = ref(null); // { title, content, url, source, external? }
 
-                // Search History
-                searchHistory: JSON.parse(localStorage.getItem('acreetionInfoHistory') || '[]'),
+            // --- COMPUTED PROPERTIES ---
+            const wikiSources = computed(() => Object.entries(SOURCES).filter(([_, s]) => s.type === 'wiki').map(([key, val]) => ({ key, ...val })));
+            const externalSources = computed(() => Object.entries(SOURCES).filter(([_, s]) => s.type === 'external').map(([key, val]) => ({ key, ...val })));
+            const infoMessage = computed(() => {
+                if (!hasSearched.value) return 'Enter a query to begin.';
+                // If there are no results AND there are still 'wiki' sources we attempted to search
+                if (results.value.length === 0 && wikiSources.value.length > 0) {
+                     return `No direct results found for '<span class="notice-query">${searchQuery.value}</span>' from available wiki sources. Please check external search options below.`;
+                }
+                return '';
+            });
+
+            // --- METHODS ---
+            const fetchWikiResults = async (source, query) => {
+                const url = `${source.api}?action=query&list=search&srsearch=${encodeURIComponent(query)}&srprop=snippet&format=json&origin=*`;
+                try {
+                    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+                    if (!response.ok) {
+                        console.error(`API for ${source.name} failed with status: ${response.status}`);
+                        // Optionally provide a more specific message if an API fails here
+                        return [];
+                    }
+                    const data = await response.json();
+                    return (data.query?.search || []).map(result => ({ ...result, sourceKey: source.key, pageUrl: `${new URL(source.api).origin}/index.php?title=${encodeURIComponent(result.title)}` }));
+                } catch (error) {
+                    console.error(`Failed to fetch search results from ${source.name}:`, error);
+                    // This catch block will fire for network errors, CORS issues, timeouts, etc.
+                    // If "Anubis" is blocking, it's likely a CORS error or a network failure.
+                    return [];
+                }
             };
 
-            // --- DOM ELEMENTS ---
-            const searchForm = document.getElementById('searchForm');
-            const searchInput = document.getElementById('searchInput');
-            const introText = document.getElementById('introText');
-            const searchView = document.getElementById('searchView');
-            const searchStatus = document.getElementById('searchStatus');
-            const resultsList = document.getElementById('resultsList');
-            const infoMessage = document.getElementById('infoMessage');
-
-            const articleViewer = document.getElementById('articleViewer');
-            const prevArticleButton = document.getElementById('prevArticleButton');
-            const nextArticleButton = document.getElementById('nextArticleButton');
-            const articleNavControls = document.getElementById('articleNavControls'); // Parent for nav buttons
-            const backToResultsButton = document.getElementById('backToResultsButton');
-            const simplifyButton = document.getElementById('simplifyButton');
-            const articleStatus = document.getElementById('articleStatus');
-            const articleTitleElem = document.getElementById('articleTitle');
-            const articleSourceElem = document.getElementById('articleSource');
-            const articleContentElem = document.getElementById('articleContent');
-            const simplifiedContentElem = document.getElementById('simplifiedContent');
-
-            const apiKeyModal = document.getElementById('apiKeyModal');
-            const apiKeyInput = document.getElementById('apiKeyInput');
-            const cancelApiKeyButton = document.getElementById('cancelApiKeyButton');
-            const saveApiKeyButton = document.getElementById('saveApiKeyButton');
-
-            const ttsMasterToggle = document.getElementById('tts-master-toggle');
-            const ttsPathOne = document.getElementById('tts-path-one');
-            const ttsPathTwo = document.getElementById('tts-path-two');
-            const ttsArticleControls = document.getElementById('ttsArticleControls');
-            const playPauseButton = document.getElementById('playPauseButton');
-            const playIcon = document.getElementById('playIcon');
-            const pauseIcon = document.getElementById('pauseIcon');
-            const stopButton = document.getElementById('stopButton');
-
-            const historySection = document.getElementById('historySection');
-            const historyItemsContainer = document.getElementById('historyItems');
-            const clearHistoryButton = document.getElementById('clearHistoryButton');
-
-            // --- UTILITY FUNCTIONS ---
-            function showElement(element) {
-                if (element) element.style.display = '';
-            }
-
-            function hideElement(element) {
-                if (element) element.style.display = 'none';
-            }
-
-            // Debounce function
-            function debounce(func, delay) {
-                let timeout;
-                return function(...args) {
-                    const context = this;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => func.apply(context, args), delay);
-                };
-            }
-
-            // Helper function to clean HTML content from wiki APIs
-            function cleanHtmlContent(html, sourceKey) {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
-
-                // Selectors for elements commonly unwanted from wiki API responses
-                const selectorsToRemove = [
-                    '.toc', '.mw-editsection', '#catlinks', '.infobox', '.ambox', '.navbox',
-                    '.metadata', '.reference', 'sup.reference', 'div.mw-parser-output > table.wikitable',
-                    'div.printfooter'
-                ];
-                selectorsToRemove.forEach(selector => tempDiv.querySelectorAll(selector).forEach(el => el.remove()));
-
-                // Fix relative links to be absolute and open in new tabs
-                const sourceBaseUrl = new URL(SOURCES[sourceKey].api).origin;
-                tempDiv.querySelectorAll('a').forEach(a => {
-                    const href = a.getAttribute('href');
-                    if (href && (href.startsWith('/wiki/') || href.startsWith('./'))) {
-                        a.href = `${sourceBaseUrl}/index.php?title=${href.replace(/^\/wiki\//, '')}`;
-                        a.target = '_blank'; // Open external links in new tab
-                        a.rel = 'noopener noreferrer'; // Security best practice for target="_blank"
+            const fetchArticleContent = async (source, title) => {
+                // Using action=parse to get rendered HTML content
+                const url = `${source.api}?action=parse&page=${encodeURIComponent(title)}&format=json&prop=text&origin=*`;
+                try {
+                    const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+                    if (!response.ok) throw new Error(`API for ${source.name} article failed with status: ${response.status}`);
+                    const data = await response.json();
+                    if (data.parse && data.parse.text) {
+                        return data.parse.text['*']; // The HTML content
                     }
-                });
-
-                // Remove empty p tags or unnecessary breaks
-                tempDiv.querySelectorAll('p').forEach(p => {
-                    if (p.textContent.trim() === '') p.remove();
-                });
-
-                return tempDiv.innerHTML;
-            }
-
-            // --- RENDERING FUNCTIONS (Imperative UI Updates) ---
-
-            function renderMainView() {
-                // Show/hide main sections based on currentView
-                if (appState.currentView === 'search') {
-                    showElement(searchForm);
-                    showElement(introText);
-                    showElement(searchView);
-                    hideElement(articleViewer);
-                    hideElement(articleNavControls);
-                    if (appState.searchHistory.length > 0) {
-                        showElement(historySection);
-                    } else {
-                        hideElement(historySection);
-                    }
-                } else { // 'article' view
-                    hideElement(searchForm);
-                    hideElement(introText);
-                    hideElement(searchView);
-                    hideElement(historySection);
-                    showElement(articleViewer);
-                    if (appState.results.length > 1) {
-                        showElement(articleNavControls);
-                    } else {
-                        hideElement(articleNavControls);
-                    }
+                    return null;
+                } catch (error) {
+                    console.error(`Failed to fetch article content from ${source.name}:`, error);
+                    return `<p>Could not load content from ${source.name}. Please try visiting the <a href="${source.pageUrl}" target="_blank">original page</a>.</p>`;
                 }
-                renderSearchStatus(); // Update search view messages
-                renderSearchResults(); // Update results list if in search view
-                renderArticleView(); // Update article content if in article view
-                renderTTSControls(); // Update TTS controls
-                renderHistory(); // Update history section
-            }
+            };
 
-            function renderSearchStatus() {
-                // Search status/info messages
-                if (appState.currentView === 'search') {
-                    if (appState.isLoading) {
-                        searchStatus.textContent = 'Searching...';
-                        showElement(searchStatus);
-                        hideElement(infoMessage);
-                    } else if (appState.searchError) {
-                        searchStatus.textContent = appState.searchError;
-                        searchStatus.classList.add('notice-error');
-                        showElement(searchStatus);
-                        hideElement(infoMessage);
-                    } else if (appState.results.length === 0 && appState.hasSearched) {
-                        searchStatus.innerHTML = `No results found for '<span class="notice-query">${appState.query}</span>'.`;
-                        searchStatus.classList.remove('notice-error');
-                        showElement(searchStatus);
-                        hideElement(infoMessage);
-                    } else if (!appState.hasSearched) {
-                        infoMessage.textContent = 'Enter a query to search Arch Wiki & Wikipedia.';
-                        showElement(infoMessage);
-                        hideElement(searchStatus);
-                    } else {
-                        hideElement(searchStatus);
-                        hideElement(infoMessage);
-                    }
-                }
-            }
-
-            function renderSearchResults() {
-                resultsList.innerHTML = ''; // Clear previous results
-                if (appState.currentView === 'search' && appState.results.length > 0) {
-                    appState.results.forEach((result, index) => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'result-item';
-                        resultItem.style.animationDelay = `${index * 40}ms`;
-                        resultItem.addEventListener('click', () => navigateToArticle(index));
-
-                        const resultHeader = document.createElement('div');
-                        resultHeader.className = 'result-header';
-
-                        const sourceTag = document.createElement('span');
-                        sourceTag.className = 'result-source-tag';
-                        const sourceInfo = SOURCES[result.sourceKey];
-                        if (sourceInfo) {
-                            sourceTag.style.backgroundColor = sourceInfo.color;
-                            sourceTag.textContent = sourceInfo.name;
-                        }
-                        resultHeader.appendChild(sourceTag);
-
-                        const titleElem = document.createElement('h3');
-                        titleElem.className = 'result-title';
-                        titleElem.textContent = result.title;
-
-                        const snippetElem = document.createElement('div');
-                        snippetElem.className = 'result-snippet';
-                        let snippetHtml = result.snippet;
-                        if (appState.query) {
-                            const regex = new RegExp(`(${appState.query.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\`]/g, "\\$&")})`, 'gi');
-                            snippetHtml = snippetHtml.replace(regex, '<span class="searchmatch">$1</span>');
-                        }
-                        snippetElem.innerHTML = snippetHtml;
-
-                        resultItem.appendChild(resultHeader);
-                        resultItem.appendChild(titleElem);
-                        resultItem.appendChild(snippetElem);
-                        resultsList.appendChild(resultItem);
-                    });
-                }
-            }
-
-            function renderArticleView() {
-                if (appState.currentView === 'article') {
-                    if (appState.article) {
-                        articleTitleElem.textContent = appState.article.title;
-                        articleSourceElem.innerHTML = `<span>${appState.isShowingSimplified ? 'Simplified from: ' : ''}</span><a href="${appState.article.url}" target="_blank" rel="noopener noreferrer">${SOURCES[appState.article.sourceKey]?.name || ''}</a>`;
-
-                        if (appState.isArticleLoading || appState.isSimplifying) {
-                            articleStatus.textContent = appState.isSimplifying ? 'Simplifying with AI...' : 'Loading article...';
-                            showElement(articleStatus);
-                            hideElement(articleContentElem);
-                            hideElement(simplifiedContentElem);
-                            simplifyButton.disabled = true;
-                            // Update TTS button state while loading/simplifying
-                            playPauseButton.disabled = true;
-                            stopButton.disabled = true;
-                        } else {
-                            hideElement(articleStatus);
-                            simplifyButton.disabled = false;
-                            // Update TTS button state once content is ready
-                            playPauseButton.disabled = false;
-                            stopButton.disabled = !appState.isSpeaking; // Only enabled if speaking or paused
-
-                            if (appState.isShowingSimplified) {
-                                simplifiedContentElem.innerHTML = appState.simplifiedContent;
-                                showElement(simplifiedContentElem);
-                                hideElement(articleContentElem);
-                                simplifyButton.textContent = 'Show Original Text';
-                            } else {
-                                articleContentElem.innerHTML = appState.article.content;
-                                showElement(articleContentElem);
-                                hideElement(simplifiedContentElem);
-                                simplifyButton.textContent = 'Simplify with AI';
-                            }
-                        }
-                    } else {
-                        // Clear article view if no article is selected or not in article view
-                        articleTitleElem.textContent = '';
-                        articleSourceElem.innerHTML = '';
-                        articleContentElem.innerHTML = '';
-                        simplifiedContentElem.innerHTML = '';
-                    }
-
-                    // Update Article Navigation buttons
-                    if (appState.results.length > 1) {
-                        prevArticleButton.disabled = appState.currentArticleIndex <= 0;
-                        nextArticleButton.disabled = appState.currentArticleIndex >= appState.results.length - 1;
-                        showElement(articleNavControls);
-                    } else {
-                        hideElement(articleNavControls);
-                    }
-                }
-            }
-
-            function renderApiKeyModal() {
-                if (appState.showApiKeyModal) {
-                    apiKeyModal.classList.add('show');
-                } else {
-                    apiKeyModal.classList.remove('show');
-                    apiKeyInput.value = ''; // Clear temp input on close
-                }
-            }
-
-            function renderTTSControls() {
-                // Master TTS Toggle
-                if (appState.isTtsSupported) {
-                    ttsMasterToggle.disabled = false;
-                    ttsMasterToggle.title = appState.isTtsEnabled ? 'Disable article reader' : 'Enable article reader';
-                    if (appState.isTtsEnabled) {
-                        ttsMasterToggle.classList.add('active');
-                        ttsMasterToggle.style.stroke = '#000'; // Change SVG stroke to black
-                        showElement(ttsPathTwo); // Show active icon part
-                        hideElement(ttsPathOne); // Hide inactive icon part
-                    } else {
-                        ttsMasterToggle.classList.remove('active');
-                        ttsMasterToggle.style.stroke = 'currentColor'; // Revert SVG stroke
-                        hideElement(ttsPathTwo); // Hide active icon part
-                        showElement(ttsPathOne); // Show inactive icon part
-                    }
-                    if (appState.showTtsAttention) {
-                        ttsMasterToggle.classList.add('attention');
-                    } else {
-                        ttsMasterToggle.classList.remove('attention');
-                    }
-                } else {
-                    ttsMasterToggle.disabled = true;
-                    ttsMasterToggle.title = 'Text to Speech not supported';
-                    ttsMasterToggle.classList.remove('active', 'attention');
-                    hideElement(ttsPathTwo);
-                    showElement(ttsPathOne);
-                }
-
-
-                // In-article TTS controls
-                if (appState.isTtsEnabled && appState.currentView === 'article') {
-                    showElement(ttsArticleControls);
-                    // Play/Pause button state
-                    if (appState.isSpeaking && !appState.isPaused) {
-                        playPauseButton.textContent = 'Pause';
-                        showElement(pauseIcon);
-                        hideElement(playIcon);
-                    } else {
-                        playPauseButton.textContent = 'Play Article';
-                        showElement(playIcon);
-                        hideElement(pauseIcon);
-                    }
-                    // Stop button state
-                    stopButton.disabled = !appState.isSpeaking;
-                } else {
-                    hideElement(ttsArticleControls);
-                }
-            }
-
-            function renderHistory() {
-                historyItemsContainer.innerHTML = ''; // Clear previous history items
-                if (appState.currentView === 'search' && appState.searchHistory.length > 0) {
-                    showElement(historySection);
-                    appState.searchHistory.forEach(item => {
-                        const historyItem = document.createElement('span');
-                        historyItem.className = 'history-item';
-                        historyItem.textContent = item;
-                        historyItem.addEventListener('click', () => runSearchFromHistory(item));
-                        historyItemsContainer.appendChild(historyItem);
-                    });
-                } else {
-                    hideElement(historySection);
-                }
-            }
-
-
-            // --- CORE APPLICATION LOGIC ---
-
-            async function performSearch(event) {
-                if (event) event.preventDefault(); // Prevent form submission and page reload
-
-                stopSpeech(); // Stop any ongoing TTS
-                appState.currentView = 'search';
-                appState.article = null;
-                appState.currentArticleIndex = -1;
-                appState.simplifiedContent = '';
-                appState.isShowingSimplified = false;
-                appState.query = searchInput.value.trim(); // Update query from input field
-
-                if (!appState.query) {
-                    appState.hasSearched = false;
-                    appState.searchError = '';
-                    appState.results = [];
-                    renderMainView(); // Re-render to show initial message
+            const performSearch = async () => {
+                const query = searchQuery.value.trim();
+                if (!query) {
+                    results.value = [];
+                    hasSearched.value = false;
                     return;
                 }
+                isLoading.value = true;
+                hasSearched.value = true;
+                results.value = [];
 
-                appState.isLoading = true;
-                appState.hasSearched = true;
-                appState.searchError = ''; // Clear previous errors
-                appState.results = []; // Clear previous results
-                renderMainView(); // Show "Searching..." status
+                // Only attempt to fetch results from 'wiki' type sources
+                const settledResults = await Promise.allSettled(wikiSources.value.map(s => fetchWikiResults(s, query)));
+                let combinedResults = settledResults.flatMap(res => (res.status === 'fulfilled' ? res.value : []));
+                combinedResults.sort((a, b) => (b.snippet.includes('searchmatch') ? 1 : 0) - (a.snippet.includes('searchmatch') ? 1 : 0));
+                
+                results.value = combinedResults;
+                isLoading.value = false;
+            };
 
-                let allResults = [];
-                let failedSources = []; // For API-specific errors (e.g., 404, bad request from the actual API)
-                let networkErrors = []; // For network-level issues (e.g., connection, timeout, CORS)
+            const generateExternalUrl = (sourceKey) => {
+                if (!searchQuery.value) return '#';
+                const source = SOURCES[sourceKey];
+                const fullQuery = `site:${source.searchDomain} ${searchQuery.value}`;
+                return `https://duckduckgo.com/?q=${encodeURIComponent(fullQuery)}`;
+            };
 
-                const wikiSourceKeys = Object.keys(SOURCES);
-                const searchPromises = wikiSourceKeys.map(async (key) => {
-                    const source = SOURCES[key];
-                    const url = `${source.api}?action=query&list=search&srsearch=${encodeURIComponent(appState.query)}&srprop=snippet&format=json&origin=*`;
+            // --- AI METHOD: "Copy & Go with Countdown" ---
+            const constructAiPrompt = () => {
+                const query = searchQuery.value.trim();
+                const searchContext = results.value.length > 0 
+                    ? results.value
+                        .map(r => `Title: ${r.title}\nSnippet: ${r.snippet.replace(/<[^>]*>/g, '')}`)
+                        .join('\n\n---\n\n')
+                    : 'No specific search results were found, please answer based on general knowledge.';
 
-                    try {
-                        const response = await fetch(url, { signal: AbortSignal.timeout(8000) }); // 8-second timeout
-                        if (!response.ok) {
-                            const errorText = await response.text();
-                            throw new Error(`API responded with ${response.status} for ${source.name}: ${errorText.substring(0, 100)}`);
-                        }
-                        const data = await response.json();
-                        if (data.error) {
-                            throw new Error(`API Error from ${source.name}: ${data.error.info}`);
-                        }
-                        return (data.query?.search || []).map(result => ({ ...result, sourceKey: key }));
-                    } catch (error) {
-                        console.error(`Raw error for ${source.name}:`, error); // Log full error for debugging
-                        if (error.name === 'AbortError' && error.message.includes('timed out')) {
-                            networkErrors.push(`${source.name} (request timed out)`);
-                        } else if (error instanceof TypeError) {
-                            // This specifically catches general network errors like "Failed to fetch" (no internet, CORS block etc.)
-                            networkErrors.push(`${source.name} (network connection or browser security issue)`);
-                        }
-                        else {
-                            // This captures other specific API errors (e.g., server returned 404, or malformed JSON from the API itself)
-                            failedSources.push(`${source.name} (${error.message.split(':')[0] || 'unknown API error'})`);
-                        }
-                        return null;
+                return `Act as an expert technical assistant. Based on the context below, provide a comprehensive answer for the user's query. Use Markdown for formatting, such as lists, code blocks, and bold text.\n\n## User Query:\n"${query}"\n\n## Context from Search Results:\n${searchContext}`;
+            };
+            
+            const startAiProcess = () => {
+                if (countdownTimer) clearInterval(countdownTimer);
+                
+                showAiModal.value = true;
+                countdown.value = 15;
+                
+                countdownTimer = setInterval(() => {
+                    countdown.value--;
+                    if (countdown.value <= 0) {
+                        proceedToAi();
                     }
+                }, 1000);
+            };
+            
+            const proceedToAi = () => {
+                if (countdownTimer) clearInterval(countdownTimer);
+                const prompt = constructAiPrompt();
+                
+                navigator.clipboard.writeText(prompt).then(() => {
+                    window.open('https://aistudio.google.com/app/prompts/new_chat', '_blank');
+                    showAiModal.value = false;
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert("Failed to copy prompt to clipboard. The AI Studio will still open.");
+                    window.open('https://aistudio.google.com/app/prompts/new_chat', '_blank');
+                    showAiModal.value = false;
                 });
+            };
 
-                const settledPromises = await Promise.all(searchPromises);
-
-                allResults = settledPromises.flatMap(res => res || []);
-
-                if (allResults.length > 0) {
-                    // Prioritize results where the query string is found in the title
-                    allResults.sort((a, b) => {
-                        const aTitleMatch = a.title.toLowerCase().includes(appState.query.toLowerCase());
-                        const bTitleMatch = b.title.toLowerCase().includes(appState.query.toLowerCase());
-                        if (aTitleMatch && !bTitleMatch) return -1;
-                        if (!aTitleMatch && bTitleMatch) return 1;
-                        return 0;
-                    });
-                    appState.results = allResults;
-                    addToHistory(appState.query); // Add to history only if results found
-
-                    let errorMessages = [];
-                    if (networkErrors.length > 0) {
-                        errorMessages.push(`Some sources failed to load due to network issues or browser security: ${networkErrors.join(', ')}. Please check your internet connection or try a different network.`);
-                    }
-                    if (failedSources.length > 0) {
-                        errorMessages.push(`Some sources returned API errors: ${failedSources.join(', ')}.`);
-                    }
-                    appState.searchError = errorMessages.join(' ');
-
-                } else if ((networkErrors.length + failedSources.length) === wikiSourceKeys.length) {
-                    // All sources failed, either due to network or API errors
-                    appState.searchError = "All search sources failed. This could be a network issue, browser security (CORS), or a problem with the API servers. Please check your internet connection and try again.";
-                    if (networkErrors.length > 0) {
-                         appState.searchError += ` Specific connection issues: ${networkErrors.join(', ')}.`;
-                    }
-                } else {
-                    appState.searchError = ''; // Clear error if no results but some sources worked (e.g., query too specific)
-                }
-
-                appState.isLoading = false;
-                renderMainView(); // Update UI with results or error
-            }
-
-            async function navigateToArticle(index) {
-                // Ensure index is within bounds of results array
-                if (index < 0 || index >= appState.results.length) return;
-
-                stopSpeech(); // Stop any ongoing TTS
-                const result = appState.results[index];
-
-                // Abort any previously ongoing article fetch
-                if (appState.activeArticleFetchController) {
-                    appState.activeArticleFetchController.abort();
-                }
-                const controller = new AbortController();
-                appState.activeArticleFetchController = controller;
-
-                appState.currentView = 'article';
-                appState.isArticleLoading = true;
-                appState.isShowingSimplified = false; // Always show original first
-                appState.simplifiedContent = ''; // Clear previous simplified content
-                appState.article = null; // Clear previous article content for loading state
-                appState.currentArticleIndex = index; // Set current article index
-                renderMainView(); // Show "Loading article..."
+            // --- Article Modal Methods ---
+            const openArticleModal = async (result) => {
+                currentArticle.value = null; // Clear previous content
+                showArticleModal.value = true; // Show modal with loading state
 
                 const source = SOURCES[result.sourceKey];
-                const url = `${source.api}?action=parse&page=${encodeURIComponent(result.title)}&prop=text&formatversion=2&format=json&origin=*`;
 
-                try {
-                    const response = await fetch(url, { signal: controller.signal }); // Use the controller's signal
-                    // Clear the active controller once fetch is complete or errors out (unless it was aborted by a new request)
-                    if (appState.activeArticleFetchController === controller) {
-                        appState.activeArticleFetchController = null;
-                    }
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        // Check if the error is due to abortion
-                        if (controller.signal.aborted) {
-                            console.log('Article fetch aborted by new request.');
-                            return; // Do not update state if aborted
-                        }
-                        throw new Error(`Failed to load article: ${response.status} ${response.statusText}. Please try again later.`);
-                    }
-                    const data = await response.json();
-                    if (!data.parse?.text) {
-                        throw new Error('Could not retrieve article content. API response missing text.');
-                    }
-                    appState.article = {
-                        title: data.parse.title,
-                        content: cleanHtmlContent(data.parse.text, result.sourceKey),
-                        url: `${new URL(source.api).origin}/index.php?title=${encodeURIComponent(result.title)}`,
-                        sourceKey: result.sourceKey
+                if (source.type === 'wiki') { // Only attempt to fetch content if it's a 'wiki' type source
+                    const content = await fetchArticleContent(source, result.title);
+                    currentArticle.value = { 
+                        title: result.title, 
+                        content: content || '<p>Failed to load article content.</p>', 
+                        url: result.pageUrl, 
+                        source: source.name,
+                        external: false
                     };
-                } catch (error) {
-                    // Check if the error is due to abortion (again, as network errors can also be caught here)
-                    if (controller.signal.aborted) {
-                        console.log('Article fetch aborted by new request (in catch).');
-                        return; // Do not update state if aborted
-                    }
-                    console.error('Article fetch error:', error);
-                    appState.article = {
+                } else if (source.type === 'external') {
+                    // For external sources, we cannot display content directly due to CORS/security
+                    currentArticle.value = {
                         title: result.title,
-                        content: `<p class="notice notice-error">Sorry, the article content could not be loaded. This might be a network issue or the article is unavailable. Details: ${error.message}</p>`,
-                        url: result.url, // Fallback to snippet's URL
-                        sourceKey: result.sourceKey
+                        content: '<p>Content from this external source cannot be displayed directly here due to security and cross-origin policy restrictions.</p><p>Please click the button below to view the article on its original site.</p>',
+                        url: result.pageUrl, // Use the pageUrl from the search result for the direct link
+                        source: source.name,
+                        external: true
                     };
-                } finally {
-                    // Only update loading state if this was the active fetch or if it wasn't aborted
-                    if (appState.activeArticleFetchController === controller || !controller.signal.aborted) {
-                        appState.isArticleLoading = false;
-                        renderMainView(); // Update UI with loaded article
-                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top of the page
-                    }
                 }
-            }
+            };
 
-            function goBackToSearch() {
-                stopSpeech(); // Stop speech when returning to search results
-                appState.currentView = 'search';
-                appState.article = null;
-                appState.currentArticleIndex = -1;
-                appState.simplifiedContent = '';
-                appState.isShowingSimplified = false;
-                appState.searchError = ''; // Clear any article-specific error messages
-                renderMainView(); // Go back to search results view
-            }
+            const closeArticleModal = () => {
+                showArticleModal.value = false;
+                currentArticle.value = null;
+            };
 
-            // --- AI SIMPLIFICATION METHODS ---
-            function handleSimplifyClick() {
-                stopSpeech(); // Stop speech if simplifying
-                if (appState.isShowingSimplified) {
-                    appState.isShowingSimplified = false; // Toggle back to original
-                    renderArticleView();
-                    return;
-                }
-                if (!appState.googleApiKey) {
-                    appState.showApiKeyModal = true;
-                    renderApiKeyModal();
-                    return;
-                }
-                simplifyTextWithAi();
-            }
-
-            function saveAndUseApiKey() {
-                const tempKey = apiKeyInput.value.trim();
-                if (!tempKey) {
-                    alert("Please enter your API key.");
-                    return;
-                }
-                appState.googleApiKey = tempKey;
-                localStorage.setItem('googleApiKey', appState.googleApiKey);
-                appState.showApiKeyModal = false;
-                renderApiKeyModal(); // Close modal
-                simplifyTextWithAi(); // Re-attempt simplification
-            }
-
-            async function simplifyTextWithAi() {
-                if (!appState.article || !appState.googleApiKey) return;
-
-                appState.isSimplifying = true;
-                renderArticleView(); // Show "Simplifying with AI..."
-
-                const plainTextContent = new DOMParser().parseFromString(appState.article.content, "text/html").documentElement.textContent;
-
-                const prompt = `You are an expert technical writer. Your task is to simplify the following technical text. Your goal is to make it easy for a user who is new to the topic but is technically competent to understand.
-                - Explain technical jargon in simple terms.
-                - If there are complex shell commands, break them down into parts and explain what each part does.
-                - Rewrite dense sentences into clearer, more direct language.
-                - Maintain the core meaning, accuracy, and all essential steps or commands. Do not omit critical information.
-                - Use Markdown for formatting, including headers, lists, and code blocks for commands.
-
-                Here is the text to simplify:\n\n---\n\n${plainTextContent}`;
-
-                // --- FIX: Updated model to gemini-1.5-pro to address the "not found" error ---
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${appState.googleApiKey}`;
-
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error?.message || 'Invalid API Key or API error.');
-                    }
-
-                    const data = await response.json();
-                    const simplifiedMarkdown = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (simplifiedMarkdown) {
-                        appState.simplifiedContent = marked.parse(simplifiedMarkdown); // Parse markdown to HTML
-                        appState.isShowingSimplified = true; // Switch to simplified view
-                    } else {
-                        throw new Error('AI returned no content.');
-                    }
-                } catch (error) {
-                    console.error('AI Simplification Error:', error);
-                    alert(`Simplification failed: ${error.message}\nPlease check your API key and try again.`);
-                    appState.isShowingSimplified = false; // Stay on original if simplification fails
-                } finally {
-                    appState.isSimplifying = false;
-                    renderArticleView(); // Update UI to show simplified or error state
-                }
-            }
-
-            // --- TEXT-TO-SPEECH (TTS) METHODS ---
-            const speechSynthesis = window.speechSynthesis;
-            let ttsSpeakingUtterance = null; // Store the current utterance to cancel it
-
-            function toggleTtsMaster() {
-                if (!appState.isTtsSupported) return;
-                appState.isTtsEnabled = !appState.isTtsEnabled;
-                localStorage.setItem('acreetionTtsEnabled', appState.isTtsEnabled);
-                if (!appState.isTtsEnabled) {
-                    stopSpeech();
-                }
-                renderTTSControls(); // Update UI for master toggle
-            }
-
-            function speakNextChunk() {
-                if (appState.currentTtsChunk >= appState.ttsChunks.length || !appState.isSpeaking || !appState.isTtsSupported) {
-                    appState.isSpeaking = false;
-                    appState.isPaused = false;
-                    renderTTSControls();
-                    return;
-                }
-                ttsSpeakingUtterance = new SpeechSynthesisUtterance(appState.ttsChunks[appState.currentTtsChunk]);
-                ttsSpeakingUtterance.onend = () => {
-                    // Only move to next chunk if speech is still active (not explicitly stopped/paused by user)
-                    if (appState.isSpeaking) {
-                        appState.currentTtsChunk++;
-                        speakNextChunk();
-                    }
-                };
-                ttsSpeakingUtterance.onerror = (e) => {
-                    console.error("Speech Synthesis Error:", e);
-                    appState.isSpeaking = false;
-                    appState.isPaused = false;
-                    renderTTSControls();
-                };
-                speechSynthesis.speak(ttsSpeakingUtterance);
-            }
-
-            function startSpeech() {
-                if (appState.isArticleLoading || appState.isSimplifying || !appState.isTtsEnabled || !appState.isTtsSupported) return;
-
-                stopSpeech(); // Stop any previous speech before starting new
-                appState.isPaused = false;
-                appState.isSpeaking = true;
-
-                const contentToRead = appState.isShowingSimplified ? appState.simplifiedContent : appState.article.content;
-                // Get plain text from HTML, remove multiple newlines/spaces
-                const plainText = new DOMParser().parseFromString(contentToRead, "text/html").documentElement.textContent.replace(/\s+/g, ' ').trim();
-
-                // Split text into manageable chunks (e.g., around 200 characters)
-                // Browsers often have a character limit per utterance (~200-300 for Chrome, much higher for others)
-                appState.ttsChunks = plainText.match(/[\s\S]{1,200}/g) || [];
-                appState.currentTtsChunk = 0;
-
-                speakNextChunk();
-                renderTTSControls();
-            }
-
-            function pauseSpeech() {
-                if (appState.isTtsSupported && speechSynthesis.speaking && !speechSynthesis.paused) {
-                    speechSynthesis.pause();
-                    appState.isPaused = true;
-                    renderTTSControls();
-                }
-            }
-
-            function resumeSpeech() {
-                if (appState.isTtsSupported && speechSynthesis.paused) {
-                    speechSynthesis.resume();
-                    appState.isPaused = false;
-                    renderTTSControls();
-                }
-            }
-
-            function stopSpeech() {
-                appState.isSpeaking = false;
-                appState.isPaused = false;
-                appState.ttsChunks = [];
-                appState.currentTtsChunk = 0;
-                if (appState.isTtsSupported && speechSynthesis.speaking) {
-                    speechSynthesis.cancel(); // Stop all utterances in the queue
-                }
-                renderTTSControls();
-            }
-
-            function handlePlayPause() {
-                if (!appState.isSpeaking || speechSynthesis.speaking === false) { // If not speaking, or finished speaking
-                    startSpeech();
-                } else if (appState.isPaused) {
-                    resumeSpeech();
+            // --- WATCHER ---
+            watch(searchQuery, (newQuery) => {
+                clearTimeout(debounceTimer);
+                if (newQuery.trim()) {
+                    debounceTimer = setTimeout(performSearch, 500);
                 } else {
-                    pauseSpeech();
+                    results.value = [];
+                    hasSearched.value = false;
                 }
-            }
-
-            // --- HISTORY METHODS ---
-            function addToHistory(query) {
-                const cleanedQuery = query.toLowerCase().trim();
-                if (!cleanedQuery) return;
-
-                // Remove existing entry to avoid duplicates and bring to front
-                const history = appState.searchHistory.filter(item => item.toLowerCase().trim() !== cleanedQuery);
-                history.unshift(query); // Add new query to the beginning
-
-                appState.searchHistory = history.slice(0, 10); // Keep only the last 10 searches
-                localStorage.setItem('acreetionInfoHistory', JSON.stringify(appState.searchHistory));
-                renderHistory();
-            }
-
-            function runSearchFromHistory(query) {
-                searchInput.value = query; // Set the search input to the history item
-                performSearch(); // Execute the search
-            }
-
-            function clearHistory() {
-                appState.searchHistory = [];
-                localStorage.removeItem('acreetionInfoHistory');
-                renderHistory();
-            }
-
-            // --- INITIALIZATION ---
-            function init() {
-                // Check for TTS attention on first visit
-                const savedTtsPref = localStorage.getItem('acreetionTtsEnabled');
-                if (savedTtsPref === null && appState.isTtsSupported) {
-                    appState.showTtsAttention = true;
-                    setTimeout(() => {
-                        appState.showTtsAttention = false;
-                        renderTTSControls();
-                    }, 4500); // Stop pulsing after a few seconds
-                }
-
-                // Event Listeners
-                searchInput.addEventListener('input', debounce(performSearch, 300)); // Debounce search by 300ms
-                searchForm.addEventListener('submit', performSearch); // Keep this for enter key or explicit button click, it will trigger the search immediately
-
-                backToResultsButton.addEventListener('click', goBackToSearch);
-                simplifyButton.addEventListener('click', handleSimplifyClick);
-                cancelApiKeyButton.addEventListener('click', () => {
-                    appState.showApiKeyModal = false;
-                    renderApiKeyModal();
-                });
-                saveApiKeyButton.addEventListener('click', saveAndUseApiKey);
-
-                ttsMasterToggle.addEventListener('click', toggleTtsMaster);
-                playPauseButton.addEventListener('click', handlePlayPause);
-                stopButton.addEventListener('click', stopSpeech);
-
-                prevArticleButton.addEventListener('click', () => navigateToArticle(appState.currentArticleIndex - 1));
-                nextArticleButton.addEventListener('click', () => navigateToArticle(appState.currentArticleIndex + 1));
-
-                clearHistoryButton.addEventListener('click', clearHistory);
-
-
-                // Initial UI Render
-                renderMainView();
-                renderApiKeyModal(); // Ensure modal is hidden initially
-                renderTTSControls(); // Initial TTS toggle render
-            }
-
-            // Run initialization when the DOM is fully loaded
-            document.addEventListener('DOMContentLoaded', init);
-
-        })(); // End of IIFE
+            });
+            
+            return {
+                SOURCES, searchQuery, results, isLoading, hasSearched, infoMessage,
+                externalSources, performSearch, generateExternalUrl,
+                showAiModal, countdown, startAiProcess, proceedToAi,
+                showArticleModal, currentArticle, openArticleModal, closeArticleModal // Expose article modal state and methods
+            };
+        }
+    }).mount('#app');
     </script>
 </body>
 </html>
