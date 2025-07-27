@@ -768,6 +768,7 @@
             const DISCORD_LINK = 'https://discord.gg/AJ6uuvtDXY';
             const DEV_EMAIL = 'support@acreetionos.org';
             const SOURCES = {
+                // Reverted Arch Wiki API to direct endpoint as per "Sprungli" example
                 arch: { name: 'Arch Wiki', api: 'https://wiki.archlinux.org/api.php', color: '#1793D1' },
                 wikipedia: { name: 'Wikipedia', api: 'https://en.wikipedia.org/w/api.php', color: '#7A7A7A' },
             };
@@ -783,6 +784,7 @@
                 isArticleLoading: false,
                 article: null, // { title, content, url, sourceKey }
                 currentArticleIndex: -1, // Index of the currently viewed article in the results array
+                activeArticleFetchController: null, // New: To manage active article fetch
 
                 // AI Simplification
                 isSimplifying: false,
@@ -850,6 +852,16 @@
 
             function hideElement(element) {
                 if (element) element.style.display = 'none';
+            }
+
+            // Debounce function
+            function debounce(func, delay) {
+                let timeout;
+                return function(...args) {
+                    const context = this;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), delay);
+                };
             }
 
             // Helper function to clean HTML content from wiki APIs
@@ -1145,7 +1157,8 @@
                 renderMainView(); // Show "Searching..." status
 
                 let allResults = [];
-                let failedSources = [];
+                let failedSources = []; // For API-specific errors (e.g., 404, bad request from the actual API)
+                let networkErrors = []; // For network-level issues (e.g., connection, timeout, CORS)
 
                 const wikiSourceKeys = Object.keys(SOURCES);
                 const searchPromises = wikiSourceKeys.map(async (key) => {
@@ -1156,16 +1169,25 @@
                         const response = await fetch(url, { signal: AbortSignal.timeout(8000) }); // 8-second timeout
                         if (!response.ok) {
                             const errorText = await response.text();
-                            throw new Error(`Network error (${response.status}): ${errorText.substring(0, 100)}`);
+                            throw new Error(`API responded with ${response.status} for ${source.name}: ${errorText.substring(0, 100)}`);
                         }
                         const data = await response.json();
                         if (data.error) {
-                            throw new Error(`API Error: ${data.error.info}`);
+                            throw new Error(`API Error from ${source.name}: ${data.error.info}`);
                         }
                         return (data.query?.search || []).map(result => ({ ...result, sourceKey: key }));
                     } catch (error) {
-                        failedSources.push(source.name);
-                        console.error(`Search failed for ${source.name}:`, error);
+                        console.error(`Raw error for ${source.name}:`, error); // Log full error for debugging
+                        if (error.name === 'AbortError' && error.message.includes('timed out')) {
+                            networkErrors.push(`${source.name} (request timed out)`);
+                        } else if (error instanceof TypeError) {
+                            // This specifically catches general network errors like "Failed to fetch" (no internet, CORS block etc.)
+                            networkErrors.push(`${source.name} (network connection or browser security issue)`);
+                        }
+                        else {
+                            // This captures other specific API errors (e.g., server returned 404, or malformed JSON from the API itself)
+                            failedSources.push(`${source.name} (${error.message.split(':')[0] || 'unknown API error'})`);
+                        }
                         return null;
                     }
                 });
@@ -1186,13 +1208,23 @@
                     appState.results = allResults;
                     addToHistory(appState.query); // Add to history only if results found
 
-                    if (failedSources.length > 0) {
-                        appState.searchError = `Note: Could not get results from ${failedSources.join(', ')}.`;
+                    let errorMessages = [];
+                    if (networkErrors.length > 0) {
+                        errorMessages.push(`Some sources failed to load due to network issues or browser security: ${networkErrors.join(', ')}. Please check your internet connection or try a different network.`);
                     }
-                } else if (failedSources.length === wikiSourceKeys.length) {
-                    appState.searchError = "Search failed for all sources. Please check your internet connection and try again.";
+                    if (failedSources.length > 0) {
+                        errorMessages.push(`Some sources returned API errors: ${failedSources.join(', ')}.`);
+                    }
+                    appState.searchError = errorMessages.join(' ');
+
+                } else if ((networkErrors.length + failedSources.length) === wikiSourceKeys.length) {
+                    // All sources failed, either due to network or API errors
+                    appState.searchError = "All search sources failed. This could be a network issue, browser security (CORS), or a problem with the API servers. Please check your internet connection and try again.";
+                    if (networkErrors.length > 0) {
+                         appState.searchError += ` Specific connection issues: ${networkErrors.join(', ')}.`;
+                    }
                 } else {
-                    appState.searchError = ''; // Clear error if no results but some sources worked
+                    appState.searchError = ''; // Clear error if no results but some sources worked (e.g., query too specific)
                 }
 
                 appState.isLoading = false;
@@ -1205,6 +1237,14 @@
 
                 stopSpeech(); // Stop any ongoing TTS
                 const result = appState.results[index];
+
+                // Abort any previously ongoing article fetch
+                if (appState.activeArticleFetchController) {
+                    appState.activeArticleFetchController.abort();
+                }
+                const controller = new AbortController();
+                appState.activeArticleFetchController = controller;
+
                 appState.currentView = 'article';
                 appState.isArticleLoading = true;
                 appState.isShowingSimplified = false; // Always show original first
@@ -1217,10 +1257,20 @@
                 const url = `${source.api}?action=parse&page=${encodeURIComponent(result.title)}&prop=text&formatversion=2&format=json&origin=*`;
 
                 try {
-                    const response = await fetch(url, { signal: AbortSignal.timeout(10000) }); // 10-second timeout
+                    const response = await fetch(url, { signal: controller.signal }); // Use the controller's signal
+                    // Clear the active controller once fetch is complete or errors out (unless it was aborted by a new request)
+                    if (appState.activeArticleFetchController === controller) {
+                        appState.activeArticleFetchController = null;
+                    }
+
                     if (!response.ok) {
                         const errorText = await response.text();
-                        throw new Error(`Network error (${response.status}): ${errorText.substring(0, 100)}`);
+                        // Check if the error is due to abortion
+                        if (controller.signal.aborted) {
+                            console.log('Article fetch aborted by new request.');
+                            return; // Do not update state if aborted
+                        }
+                        throw new Error(`Failed to load article: ${response.status} ${response.statusText}. Please try again later.`);
                     }
                     const data = await response.json();
                     if (!data.parse?.text) {
@@ -1233,17 +1283,25 @@
                         sourceKey: result.sourceKey
                     };
                 } catch (error) {
+                    // Check if the error is due to abortion (again, as network errors can also be caught here)
+                    if (controller.signal.aborted) {
+                        console.log('Article fetch aborted by new request (in catch).');
+                        return; // Do not update state if aborted
+                    }
                     console.error('Article fetch error:', error);
                     appState.article = {
                         title: result.title,
-                        content: `<p class="notice notice-error">Sorry, the article content could not be loaded: ${error.message}</p>`,
+                        content: `<p class="notice notice-error">Sorry, the article content could not be loaded. This might be a network issue or the article is unavailable. Details: ${error.message}</p>`,
                         url: result.url, // Fallback to snippet's URL
                         sourceKey: result.sourceKey
                     };
                 } finally {
-                    appState.isArticleLoading = false;
-                    renderMainView(); // Update UI with loaded article
-                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top of the page
+                    // Only update loading state if this was the active fetch or if it wasn't aborted
+                    if (appState.activeArticleFetchController === controller || !controller.signal.aborted) {
+                        appState.isArticleLoading = false;
+                        renderMainView(); // Update UI with loaded article
+                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top of the page
+                    }
                 }
             }
 
@@ -1470,7 +1528,9 @@
                 }
 
                 // Event Listeners
-                searchForm.addEventListener('submit', performSearch);
+                searchInput.addEventListener('input', debounce(performSearch, 300)); // Debounce search by 300ms
+                searchForm.addEventListener('submit', performSearch); // Keep this for enter key or explicit button click, it will trigger the search immediately
+
                 backToResultsButton.addEventListener('click', goBackToSearch);
                 simplifyButton.addEventListener('click', handleSimplifyClick);
                 cancelApiKeyButton.addEventListener('click', () => {
