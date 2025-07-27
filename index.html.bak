@@ -51,6 +51,24 @@
             background-color: var(--acreetion-body-bg);
             color: var(--acreetion-text-bright);
             line-height: 1.6;
+            /* Animation styles */
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        /* Fade Out Animation Class */
+        body.fade-out {
+            animation: fadeOut 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
 
         /* --- HEADER --- */
@@ -176,7 +194,7 @@
 
     <header class="page-header">
         <div class="header-content">
-            <a href="#" class="logo">
+            <a href="index.html" class="logo transition-link">
                 <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img">
                 <span class="logo-text">Acreetion<span>OS</span></span>
             </a>
@@ -185,7 +203,7 @@
                 <a href="#easy-install">Easy Install</a>
                 <a href="#manual-downloads">Downloads</a>
                 <a href="#" data-modal-target="#documentation-viewer">Documentation</a>
-                <a href="contact.html">Contact & Support</a>
+                <a href="contact.html" class="transition-link">Contact & Support</a>
             </nav>
         </div>
     </header>
@@ -284,7 +302,7 @@
             <div id="community" class="content-box sidebar-box" style="margin-top: 2rem;">
                 <div class="box-header"><h2>Community</h2></div>
                 <div class="box-body">
-                    <p>For more ways to get in touch, including bug reports and to see the full team, please see our <a href="contact.html">Contact & Support page</a>.</p>
+                    <p>For more ways to get in touch, including bug reports and to see the full team, please see our <a href="contact.html" class="transition-link">Contact & Support page</a>.</p>
                     <ul class="sidebar-nav">
                         <li><a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord Server</a></li>
                         <li><a href="https://bbs.archlinux.org/" target="_blank" rel="noopener noreferrer">Forums</a></li>
@@ -328,6 +346,19 @@ Port: 6697 (SSL)</code></pre>
     <!-- JAVASCRIPT LOGIC -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- PAGE TRANSITION LOGIC ---
+            const transitionLinks = document.querySelectorAll('.transition-link');
+            transitionLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetUrl = this.href;
+                    document.body.classList.add('fade-out');
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 500); // Should match the animation duration
+                });
+            });
+
             // --- DATA STORE ---
             const docs = [
                 {
