@@ -1,5 +1,3 @@
-<!-- Made by AcreetionOS Team, Love you all: Natalie <3 -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +15,7 @@
     <!-- Markdown Parser Library -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    <!-- Internal Stylesheet -->
+    <!-- Consolidated Internal Stylesheet -->
     <style>
         :root {
             /* --- AcreetionOS Soft Dark Palette (No Blinding Whites) --- */
@@ -56,7 +54,7 @@
             animation: fadeIn 0.5s ease-in-out forwards;
         }
         
-        /* Fade Out Animation Class */
+        /* Fade Out Animation Class for page transitions */
         body.fade-out {
             animation: fadeOut 0.5s ease-in-out forwards;
         }
@@ -126,6 +124,7 @@
         .sidebar-nav { list-style: none; padding: 0; }
         .sidebar-nav a { display: block; text-decoration: none; color: var(--acreetion-green); padding: 0.5rem 0; border-bottom: 1px solid var(--acreetion-box-border); cursor: pointer; }
         .sidebar-nav a:hover { background-color: #3a3a3a; }
+        .sidebar-nav a.active { background-color: var(--acreetion-green); color: black; font-weight: 700; }
         .sidebar-box p { color: var(--acreetion-text); padding: 0 0.2rem 1rem; }
 
         /* --- CODE BLOCKS & BUTTONS --- */
@@ -147,11 +146,86 @@
         #manual-downloads h3:first-of-type { margin-top: 0; }
         #manual-downloads .download-options-group { margin-bottom: 2rem; }
         
-        /* --- MODAL OVERLAYS --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto; align-items: center; justify-content: center; padding: 1rem; }
-        .modal-overlay.visible { display: flex; }
-        .modal-box { position: relative; cursor: default; background-color: var(--doc-content-bg); border: 1px solid var(--acreetion-box-border); padding: 2rem 3rem; max-width: 700px; }
-        .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background-color: var(--gnome-color); color: black; font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; line-height: 40px; text-align: center; }
+        /* --- MODAL OVERLAYS (for Docs Viewer, IRC, and now Info Tool) --- */
+        .modal-overlay { 
+            display: none; /* Controlled by JS */
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+            backdrop-filter: blur(8px); /* Add backdrop blur */
+            z-index: 1000; 
+            overflow-y: auto; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 1rem; 
+            opacity: 0; /* For fade in/out */
+            visibility: hidden; /* For proper hiding */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible { 
+            display: flex; /* Or block depending on content */
+            opacity: 1; 
+            visibility: visible;
+        }
+        .modal-box { 
+            position: relative; 
+            cursor: default; 
+            background-color: var(--doc-content-bg); 
+            border: 1px solid var(--acreetion-box-border); 
+            padding: 2rem 3rem; 
+            max-width: 700px; /* Default modal width */
+        }
+
+        /* Fullscreen Modal specific styles (for the Info Tool) */
+        #infoToolAppContainer.modal-overlay {
+            padding: 0; /* Remove padding for fullscreen */
+            align-items: stretch; /* Stretch content */
+            justify-content: stretch; /* Stretch content */
+        }
+
+        #infoToolAppContainer .modal-content-wrapper {
+            width: 100%;
+            height: 100%;
+            background-color: var(--acreetion-body-bg); /* Use Info Tool's body background */
+            position: relative; /* For the close button */
+            overflow-y: auto; /* Allow scrolling within the tool */
+            display: flex; /* To center/align tool content */
+            flex-direction: column;
+        }
+
+        #infoToolAppContainer .search-wrapper {
+            /* Override search-wrapper min-height to fit inside modal */
+            min-height: auto;
+            flex-grow: 1; /* Allow content to grow */
+        }
+
+        .modal-close-btn { 
+            position: absolute; 
+            top: 1rem; 
+            right: 1rem; 
+            background-color: var(--gnome-color); 
+            color: black; 
+            font-family: var(--font-sans); 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            border: none; 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            cursor: pointer; 
+            line-height: 40px; 
+            text-align: center; 
+            z-index: 1001; /* Ensure close button is above everything */
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background-color: #d15c64; /* Slightly darker red */
+            transform: scale(1.05);
+        }
+
         .modal-box h2 { color: var(--acreetion-green); }
         
         /* --- DOCUMENTATION VIEWER --- */
@@ -188,6 +262,164 @@
             .main-nav a { margin-left: 0; }
             .article-logo-cluster { float: none; display: block; text-align: center; margin: 0 auto 1.5rem; }
         }
+        /* Styles from selfhelp.html (Info Tool) - Consolidated */
+        /* Note: Some overrides apply to make it fit as a fullscreen modal */
+        #infoToolAppContainer .search-wrapper { /* Targets the main content wrapper inside the Info Tool */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: auto; /* Adjusted for modal */
+            padding: 5vh 20px 80px 20px;
+            flex-grow: 1; /* Allow it to take available height */
+        }
+        #infoToolAppContainer .header-logo {
+            display: flex; align-items: center; gap: 1.5rem;
+            text-decoration: none; margin-bottom: 2rem; text-align: center;
+        }
+        #infoToolAppContainer .logo-img { height: 60px; }
+        #infoToolAppContainer .logo-text {
+            font-family: var(--font-sans); font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 700; color: var(--acreetion-text-bright);
+        }
+        #infoToolAppContainer .logo-text span { color: var(--acreetion-green); }
+        #infoToolAppContainer .intro-text {
+            text-align: center; max-width: 650px; margin-bottom: 2.5rem;
+            font-size: 1.1em; color: var(--acreetion-text);
+        }
+        #infoToolAppContainer .search-form {
+            position: relative; width: 100%; max-width: 700px;
+            display: flex; align-items: center; margin-bottom: 40px;
+        }
+        #infoToolAppContainer #searchInput {
+            width: 100%; padding: 16px 65px 16px 25px; font-family: var(--font-mono);
+            font-size: 1.1em; color: var(--acreetion-text-bright); background-color: var(--acreetion-box-bg);
+            border: 1px solid var(--acreetion-box-border); border-radius: 8px;
+            outline: none; transition: all .3s ease;
+        }
+        #infoToolAppContainer #searchInput:focus {
+            border-color: var(--acreetion-green); box-shadow: 0 0 15px var(--acreetion-shadow);
+        }
+        #infoToolAppContainer #searchButton {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            width: 42px; height: 42px; background: var(--acreetion-green);
+            border: none; border-radius: 6px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: transform .2s ease, filter .2s ease;
+        }
+        #infoToolAppContainer #searchButton:hover { transform: translateY(-50%) scale(1.05); filter: brightness(1.1); }
+        #infoToolAppContainer .page-content { width: 100%; max-width: 800px; }
+        #infoToolAppContainer .results-list { display: flex; flex-direction: column; gap: 15px; }
+        #infoToolAppContainer .result-item {
+            background: var(--acreetion-box-bg); border: 1px solid var(--acreetion-box-border);
+            padding: 20px; border-radius: 6px; animation: fadeInResult 0.5s ease forwards;
+            transition: all .3s ease; cursor: pointer;
+        }
+        #infoToolAppContainer .result-item:hover {
+            transform: translateY(-4px); box-shadow: 0 5px 25px var(--acreetion-shadow);
+            border-color: var(--acreetion-green);
+        }
+        #infoToolAppContainer .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        #infoToolAppContainer .result-source-tag {
+            font-family: var(--font-sans); font-weight: 500; font-size: 0.8em; padding: 4px 10px;
+            border-radius: 4px; color: #fff;
+        }
+        #infoToolAppContainer .result-title {
+            font-size: 1.2em; font-weight: 500; margin-bottom: 8px; line-height: 1.3;
+            color: var(--acreetion-text-bright);
+        }
+        #infoToolAppContainer .result-item:hover .result-title { color: var(--acreetion-green); }
+        #infoToolAppContainer .result-snippet { font-size: 0.95em; color: var(--acreetion-text); }
+        #infoToolAppContainer .result-snippet .searchmatch {
+            font-weight: bold; color: var(--acreetion-green); background-color: rgba(46, 204, 113, 0.1);
+        }
+        /* Article Viewer */
+        #infoToolAppContainer .article-viewer { animation: fadeIn 0.5s ease; position: relative; }
+        #infoToolAppContainer .article-header { margin-bottom: 1rem; }
+        #infoToolAppContainer .article-title {
+            font-size: 2em; font-weight: 700; color: var(--acreetion-text-bright);
+            line-height: 1.3; margin-bottom: 0.5rem;
+        }
+        #infoToolAppContainer .article-source { font-size: 1em; color: var(--acreetion-text); }
+        #infoToolAppContainer .article-source a { color: var(--acreetion-accent-blue); text-decoration: none; }
+        #infoToolAppContainer .article-source a:hover { text-decoration: underline; }
+        #infoToolAppContainer .article-content-body { line-height: 1.7; }
+        #infoToolAppContainer .article-content-body h2, #infoToolAppContainer .article-content-body h3, #infoToolAppContainer .article-content-body h4 {
+            font-weight: 500; color: var(--acreetion-text-bright);
+            border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem;
+            margin-top: 2rem; margin-bottom: 1rem;
+        }
+        #infoToolAppContainer .article-content-body h2 { font-size: 1.5em; }
+        #infoToolAppContainer .article-content-body h3 { font-size: 1.2em; }
+        #infoToolAppContainer .article-content-body h4 { font-size: 1.1em; border-bottom: none; }
+        #infoToolAppContainer .article-content-body a { color: var(--acreetion-green); }
+        #infoToolAppContainer .article-content-body p { margin-bottom: 1rem; }
+        #infoToolAppContainer .article-content-body ul, #infoToolAppContainer .article-content-body ol { margin-bottom: 1rem; padding-left: 25px; }
+        #infoToolAppContainer .article-content-body pre {
+            font-family: var(--font-mono); background-color: var(--acreetion-panel-bg);
+            border: 1px solid var(--acreetion-box-border); padding: 1em; overflow-x: auto;
+            margin: 1rem 0; border-radius: 6px; color: var(--acreetion-text-bright);
+        }
+        #infoToolAppContainer .article-content-body code:not(pre code) {
+            font-family: var(--font-mono); background-color: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.2); padding: 0.2em 0.4em;
+            border-radius: 3px; color: var(--acreetion-text-bright);
+        }
+        /* Article Navigation */
+        #infoToolAppContainer .article-nav-button {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px; background-color: rgba(42, 42, 42, 0.8);
+            border: 1px solid var(--acreetion-box-border); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 1000; transition: all 0.2s ease;
+        }
+        #infoToolAppContainer .article-nav-button:hover:not(:disabled) { background-color: var(--acreetion-green); }
+        #infoToolAppContainer .article-nav-button:hover:not(:disabled) svg { stroke: black; }
+        #infoToolAppContainer .article-nav-button:disabled { opacity: 0.2; cursor: not-allowed; }
+        #infoToolAppContainer .article-nav-prev { left: 20px; }
+        #infoToolAppContainer .article-nav-next { right: 20px; }
+        /* Controls */
+        #infoToolAppContainer .controls-bar { text-align: center; margin: 0 0 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        #infoToolAppContainer .control-button {
+            font-family: var(--font-sans); font-weight: 500; font-size: 1em; padding: 10px 20px;
+            border-radius: 6px; border: 1px solid var(--acreetion-green);
+            color: var(--acreetion-green); background: transparent;
+            cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;
+            text-decoration: none;
+        }
+        #infoToolAppContainer .control-button.simplify-btn { border-color: var(--acreetion-accent-blue); color: var(--acreetion-accent-blue); }
+        #infoToolAppContainer .control-button.help-btn { border-color: var(--acreetion-accent-red); color: var(--acreetion-accent-red); }
+        #infoToolAppContainer .control-button:hover { background: var(--acreetion-green); color: black; }
+        #infoToolAppContainer .control-button.simplify-btn:hover { background: var(--acreetion-accent-blue); color: white; }
+        #infoToolAppContainer .control-button.help-btn:hover { background: var(--acreetion-accent-red); color: white; }
+        #infoToolAppContainer .control-button:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Modals, Notices, TTS, History, Contact (within Info Tool) */
+        /* Re-used modal-overlay styles from main CSS for info tool's modals */
+        #infoToolAppContainer .notice { text-align: center; padding: 60px 20px; font-size: 1.1em; font-family: var(--font-mono); opacity: 0.7; }
+        #infoToolAppContainer .notice-query { font-weight: bold; color: var(--acreetion-green); }
+        #infoToolAppContainer .notice-error { color: var(--acreetion-accent-red); }
+        #infoToolAppContainer #tts-master-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 1001; width: 50px; height: 50px; background-color: var(--acreetion-box-bg); border: 1px solid var(--acreetion-box-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;
+        }
+        #infoToolAppContainer #tts-master-toggle.active { border-color: var(--acreetion-green); background-color: var(--acreetion-green); }
+        #infoToolAppContainer #tts-master-toggle.attention { animation: pulse 1.5s 3 ease-in-out; }
+        #infoToolAppContainer .tts-article-controls { background-color: var(--acreetion-box-bg); padding: 10px; border-radius: 8px; border: 1px solid var(--acreetion-box-border); display: flex; justify-content: center; align-items: center; gap: 15px; margin: 0 auto 20px auto; max-width: fit-content; }
+        #infoToolAppContainer .history-section, #infoToolAppContainer .contact-section { width: 100%; max-width: 800px; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--acreetion-box-border); text-align: center; }
+        #infoToolAppContainer .history-section h2, #infoToolAppContainer .contact-section h2 { font-size: 1.8em; font-weight: 500; color: var(--acreetion-text-bright); margin-bottom: 1rem; }
+        #infoToolAppContainer .contact-section > p { max-width: 600px; margin: 0 auto 2.5rem auto; color: var(--acreetion-text); }
+        #infoToolAppContainer .history-items { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        #infoToolAppContainer .history-item { background: var(--acreetion-box-bg); border: 1px solid var(--acreetion-box-border); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-family: var(--font-mono); transition: all 0.2s ease; }
+        #infoToolAppContainer .history-item:hover { background-color: var(--acreetion-green); color: black; border-color: var(--acreetion-green); }
+        #infoToolAppContainer .clear-history-btn { font-size: 0.9em; color: var(--acreetion-accent-blue); cursor: pointer; text-decoration: none; }
+        #infoToolAppContainer .clear-history-btn:hover { text-decoration: underline; }
+        #infoToolAppContainer .contact-methods { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        #infoToolAppContainer .contact-method { background: var(--acreetion-box-bg); border: 1px solid var(--acreetion-box-border); border-radius: 8px; padding: 25px; max-width: 350px; flex-grow: 1; text-align: left; transition: all 0.2s ease; }
+        #infoToolAppContainer .contact-method:hover { border-color: #555; }
+        #infoToolAppContainer .contact-method h3 { font-size: 1.2em; color: var(--acreetion-text-bright); margin-bottom: 0.5rem; }
+        #infoToolAppContainer .contact-method p { font-size: 0.95em; margin-bottom: 1.5rem; }
+        #infoToolAppContainer .contact-button { display: inline-block; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: 500; transition: all 0.2s ease; }
+        #infoToolAppContainer .contact-button.discord { background-color: #5865F2; color: white; }
+        #infoToolAppContainer .contact-button.discord:hover { filter: brightness(1.1); }
+        #infoToolAppContainer .contact-button.email { background-color: var(--acreetion-box-border); color: var(--acreetion-text-bright); }
+        #infoToolAppContainer .contact-button.email:hover { background-color: #555; }
     </style>
 </head>
 <body>
@@ -199,6 +431,7 @@
                 <span class="logo-text">Acreetion<span>OS</span></span>
             </a>
             <nav class="main-nav">
+                <a href="selfhelp.html" id="infoToolTrigger">Got a question? Try our Info Tool!</a> <!-- New prominent link -->
                 <a href="#about">About</a>
                 <a href="#easy-install">Easy Install</a>
                 <a href="#manual-downloads">Downloads</a>
@@ -320,7 +553,7 @@
         <p>© 2025 AcreetionOS Project.</p>
     </footer>
 
-    <!-- MODALS -->
+    <!-- MODALS (Existing ones) -->
     <div id="documentation-viewer" class="modal-overlay">
         <div class="doc-container">
             <button class="modal-close-btn" title="Close Documentation">×</button>
@@ -343,23 +576,166 @@ Port: 6697 (SSL)</code></pre>
         </div>
     </div>
 
+    <!-- AcreetionOS Info Tool (Integrated as a Fullscreen Overlay) -->
+    <div id="infoToolAppContainer" class="modal-overlay">
+        <div class="modal-content-wrapper">
+            <button class="modal-close-btn" id="closeInfoToolButton" title="Close Info Tool">×</button>
+
+            <!-- TTS Master Toggle (from selfhelp.html) -->
+            <button id="tts-master-toggle" title="Text to Speech not supported">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path id="tts-path-one" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path id="tts-path-two" style="display:none;" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+            </button>
+
+            <!-- API Key Modal (from selfhelp.html) -->
+            <div class="modal-overlay" id="apiKeyModal">
+                <div class="modal-box">
+                    <h2>AI Simplification Requires API Key</h2>
+                    <p>To power this feature, the tool needs a <strong>Google AI API Key.</strong></p>
+                    <p>You can get a <strong>free</strong> key from the Google AI Studio. Your key is saved <em>only in your browser</em> and is never shared or stored by us.</p>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Click here to get your API Key →</a>
+                    <input type="password" class="modal-input" id="apiKeyInput" placeholder="Paste your API key here">
+                    <div class="modal-button-group">
+                        <button id="cancelApiKeyButton" class="modal-button secondary">Cancel</button>
+                        <button id="saveApiKeyButton" class="modal-button">Save & Simplify</button>
+                    </div>
+                </div>
+            </div>
+
+            <main class="search-wrapper">
+                <header class="header-logo">
+                    <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img">
+                    <h1 class="logo-text">Info<span>Tool</span></h1>
+                </header>
+
+                <p class="intro-text" id="introText">
+                    Your intelligent guide to Linux and more. Search the Arch Wiki and Wikipedia simultaneously, and simplify complex articles with a single click.
+                </p>
+
+                <form class="search-form" id="searchForm">
+                    <input type="text" id="searchInput" placeholder="Search Arch Wiki & Wikipedia..." autocomplete="off">
+                    <button type="submit" id="searchButton" aria-label="Submit search">
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round" style="width:20px;height:20px; color: black;">
+                            <path d="M16.67 16.64L21 21M19 11c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8 8 3.58 8 8Z" />
+                        </svg>
+                    </button>
+                </form>
+
+                <div class="page-content">
+                    <!-- ARTICLE VIEW -->
+                    <div id="articleViewer" class="article-viewer" style="display: none;">
+                        <!-- Article Nav -->
+                        <div id="articleNavControls" style="display:none;">
+                            <button class="article-nav-button article-nav-prev" id="prevArticleButton" title="Previous Article">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                            </button>
+                            <button class="article-nav-button article-nav-next" id="nextArticleButton" title="Next Article">
+                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="controls-bar">
+                            <button id="backToResultsButton" class="control-button">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+                                Back to Results
+                            </button>
+                            <button id="simplifyButton" class="control-button simplify-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                                Simplify with AI
+                            </button>
+                             <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer" class="control-button help-btn">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                Ask the Developers
+                            </a>
+                        </div>
+                         <!-- TTS ARTICLE CONTROLS -->
+                        <div id="ttsArticleControls" class="tts-article-controls" style="display:none;">
+                            <button id="playPauseButton" class="control-button">
+                                <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                <svg id="pauseIcon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                                Play Article
+                            </button>
+                            <button id="stopButton" class="control-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+                                Stop
+                            </button>
+                        </div>
+
+                         <div id="articleStatus" class="notice" style="display: none;"></div>
+                         <header class="article-header">
+                            <h2 class="article-title" id="articleTitle"></h2>
+                            <div class="article-source" id="articleSource"></div>
+                        </header>
+                        <div class="article-content-body" id="articleContent"></div>
+                        <div class="article-content-body" id="simplifiedContent" style="display: none;"></div>
+                    </div>
+
+                    <!-- SEARCH VIEW -->
+                    <div id="searchView">
+                        <div id="searchStatus" class="notice" style="display: none;"></div>
+                        <div id="resultsList" class="results-list">
+                            <!-- Search results will be injected here -->
+                        </div>
+                        <div id="infoMessage" class="notice">
+                            Enter a query to search Arch Wiki & Wikipedia.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HISTORY & CONTACT SECTIONS -->
+                <div id="historySection" class="history-section" style="display: none;">
+                    <h2>Search History</h2>
+                    <div id="historyItems" class="history-items">
+                        <!-- History items will be injected here -->
+                    </div>
+                    <a href="#" id="clearHistoryButton" class="clear-history-btn">Clear History</a>
+                </div>
+
+                <div class="contact-section">
+                    <h2>Need More Help?</h2>
+                    <p>If you can't find your answer here, feel free to reach out directly to the team or the community.</p>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <h3>Community & Live Support</h3>
+                            <p>For immediate help, discussions, or to file a support ticket, join our Discord server.</p>
+                            <a href="https://discord.gg/AJ6uuvtDXY" class="contact-button discord" target="_blank" rel="noopener noreferrer">Join Discord Server</a>
+                        </div>
+                        <div class="contact-method">
+                            <h3>Direct Email</h3>
+                            <p>For direct inquiries or if you prefer email, you can contact the development team here.</p>
+                            <a href="mailto:support@acreetionos.org" class="contact-button email">Email the Developers</a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT LOGIC -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- PAGE TRANSITION LOGIC ---
+            // --- MAIN PAGE TRANSITION LOGIC ---
             const transitionLinks = document.querySelectorAll('.transition-link');
             transitionLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetUrl = this.href;
-                    document.body.classList.add('fade-out');
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 500); // Should match the animation duration
-                });
+                // Ensure the Info Tool trigger doesn't cause a full page transition here
+                if (link.id !== 'infoToolTrigger') { 
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetUrl = this.href;
+                        document.body.classList.add('fade-out');
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 500); // Should match the animation duration
+                    });
+                }
             });
 
-            // --- DATA STORE ---
+            // --- MAIN PAGE DATA STORE (for documentation modal) ---
             const docs = [
                 {
                     id: 'installation.md',
@@ -383,16 +759,22 @@ Port: 6697 (SSL)</code></pre>
                 }
             ];
 
-            // --- ELEMENT SELECTORS ---
-            const modalTriggers = document.querySelectorAll('[data-modal-target]');
-            const modals = document.querySelectorAll('.modal-overlay');
+            // --- MAIN PAGE MODAL FUNCTIONS & SELECTORS ---
+            const mainPageModalTriggers = document.querySelectorAll('[data-modal-target]');
+            const mainPageModals = document.querySelectorAll('.modal-overlay'); // Selects all modals including info tool initially
             const docViewer = document.getElementById('documentation-viewer');
             const docList = document.getElementById('doc-list');
             const docMainContent = document.getElementById('doc-main-content');
 
-            // --- FUNCTIONS ---
-            const openModal = (modal) => modal.classList.add('visible');
-            const closeModal = (modal) => modal.classList.remove('visible');
+            const openModal = (modal) => {
+                modal.classList.add('visible');
+                // Optional: add a class to body to prevent scrolling, if not handled by modal itself
+                document.body.style.overflow = 'hidden';
+            };
+            const closeModal = (modal) => {
+                modal.classList.remove('visible');
+                document.body.style.overflow = ''; // Restore body scrolling
+            };
 
             const renderDoc = (docId) => {
                 const doc = docs.find(d => d.id === docId);
@@ -404,8 +786,8 @@ Port: 6697 (SSL)</code></pre>
                 });
             };
 
-            // --- INITIALIZATION ---
-            docList.innerHTML = ''; 
+            // Initialize documentation modal
+            docList.innerHTML = '';
             docs.forEach(doc => {
                 const a = document.createElement('a');
                 a.href = '#';
@@ -414,7 +796,7 @@ Port: 6697 (SSL)</code></pre>
                 docList.appendChild(document.createElement('li')).appendChild(a);
             });
 
-            modalTriggers.forEach(trigger => {
+            mainPageModalTriggers.forEach(trigger => {
                 trigger.addEventListener('click', (e) => {
                     e.preventDefault();
                     const modal = document.querySelector(trigger.dataset.modalTarget);
@@ -428,9 +810,9 @@ Port: 6697 (SSL)</code></pre>
                 });
             });
 
-            modals.forEach(modal => {
+            mainPageModals.forEach(modal => {
                 modal.addEventListener('click', (e) => {
-                    if (e.target === modal) closeModal(modal);
+                    if (e.target === modal) closeModal(modal); // Close if clicking on overlay itself
                 });
                 const closeBtn = modal.querySelector('.modal-close-btn');
                 if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
@@ -441,6 +823,737 @@ Port: 6697 (SSL)</code></pre>
                     e.preventDefault();
                     renderDoc(e.target.dataset.docName);
                 }
+            });
+
+
+            // --- AcreetionOS Info Tool Logic (formerly selfhelp.html content) ---
+            // Scope all Info Tool related elements under its container
+            const infoToolAppContainer = document.getElementById('infoToolAppContainer');
+            const closeInfoToolButton = document.getElementById('closeInfoToolButton');
+
+            // --- INFO TOOL STATE MANAGEMENT ---
+            const infoToolState = {
+                query: '',
+                results: [],
+                isLoading: false,
+                hasSearched: false,
+                searchError: '',
+                currentView: 'search', // 'search' or 'article'
+                isArticleLoading: false,
+                article: null, // { title, content, url, sourceKey }
+                currentArticleIndex: -1, // Index of the currently viewed article in the results array
+
+                // AI Simplification
+                isSimplifying: false,
+                simplifiedContent: '',
+                isShowingSimplified: false,
+                googleApiKey: localStorage.getItem('googleApiKey') || '',
+                showApiKeyModal: false,
+
+                // Text-to-Speech (TTS)
+                isTtsSupported: 'speechSynthesis' in window,
+                isTtsEnabled: localStorage.getItem('acreetionTtsEnabled') === 'true', // Default to false if not set
+                isSpeaking: false,
+                isPaused: false,
+                showTtsAttention: false,
+                ttsChunks: [],
+                currentTtsChunk: 0,
+
+                // Search History
+                searchHistory: JSON.parse(localStorage.getItem('acreetionInfoHistory') || '[]'),
+            };
+
+            // --- INFO TOOL DOM ELEMENTS (scoped to infoToolAppContainer) ---
+            const infoToolSearchForm = infoToolAppContainer.querySelector('#searchForm');
+            const infoToolSearchInput = infoToolAppContainer.querySelector('#searchInput');
+            const infoToolIntroText = infoToolAppContainer.querySelector('#introText');
+            const infoToolSearchView = infoToolAppContainer.querySelector('#searchView');
+            const infoToolSearchStatus = infoToolAppContainer.querySelector('#searchStatus');
+            const infoToolResultsList = infoToolAppContainer.querySelector('#resultsList');
+            const infoToolInfoMessage = infoToolAppContainer.querySelector('#infoMessage');
+
+            const infoToolArticleViewer = infoToolAppContainer.querySelector('#articleViewer');
+            const infoToolPrevArticleButton = infoToolAppContainer.querySelector('#prevArticleButton');
+            const infoToolNextArticleButton = infoToolAppContainer.querySelector('#nextArticleButton');
+            const infoToolArticleNavControls = infoToolAppContainer.querySelector('#articleNavControls');
+            const infoToolBackToResultsButton = infoToolAppContainer.querySelector('#backToResultsButton');
+            const infoToolSimplifyButton = infoToolAppContainer.querySelector('#simplifyButton');
+            const infoToolArticleStatus = infoToolAppContainer.querySelector('#articleStatus');
+            const infoToolArticleTitleElem = infoToolAppContainer.querySelector('#articleTitle');
+            const infoToolArticleSourceElem = infoToolAppContainer.querySelector('#articleSource');
+            const infoToolArticleContentElem = infoToolAppContainer.querySelector('#articleContent');
+            const infoToolSimplifiedContentElem = infoToolAppContainer.querySelector('#simplifiedContent');
+
+            const infoToolApiKeyModal = infoToolAppContainer.querySelector('#apiKeyModal');
+            const infoToolApiKeyInput = infoToolAppContainer.querySelector('#apiKeyInput');
+            const infoToolCancelApiKeyButton = infoToolAppContainer.querySelector('#cancelApiKeyButton');
+            const infoToolSaveApiKeyButton = infoToolAppContainer.querySelector('#saveApiKeyButton');
+
+            const infoToolTtsMasterToggle = infoToolAppContainer.querySelector('#tts-master-toggle');
+            const infoToolTtsPathOne = infoToolAppContainer.querySelector('#tts-path-one');
+            const infoToolTtsPathTwo = infoToolAppContainer.querySelector('#tts-path-two');
+            const infoToolTtsArticleControls = infoToolAppContainer.querySelector('#ttsArticleControls');
+            const infoToolPlayPauseButton = infoToolAppContainer.querySelector('#playPauseButton');
+            const infoToolPlayIcon = infoToolAppContainer.querySelector('#playIcon');
+            const infoToolPauseIcon = infoToolAppContainer.querySelector('#pauseIcon');
+            const infoToolStopButton = infoToolAppContainer.querySelector('#stopButton');
+
+            const infoToolHistorySection = infoToolAppContainer.querySelector('#historySection');
+            const infoToolHistoryItemsContainer = infoToolAppContainer.querySelector('#historyItems');
+            const infoToolClearHistoryButton = infoToolAppContainer.querySelector('#clearHistoryButton');
+
+            // --- INFO TOOL UTILITY FUNCTIONS ---
+            function infoToolShowElement(element) {
+                if (element) element.style.display = '';
+            }
+
+            function infoToolHideElement(element) {
+                if (element) element.style.display = 'none';
+            }
+
+            function infoToolCleanHtmlContent(html, sourceKey) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                const selectorsToRemove = [
+                    '.toc', '.mw-editsection', '#catlinks', '.infobox', '.ambox', '.navbox',
+                    '.metadata', '.reference', 'sup.reference', 'div.mw-parser-output > table.wikitable',
+                    'div.printfooter'
+                ];
+                selectorsToRemove.forEach(selector => tempDiv.querySelectorAll(selector).forEach(el => el.remove()));
+                const sourceBaseUrl = new URL(SOURCES[sourceKey].api).origin;
+                tempDiv.querySelectorAll('a').forEach(a => {
+                    const href = a.getAttribute('href');
+                    if (href && (href.startsWith('/wiki/') || href.startsWith('./'))) {
+                        a.href = `${sourceBaseUrl}/index.php?title=${href.replace(/^\/wiki\//, '')}`;
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                    }
+                });
+                tempDiv.querySelectorAll('p').forEach(p => {
+                    if (p.textContent.trim() === '') p.remove();
+                });
+                return tempDiv.innerHTML;
+            }
+
+            // --- INFO TOOL RENDERING FUNCTIONS ---
+            function renderInfoToolMainView() {
+                if (infoToolState.currentView === 'search') {
+                    infoToolShowElement(infoToolSearchForm);
+                    infoToolShowElement(infoToolIntroText);
+                    infoToolShowElement(infoToolSearchView);
+                    infoToolHideElement(infoToolArticleViewer);
+                    infoToolHideElement(infoToolArticleNavControls);
+                    if (infoToolState.searchHistory.length > 0) {
+                        infoToolShowElement(infoToolHistorySection);
+                    } else {
+                        infoToolHideElement(infoToolHistorySection);
+                    }
+                } else { // 'article' view
+                    infoToolHideElement(infoToolSearchForm);
+                    infoToolHideElement(infoToolIntroText);
+                    infoToolHideElement(infoToolSearchView);
+                    infoToolHideElement(infoToolHistorySection);
+                    infoToolShowElement(infoToolArticleViewer);
+                    if (infoToolState.results.length > 1) {
+                        infoToolShowElement(infoToolArticleNavControls);
+                    } else {
+                        infoToolHideElement(infoToolArticleNavControls);
+                    }
+                }
+                renderInfoToolSearchStatus();
+                renderInfoToolSearchResults();
+                renderInfoToolArticleView();
+                renderInfoToolTTSControls();
+                renderInfoToolHistory();
+            }
+
+            function renderInfoToolSearchStatus() {
+                if (infoToolState.currentView === 'search') {
+                    if (infoToolState.isLoading) {
+                        infoToolSearchStatus.textContent = 'Searching...';
+                        infoToolShowElement(infoToolSearchStatus);
+                        infoToolHideElement(infoToolInfoMessage);
+                    } else if (infoToolState.searchError) {
+                        infoToolSearchStatus.textContent = infoToolState.searchError;
+                        infoToolSearchStatus.classList.add('notice-error');
+                        infoToolShowElement(infoToolSearchStatus);
+                        infoToolHideElement(infoToolInfoMessage);
+                    } else if (infoToolState.results.length === 0 && infoToolState.hasSearched) {
+                        infoToolSearchStatus.innerHTML = `No results found for '<span class="notice-query">${infoToolState.query}</span>'.`;
+                        infoToolSearchStatus.classList.remove('notice-error');
+                        infoToolShowElement(infoToolSearchStatus);
+                        infoToolHideElement(infoToolInfoMessage);
+                    } else if (!infoToolState.hasSearched) {
+                        infoToolInfoMessage.textContent = 'Enter a query to search Arch Wiki & Wikipedia.';
+                        infoToolShowElement(infoToolInfoMessage);
+                        infoToolHideElement(infoToolSearchStatus);
+                    } else {
+                        infoToolHideElement(infoToolSearchStatus);
+                        infoToolHideElement(infoToolInfoMessage);
+                    }
+                }
+            }
+
+            function renderInfoToolSearchResults() {
+                infoToolResultsList.innerHTML = '';
+                if (infoToolState.currentView === 'search' && infoToolState.results.length > 0) {
+                    infoToolState.results.forEach((result, index) => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'result-item';
+                        resultItem.style.animationDelay = `${index * 40}ms`;
+                        resultItem.addEventListener('click', () => navigateToArticle(index));
+
+                        const resultHeader = document.createElement('div');
+                        resultHeader.className = 'result-header';
+
+                        const sourceTag = document.createElement('span');
+                        sourceTag.className = 'result-source-tag';
+                        const sourceInfo = SOURCES[result.sourceKey];
+                        if (sourceInfo) {
+                            sourceTag.style.backgroundColor = sourceInfo.color;
+                            sourceTag.textContent = sourceInfo.name;
+                        }
+                        resultHeader.appendChild(sourceTag);
+
+                        const titleElem = document.createElement('h3');
+                        titleElem.className = 'result-title';
+                        titleElem.textContent = result.title;
+
+                        const snippetElem = document.createElement('div');
+                        snippetElem.className = 'result-snippet';
+                        let snippetHtml = result.snippet;
+                        if (infoToolState.query) {
+                            const regex = new RegExp(`(${infoToolState.query.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\`]/g, "\\$&")})`, 'gi');
+                            snippetHtml = snippetHtml.replace(regex, '<span class="searchmatch">$1</span>');
+                        }
+                        snippetElem.innerHTML = snippetHtml;
+
+                        resultItem.appendChild(resultHeader);
+                        resultItem.appendChild(titleElem);
+                        resultItem.appendChild(snippetElem);
+                        infoToolResultsList.appendChild(resultItem);
+                    });
+                }
+            }
+
+            function renderInfoToolArticleView() {
+                if (infoToolState.currentView === 'article') {
+                    if (infoToolState.article) {
+                        infoToolArticleTitleElem.textContent = infoToolState.article.title;
+                        infoToolArticleSourceElem.innerHTML = `<span>${infoToolState.isShowingSimplified ? 'Simplified from: ' : ''}</span><a href="${infoToolState.article.url}" target="_blank" rel="noopener noreferrer">${SOURCES[infoToolState.article.sourceKey]?.name || ''}</a>`;
+
+                        if (infoToolState.isArticleLoading || infoToolState.isSimplifying) {
+                            infoToolArticleStatus.textContent = infoToolState.isSimplifying ? 'Simplifying with AI...' : 'Loading article...';
+                            infoToolShowElement(infoToolArticleStatus);
+                            infoToolHideElement(infoToolArticleContentElem);
+                            infoToolHideElement(infoToolSimplifiedContentElem);
+                            infoToolSimplifyButton.disabled = true;
+                            infoToolPlayPauseButton.disabled = true;
+                            infoToolStopButton.disabled = true;
+                        } else {
+                            infoToolHideElement(infoToolArticleStatus);
+                            infoToolSimplifyButton.disabled = false;
+                            infoToolPlayPauseButton.disabled = false;
+                            infoToolStopButton.disabled = !infoToolState.isSpeaking;
+
+                            if (infoToolState.isShowingSimplified) {
+                                infoToolSimplifiedContentElem.innerHTML = infoToolState.simplifiedContent;
+                                infoToolShowElement(infoToolSimplifiedContentElem);
+                                infoToolHideElement(infoToolArticleContentElem);
+                                infoToolSimplifyButton.textContent = 'Show Original Text';
+                            } else {
+                                infoToolArticleContentElem.innerHTML = infoToolState.article.content;
+                                infoToolShowElement(infoToolArticleContentElem);
+                                infoToolHideElement(infoToolSimplifiedContentElem);
+                                infoToolSimplifyButton.textContent = 'Simplify with AI';
+                            }
+                        }
+                    } else {
+                        infoToolArticleTitleElem.textContent = '';
+                        infoToolArticleSourceElem.innerHTML = '';
+                        infoToolArticleContentElem.innerHTML = '';
+                        infoToolSimplifiedContentElem.innerHTML = '';
+                    }
+
+                    if (infoToolState.results.length > 1) {
+                        infoToolPrevArticleButton.disabled = infoToolState.currentArticleIndex <= 0;
+                        infoToolNextArticleButton.disabled = infoToolState.currentArticleIndex >= infoToolState.results.length - 1;
+                        infoToolShowElement(infoToolArticleNavControls);
+                    } else {
+                        infoToolHideElement(infoToolArticleNavControls);
+                    }
+                }
+            }
+
+            function renderInfoToolApiKeyModal() {
+                if (infoToolState.showApiKeyModal) {
+                    infoToolApiKeyModal.classList.add('visible'); // Use 'visible' class
+                } else {
+                    infoToolApiKeyModal.classList.remove('visible');
+                    infoToolApiKeyInput.value = '';
+                }
+            }
+
+            function renderInfoToolTTSControls() {
+                if (infoToolState.isTtsSupported) {
+                    infoToolTtsMasterToggle.disabled = false;
+                    infoToolTtsMasterToggle.title = infoToolState.isTtsEnabled ? 'Disable article reader' : 'Enable article reader';
+                    if (infoToolState.isTtsEnabled) {
+                        infoToolTtsMasterToggle.classList.add('active');
+                        infoToolTtsMasterToggle.style.stroke = '#000';
+                        infoToolShowElement(infoToolTtsPathTwo);
+                        infoToolHideElement(infoToolTtsPathOne);
+                    } else {
+                        infoToolTtsMasterToggle.classList.remove('active');
+                        infoToolTtsMasterToggle.style.stroke = 'currentColor';
+                        infoToolHideElement(infoToolTtsPathTwo);
+                        infoToolShowElement(infoToolTtsPathOne);
+                    }
+                    if (infoToolState.showTtsAttention) {
+                        infoToolTtsMasterToggle.classList.add('attention');
+                    } else {
+                        infoToolTtsMasterToggle.classList.remove('attention');
+                    }
+                } else {
+                    infoToolTtsMasterToggle.disabled = true;
+                    infoToolTtsMasterToggle.title = 'Text to Speech not supported';
+                    infoToolTtsMasterToggle.classList.remove('active', 'attention');
+                    infoToolHideElement(infoToolTtsPathTwo);
+                    infoToolShowElement(infoToolTtsPathOne);
+                }
+
+                if (infoToolState.isTtsEnabled && infoToolState.currentView === 'article') {
+                    infoToolShowElement(infoToolTtsArticleControls);
+                    if (infoToolState.isSpeaking && !infoToolState.isPaused) {
+                        infoToolPlayPauseButton.textContent = 'Pause';
+                        infoToolShowElement(infoToolPauseIcon);
+                        infoToolHideElement(infoToolPlayIcon);
+                    } else {
+                        infoToolPlayPauseButton.textContent = 'Play Article';
+                        infoToolShowElement(infoToolPlayIcon);
+                        infoToolHideElement(infoToolPauseIcon);
+                    }
+                    infoToolStopButton.disabled = !infoToolState.isSpeaking;
+                } else {
+                    infoToolHideElement(infoToolTtsArticleControls);
+                }
+            }
+
+            function renderInfoToolHistory() {
+                infoToolHistoryItemsContainer.innerHTML = '';
+                if (infoToolState.currentView === 'search' && infoToolState.searchHistory.length > 0) {
+                    infoToolShowElement(infoToolHistorySection);
+                    infoToolState.searchHistory.forEach(item => {
+                        const historyItem = document.createElement('span');
+                        historyItem.className = 'history-item';
+                        historyItem.textContent = item;
+                        historyItem.addEventListener('click', () => runSearchFromHistory(item));
+                        infoToolHistoryItemsContainer.appendChild(historyItem);
+                    });
+                } else {
+                    infoToolHideElement(infoToolHistorySection);
+                }
+            }
+
+
+            // --- INFO TOOL CORE APPLICATION LOGIC ---
+
+            async function infoToolPerformSearch(event) {
+                if (event) event.preventDefault();
+
+                infoToolStopSpeech();
+                infoToolState.currentView = 'search';
+                infoToolState.article = null;
+                infoToolState.currentArticleIndex = -1;
+                infoToolState.simplifiedContent = '';
+                infoToolState.isShowingSimplified = false;
+                infoToolState.query = infoToolSearchInput.value.trim();
+
+                if (!infoToolState.query) {
+                    infoToolState.hasSearched = false;
+                    infoToolState.searchError = '';
+                    infoToolState.results = [];
+                    renderInfoToolMainView();
+                    return;
+                }
+
+                infoToolState.isLoading = true;
+                infoToolState.hasSearched = true;
+                infoToolState.searchError = '';
+                infoToolState.results = [];
+                renderInfoToolMainView();
+
+                let allResults = [];
+                let failedSources = [];
+
+                const wikiSourceKeys = Object.keys(SOURCES);
+                const searchPromises = wikiSourceKeys.map(async (key) => {
+                    const source = SOURCES[key];
+                    const url = `${source.api}?action=query&list=search&srsearch=${encodeURIComponent(infoToolState.query)}&srprop=snippet&format=json&origin=*`;
+
+                    try {
+                        const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(`Network error (${response.status}): ${errorText.substring(0, 100)}`);
+                        }
+                        const data = await response.json();
+                        if (data.error) {
+                            throw new Error(`API Error: ${data.error.info}`);
+                        }
+                        return (data.query?.search || []).map(result => ({ ...result, sourceKey: key }));
+                    } catch (error) {
+                        failedSources.push(source.name);
+                        console.error(`Search failed for ${source.name}:`, error);
+                        return null;
+                    }
+                });
+
+                const settledPromises = await Promise.all(searchPromises);
+
+                allResults = settledPromises.flatMap(res => res || []);
+
+                if (allResults.length > 0) {
+                    allResults.sort((a, b) => {
+                        const aTitleMatch = a.title.toLowerCase().includes(infoToolState.query.toLowerCase());
+                        const bTitleMatch = b.title.toLowerCase().includes(infoToolState.query.toLowerCase());
+                        if (aTitleMatch && !bTitleMatch) return -1;
+                        if (!aTitleMatch && bTitleMatch) return 1;
+                        return 0;
+                    });
+                    infoToolState.results = allResults;
+                    addToHistory(infoToolState.query);
+
+                    if (failedSources.length > 0) {
+                        infoToolState.searchError = `Note: Could not get results from ${failedSources.join(', ')}.`;
+                    }
+                } else if (failedSources.length === wikiSourceKeys.length) {
+                    infoToolState.searchError = "Search failed for all sources. Please check your internet connection and try again.";
+                } else {
+                    infoToolState.searchError = '';
+                }
+
+                infoToolState.isLoading = false;
+                renderInfoToolMainView();
+            }
+
+            async function navigateToArticle(index) {
+                if (index < 0 || index >= infoToolState.results.length) return;
+
+                infoToolStopSpeech();
+                const result = infoToolState.results[index];
+                infoToolState.currentView = 'article';
+                infoToolState.isArticleLoading = true;
+                infoToolState.isShowingSimplified = false;
+                infoToolState.simplifiedContent = '';
+                infoToolState.article = null;
+                infoToolState.currentArticleIndex = index;
+                renderInfoToolMainView();
+
+                const source = SOURCES[result.sourceKey];
+                const url = `${source.api}?action=parse&page=${encodeURIComponent(result.title)}&prop=text&formatversion=2&format=json&origin=*`;
+
+                try {
+                    const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Network error (${response.status}): ${errorText.substring(0, 100)}`);
+                    }
+                    const data = await response.json();
+                    if (!data.parse?.text) {
+                        throw new Error('Could not retrieve article content. API response missing text.');
+                    }
+                    infoToolState.article = {
+                        title: data.parse.title,
+                        content: infoToolCleanHtmlContent(data.parse.text, result.sourceKey),
+                        url: `${new URL(source.api).origin}/index.php?title=${encodeURIComponent(result.title)}`,
+                        sourceKey: result.sourceKey
+                    };
+                } catch (error) {
+                    console.error('Article fetch error:', error);
+                    infoToolState.article = {
+                        title: result.title,
+                        content: `<p class="notice notice-error">Sorry, the article content could not be loaded: ${error.message}</p>`,
+                        url: result.url,
+                        sourceKey: result.sourceKey
+                    };
+                } finally {
+                    infoToolState.isArticleLoading = false;
+                    renderInfoToolMainView();
+                    infoToolAppContainer.querySelector('.search-wrapper').scrollTop = 0; // Scroll article to top
+                }
+            }
+
+            function infoToolGoBackToSearch() {
+                infoToolStopSpeech();
+                infoToolState.currentView = 'search';
+                infoToolState.article = null;
+                infoToolState.currentArticleIndex = -1;
+                infoToolState.simplifiedContent = '';
+                infoToolState.isShowingSimplified = false;
+                infoToolState.searchError = '';
+                renderInfoToolMainView();
+            }
+
+            // --- INFO TOOL AI SIMPLIFICATION METHODS ---
+            function handleSimplifyClick() {
+                infoToolStopSpeech();
+                if (infoToolState.isShowingSimplified) {
+                    infoToolState.isShowingSimplified = false;
+                    renderInfoToolArticleView();
+                    return;
+                }
+                if (!infoToolState.googleApiKey) {
+                    infoToolState.showApiKeyModal = true;
+                    renderInfoToolApiKeyModal();
+                    return;
+                }
+                simplifyTextWithAi();
+            }
+
+            function infoToolSaveAndUseApiKey() {
+                const tempKey = infoToolApiKeyInput.value.trim();
+                if (!tempKey) {
+                    alert("Please enter your API key.");
+                    return;
+                }
+                infoToolState.googleApiKey = tempKey;
+                localStorage.setItem('googleApiKey', infoToolState.googleApiKey);
+                infoToolState.showApiKeyModal = false;
+                renderInfoToolApiKeyModal();
+                simplifyTextWithAi();
+            }
+
+            async function simplifyTextWithAi() {
+                if (!infoToolState.article || !infoToolState.googleApiKey) return;
+
+                infoToolState.isSimplifying = true;
+                renderInfoToolArticleView();
+
+                const plainTextContent = new DOMParser().parseFromString(infoToolState.article.content, "text/html").documentElement.textContent;
+
+                const prompt = `You are an expert technical writer. Your task is to simplify the following technical text. Your goal is to make it easy for a user who is new to the topic but is technically competent to understand.
+                - Explain technical jargon in simple terms.
+                - If there are complex shell commands, break them down into parts and explain what each part does.
+                - Rewrite dense sentences into clearer, more direct language.
+                - Maintain the core meaning, accuracy, and all essential steps or commands. Do not omit critical information.
+                - Use Markdown for formatting, including headers, lists, and code blocks for commands.
+
+                Here is the text to simplify:\n\n---\n\n${plainTextContent}`;
+
+                // --- FIX: Updated model to gemini-1.5-pro to address the "not found" error ---
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${infoToolState.googleApiKey}`;
+
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error?.message || 'Invalid API Key or API error.');
+                    }
+
+                    const data = await response.json();
+                    const simplifiedMarkdown = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (simplifiedMarkdown) {
+                        infoToolState.simplifiedContent = marked.parse(simplifiedMarkdown);
+                        infoToolState.isShowingSimplified = true;
+                    } else {
+                        throw new Error('AI returned no content.');
+                    }
+                } catch (error) {
+                    console.error('AI Simplification Error:', error);
+                    alert(`Simplification failed: ${error.message}\nPlease check your API key and try again.`);
+                    infoToolState.isShowingSimplified = false;
+                } finally {
+                    infoToolState.isSimplifying = false;
+                    renderInfoToolArticleView();
+                }
+            }
+
+            // --- INFO TOOL TEXT-TO-SPEECH (TTS) METHODS ---
+            const speechSynthesis = window.speechSynthesis;
+            let ttsSpeakingUtterance = null;
+
+            function infoToolToggleTtsMaster() {
+                if (!infoToolState.isTtsSupported) return;
+                infoToolState.isTtsEnabled = !infoToolState.isTtsEnabled;
+                localStorage.setItem('acreetionTtsEnabled', infoToolState.isTtsEnabled);
+                if (!infoToolState.isTtsEnabled) {
+                    infoToolStopSpeech();
+                }
+                renderInfoToolTTSControls();
+            }
+
+            function infoToolSpeakNextChunk() {
+                if (infoToolState.currentTtsChunk >= infoToolState.ttsChunks.length || !infoToolState.isSpeaking || !infoToolState.isTtsSupported) {
+                    infoToolState.isSpeaking = false;
+                    infoToolState.isPaused = false;
+                    renderInfoToolTTSControls();
+                    return;
+                }
+                ttsSpeakingUtterance = new SpeechSynthesisUtterance(infoToolState.ttsChunks[infoToolState.currentTtsChunk]);
+                ttsSpeakingUtterance.onend = () => {
+                    if (infoToolState.isSpeaking) {
+                        infoToolState.currentTtsChunk++;
+                        infoToolSpeakNextChunk();
+                    }
+                };
+                ttsSpeakingUtterance.onerror = (e) => {
+                    console.error("Speech Synthesis Error:", e);
+                    infoToolState.isSpeaking = false;
+                    infoToolState.isPaused = false;
+                    renderInfoToolTTSControls();
+                };
+                speechSynthesis.speak(ttsSpeakingUtterance);
+            }
+
+            function infoToolStartSpeech() {
+                if (infoToolState.isArticleLoading || infoToolState.isSimplifying || !infoToolState.isTtsEnabled || !infoToolState.isTtsSupported) return;
+
+                infoToolStopSpeech();
+                infoToolState.isPaused = false;
+                infoToolState.isSpeaking = true;
+
+                const contentToRead = infoToolState.isShowingSimplified ? infoToolState.simplifiedContent : infoToolState.article.content;
+                const plainText = new DOMParser().parseFromString(contentToRead, "text/html").documentElement.textContent.replace(/\s+/g, ' ').trim();
+
+                infoToolState.ttsChunks = plainText.match(/[\s\S]{1,200}/g) || [];
+                infoToolState.currentTtsChunk = 0;
+
+                infoToolSpeakNextChunk();
+                renderInfoToolTTSControls();
+            }
+
+            function infoToolPauseSpeech() {
+                if (infoToolState.isTtsSupported && speechSynthesis.speaking && !speechSynthesis.paused) {
+                    speechSynthesis.pause();
+                    infoToolState.isPaused = true;
+                    renderInfoToolTTSControls();
+                }
+            }
+
+            function infoToolResumeSpeech() {
+                if (infoToolState.isTtsSupported && speechSynthesis.paused) {
+                    speechSynthesis.resume();
+                    infoToolState.isPaused = false;
+                    renderInfoToolTTSControls();
+                }
+            }
+
+            function infoToolStopSpeech() {
+                infoToolState.isSpeaking = false;
+                infoToolState.isPaused = false;
+                infoToolState.ttsChunks = [];
+                infoToolState.currentTtsChunk = 0;
+                if (infoToolState.isTtsSupported && speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                renderInfoToolTTSControls();
+            }
+
+            function handlePlayPause() {
+                if (!infoToolState.isSpeaking || speechSynthesis.speaking === false) {
+                    infoToolStartSpeech();
+                } else if (infoToolState.isPaused) {
+                    infoToolResumeSpeech();
+                } else {
+                    infoToolPauseSpeech();
+                }
+            }
+
+            // --- INFO TOOL HISTORY METHODS ---
+            function addToHistory(query) {
+                const cleanedQuery = query.toLowerCase().trim();
+                if (!cleanedQuery) return;
+
+                const history = infoToolState.searchHistory.filter(item => item.toLowerCase().trim() !== cleanedQuery);
+                history.unshift(query);
+
+                infoToolState.searchHistory = history.slice(0, 10);
+                localStorage.setItem('acreetionInfoHistory', JSON.stringify(infoToolState.searchHistory));
+                renderInfoToolHistory();
+            }
+
+            function runSearchFromHistory(query) {
+                infoToolSearchInput.value = query;
+                infoToolPerformSearch();
+            }
+
+            function clearHistory() {
+                infoToolState.searchHistory = [];
+                localStorage.removeItem('acreetionInfoHistory');
+                renderInfoToolHistory();
+            }
+
+            // --- INFO TOOL INITIALIZATION ---
+            function initInfoTool() {
+                // Check for TTS attention on first visit (only when tool is opened for first time)
+                const savedTtsPref = localStorage.getItem('acreetionTtsEnabled');
+                if (savedTtsPref === null && infoToolState.isTtsSupported) {
+                    infoToolState.showTtsAttention = true;
+                    setTimeout(() => {
+                        infoToolState.showTtsAttention = false;
+                        renderInfoToolTTSControls();
+                    }, 4500);
+                }
+
+                // Attach Info Tool specific event listeners
+                infoToolSearchForm.addEventListener('submit', infoToolPerformSearch);
+                infoToolBackToResultsButton.addEventListener('click', infoToolGoBackToSearch);
+                infoToolSimplifyButton.addEventListener('click', handleSimplifyClick);
+                infoToolCancelApiKeyButton.addEventListener('click', () => {
+                    infoToolState.showApiKeyModal = false;
+                    renderInfoToolApiKeyModal();
+                });
+                infoToolSaveApiKeyButton.addEventListener('click', infoToolSaveAndUseApiKey);
+
+                infoToolTtsMasterToggle.addEventListener('click', infoToolToggleTtsMaster);
+                infoToolPlayPauseButton.addEventListener('click', handlePlayPause);
+                infoToolStopButton.addEventListener('click', infoToolStopSpeech);
+
+                infoToolPrevArticleButton.addEventListener('click', () => navigateToArticle(infoToolState.currentArticleIndex - 1));
+                infoToolNextArticleButton.addEventListener('click', () => navigateToArticle(infoToolState.currentArticleIndex + 1));
+
+                infoToolClearHistoryButton.addEventListener('click', clearHistory);
+
+                // Initial render of the Info Tool's UI components
+                renderInfoToolMainView();
+                renderInfoToolApiKeyModal();
+                renderInfoToolTTSControls();
+            }
+
+            // --- Master Info Tool Trigger ---
+            const infoToolTrigger = document.getElementById('infoToolTrigger');
+            let infoToolInitialized = false;
+
+            infoToolTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                // No fade-out for main body as it's not a page transition, but a modal overlay
+                // document.body.classList.add('fade-out'); 
+                // setTimeout(() => {
+                    infoToolAppContainer.classList.add('visible'); // Show Info Tool
+                    document.body.style.overflow = 'hidden'; // Prevent body scroll
+                    // document.body.classList.remove('fade-out'); // Not needed if no fade-out class added
+                    if (!infoToolInitialized) {
+                        initInfoTool(); // Initialize the tool only once
+                        infoToolInitialized = true;
+                    } else {
+                        // If already initialized, ensure state is clean or re-rendered
+                        infoToolGoBackToSearch(); // Go back to search if already in article view
+                        infoToolSearchInput.value = ''; // Clear previous search query
+                        infoToolPerformSearch(); // Re-trigger a blank search to show default info
+                    }
+                // }, 0); // Removed timeout for immediate modal
+            });
+
+            closeInfoToolButton.addEventListener('click', () => {
+                infoToolStopSpeech(); // Stop any speech when closing tool
+                infoToolAppContainer.classList.remove('visible'); // Hide Info Tool
+                document.body.style.overflow = ''; // Restore body scroll
             });
         });
     </script>
