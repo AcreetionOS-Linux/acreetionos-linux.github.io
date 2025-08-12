@@ -310,7 +310,7 @@
                         <p>To fund our project without compromising our values, we are exploring the creation of proprietary software for other operating systems. This allows our Linux-based work to remain free and open, forever.</p>
                         
                         <h3>How We Work</h3>
-                        <p>As a small team, we use a modern, centralized workflow that fits our needs. We use our <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord server</a> for community interaction and as a replacement for GitHub issues, keeping everything in one place. We also utilize Nextcloud for internal collaboration and are setting up a Discourse instance for community forums.</p>
+                        <p>As a small team, we use a modern, centralized workflow that fits our needs. We use our <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord server</a> for community interaction and as a replacement for GitHub issues, keeping everything in one place. We also utilize <a href="https://nextcloud.acreetionos.org" target="_blank" rel="noopener noreferrer">Nextcloud</a> for internal collaboration and are setting up a Discourse instance for community forums.</p>
                         
                         <h3>How You Can Contribute</h3>
                         <p>We are actively looking for contributors and sponsors to help us grow. Scaling up takes time, and support from the community is crucial. We currently only have one download mirror and are looking for sponsors to help us expand our infrastructure.</p>
@@ -325,7 +325,7 @@
             <article id="easy-install" class="content-box">
                 <div class="box-header"><h2>The Easy Way: AcreetionOS USB Flasher</h2></div>
                  <div class="box-body">
-                    <p>This is the <strong>recommended method for all users</strong>. Our utility makes creating a bootable USB drive simple. Download the flasher for your current OS, or grab an ISO file below to use your own tool.</p>
+                    <p>This is the <strong>recommended method for all users</strong>. Our utility makes creating a bootable USB drive simple. Just select your downloaded AcreetionOS ISO, choose your USB drive, and click 'Flash!'. For more details, see the <a href="#" data-modal-target="#documentation-viewer" data-doc-name="installation.md">flashing instructions in our guide</a>.</p>
                     <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px;">
                         <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS%20USB%20Flasher-1.0.0.AppImage" class="btn btn-flasher">Download Flasher for Linux (.AppImage)</a>
                         <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS_USB_Flasher_Setup_1.0.0.exe" class="btn btn-flasher">Download Flasher for Windows (.exe)</a>
@@ -336,7 +336,7 @@
             <article id="manual-downloads" class="content-box">
                 <div class="box-header"><h2>Manual Downloads (ISO Files)</h2></div>
                 <div class="box-body">
-                    <p>Use these links to download an ISO file directly. This is for users who want to use their own flashing tool (like BalenaEtcher, Rufus, etc.).</p>
+                    <p>Use these links to download an ISO file directly. This is for users who want to use their own flashing tool. See below for brief instructions on popular tools.</p>
                     
                     <h3 style="color: var(--acreetion-green);">Cinnamon Edition (Main)</h3>
                     <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -357,6 +357,22 @@
                         <a href="https://sourceforge.net/projects/hackman-linux/files/latest/download" class="btn btn-storm">Download StormOS ISO (Mirror)</a>
                         <a href="https://archive.org/download/stormos-07-21-2025/stormos-07-21-2025.iso" class="btn btn-storm">Download StormOS ISO (Mirror)</a>
                         <a href="https://archive.org/download/stormos-07-21-2025/stormos-07-21-2025_archive.torrent" class="btn btn-storm">Download StormOS ISO (Torrent)</a>
+                    </div>
+                    
+                    <div class="article-content">
+                        <h3>Using Your Own Flashing Tool</h3>
+                        <p>After downloading an ISO, you will need to write it to a USB drive (8GB or larger recommended). <strong>This will erase all data on the USB drive.</strong></p>
+                        
+                        <h4 style="color: var(--acreetion-text-bright); margin-top: 1rem;">Balena Etcher (Recommended for most users)</h4>
+                        <p><a href="https://etcher.balena.io/" target="_blank" rel="noopener noreferrer">Balena Etcher</a> is a simple graphical tool for Windows, macOS, and Linux. 1. Select the downloaded AcreetionOS ISO file. 2. Select your USB drive. 3. Click "Flash!".</p>
+
+                        <h4 style="color: var(--acreetion-text-bright); margin-top: 1rem;">Ventoy (for multi-boot USBs)</h4>
+                        <p><a href="https://www.ventoy.net/" target="_blank" rel="noopener noreferrer">Ventoy</a> is a tool that lets you create a bootable USB drive where you can simply copy multiple ISO files. 1. Install Ventoy to your USB drive once. 2. Drag and drop the AcreetionOS ISO file onto the USB. 3. Boot from the USB to see the Ventoy menu.</p>
+
+                        <h4 style="color: var(--acreetion-text-bright); margin-top: 1rem;">Using `dd` (Advanced Linux Users)</h4>
+                        <p>The `dd` command is a powerful but dangerous tool. Incorrect usage can lead to data loss. Be certain of your USB drive's device name (e.g., `/dev/sdb`, not `/dev/sdb1`).</p>
+                        <pre><code>sudo dd if=/path/to/AcreetionOS.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
+                        <p>Replace `/path/to/AcreetionOS.iso` with the actual path to your downloaded file and `/dev/sdX` with your USB device identifier.</p>
                     </div>
                 </div>
             </article>
@@ -457,10 +473,64 @@
 
             // --- DOCS DATA ---
             const docs = [
-                { id: 'installation.md', title: 'Installation Guide', content: `# Installation Guide\n\nWelcome to AcreetionOS! This guide will walk you through installing the OS using our recommended USB Flasher tool.\n\n## Step 1: Get the Tools\n\n1.  The **AcreetionOS USB Flasher**.\n2.  The **AcreetionOS ISO file** for your chosen edition.\n\n## Step 2: Create a Bootable USB\n\nUse the flasher to write the ISO to a USB drive (8GB+ recommended).\n\n## Step 3: Boot from USB\n\nRestart your PC and open the boot menu (usually F2, F12, DEL, or ESC). Select the USB drive.\n\n## Step 4: Follow the Installer\n\nThe Calamares installer will start automatically. Follow the on-screen prompts for partitioning and user setup.\n\n## Step 5: First Boot\n\nReboot, remove the USB, and log in. You can now update your system using the graphical package manager.` },
-                { id: 'philosophy.md', title: 'Project Philosophy', content: `# Project Philosophy\n\nAcreetionOS is an Arch Linux fork designed to be a user-friendly entry point into the Arch ecosystem. We provide a stable, pre-configured experience to get you started comfortably.\n\nWhile the Arch Wiki is an invaluable resource, we encourage new users to seek help from our community channels first.` },
+                { id: 'installation.md', title: 'Installation Guide', content: `# Installation Guide
+
+Welcome to AcreetionOS! This guide covers creating a bootable USB drive, which is the first step to installing the OS.
+
+## Before You Start
+
+*   You will need a USB drive (8GB or larger is recommended).
+*   **WARNING:** The process described here will erase all data on your USB drive. Back up any important files before you begin.
+*   Download the AcreetionOS ISO file for your preferred edition from the main page.
+
+## Method 1: AcreetionOS USB Flasher (Recommended)
+
+This is the easiest method for all users. You can download the flasher directly from the "Easy Install" section of our website.
+
+1.  Download and run the **AcreetionOS USB Flasher** for your operating system (Windows or Linux).
+2.  Click to select the AcreetionOS ISO file you downloaded.
+3.  From the dropdown menu, choose your target USB drive.
+4.  Click the **Flash** button and wait for it to complete.
+
+## Method 2: Manual Installation
+
+If you prefer to use your own tools, here are instructions for popular options.
+
+### Using Balena Etcher
+
+Balena Etcher is a simple, graphical tool that works on Windows, macOS, and Linux. You can download it from the [official website](https://etcher.balena.io/).
+
+1.  **Select Image:** Open Etcher and click "Flash from file" to choose the AcreetionOS ISO.
+2.  **Select Target:** Etcher should automatically detect your USB drive. If not, click "Select target" and choose the correct one.
+3.  **Flash:** Click the "Flash!" button to begin the process.
+
+### Using Ventoy
+
+Ventoy is excellent for creating a multi-boot USB drive that can hold many different ISO files. You can download it from the [Ventoy website](https://www.ventoy.net/).
+
+1.  **Install Ventoy:** Run the Ventoy tool and install it onto your USB drive. You only need to do this once.
+2.  **Copy ISO:** Once Ventoy is installed, your USB drive will appear as a normal storage device. Simply copy the AcreetionOS ISO file onto it.
+3.  **Boot:** When you boot from the USB, Ventoy will present a menu showing all the ISOs you've copied. Select AcreetionOS to start the installer.
+
+### Using \`dd\` (For Advanced Linux Users)
+
+The \`dd\` command is a powerful command-line utility. **Use with extreme caution, as specifying the wrong output device (\`of=\`) can permanently destroy data on your system drives.**
+
+1.  **Identify USB Drive:** Insert your USB and find its device name. Use a command like \`lsblk\` or \`fdisk -l\`. It will be something like \`/dev/sdb\` or \`/dev/sdc\` (not a partition like \`/dev/sdb1\`).
+2.  **Run the Command:** Execute the following, replacing the input file (\`if=\`) and output file (\`of=\`) with your actual paths.
+
+<pre><code>sudo dd if=/path/to/AcreetionOS.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
+
+## Final Steps: Booting and Installing
+
+1.  Restart your computer with the newly created USB drive plugged in.
+2.  Enter your computer's boot menu (common keys are F2, F10, F12, or DEL) and select the USB drive to boot from.
+3.  The AcreetionOS live environment will load, and the Calamares installer will start automatically. Follow the on-screen prompts to complete the installation.
+
+For more detailed guides and troubleshooting, please visit our **[AcreetionOS Wiki](https://wiki.acreetionos.org)**.` },
+                { id: 'philosophy.md', title: 'Project Philosophy', content: `# Project Philosophy\n\nAcreetionOS is an Arch Linux fork designed to be a user-friendly entry point into the Arch ecosystem. We provide a stable, pre-configured experience to get you started comfortably.\n\nOur primary development and community hubs are our [Discord Server](https://discord.gg/AJ6uuvtDXY) and our [Nextcloud instance](https://nextcloud.acreetionos.org).\n\nWhile the Arch Wiki is an invaluable resource, we encourage new users to seek help from our community channels or our own [AcreetionOS Wiki](https://wiki.acreetionos.org) first.` },
                 { id: 'flavours.md', title: 'Our Flavours', content: `# Our Flavours\n\nAcreetionOS offers multiple editions ("flavours") with different desktop environments.\n\n## AcreetionOS Cinnamon\n\nOur main edition, offering a traditional, feature-rich experience.\n\n## AcreetionOS GNOME\n\nPerfect for users who enjoy a modern, minimalist workflow.` },
-                { id: 'development.md', title: 'Development Notes', content: `# Development Notes\n\n## Graphics Drivers\n\n### Mesa (Intel & AMD)\n\nThe live ISO includes the open-source Mesa drivers for broad hardware support.\n\n### NVIDIA (Proprietary)\n\nNVIDIA drivers are **not** included in the live environment. Install them after the OS installation for best performance:\n\n<pre><code>sudo pacman -S nvidia-dkms</code></pre>\n\nUsing \`nvidia-dkms\` is recommended as it rebuilds automatically on kernel updates.` }
+                { id: 'development.md', title: 'Development Notes', content: `# Development Notes\n\n## Graphics Drivers\n\n### Mesa (Intel & AMD)\n\nThe live ISO includes the open-source Mesa drivers for broad hardware support.\n\n### NVIDIA (Proprietary)\n\nNVIDIA drivers are **not** included in the live environment. Install them after the OS installation for best performance. For detailed instructions, please see the relevant page on the [AcreetionOS Wiki](https://wiki.acreetionos.org).\n\n<pre><code>sudo pacman -S nvidia-dkms</code></pre>\n\nUsing \`nvidia-dkms\` is recommended as it rebuilds automatically on kernel updates.` }
             ];
 
             // --- MODAL & DOCS SELECTORS ---
