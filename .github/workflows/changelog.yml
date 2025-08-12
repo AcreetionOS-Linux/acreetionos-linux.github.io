@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+permissions:
+  contents: write
+
 jobs:
   changelog:
     runs-on: ubuntu-latest
@@ -25,19 +28,28 @@ jobs:
             -d "{\"inputs\": \"Rewrite this commit so it’s exciting and easy for non-developers: $COMMIT\"}" \
             https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1)
 
-          echo "$RESPONSE" | jq -r '
-            if type == "array" then
+          PRETTY=$(echo "$RESPONSE" | jq -r '
+            if type == "array" and .[0].generated_text then
               .[0].generated_text
             elif type == "object" and .generated_text then
               .generated_text
             elif type == "object" and .error then
-              "Error: " + .error
+              empty
             else
-              "Error rewriting commit"
+              empty
             end
-          ' > pretty_commit.txt
+          ')
+
+          if [ -z "$PRETTY" ]; then
+            echo "AI rewrite failed, skipping Mastodon and changelog update."
+            echo "" > pretty_commit.txt
+            echo "SKIP" > skip.txt
+          else
+            echo "$PRETTY" > pretty_commit.txt
+          fi
 
       - name: Update changelog.html
+        if: ${{ !hashFiles('skip.txt') }}
         run: |
           DATE=$(date +"%Y-%m-%d %H:%M:%S")
           ENTRY="<p><strong>$DATE:</strong> $(cat pretty_commit.txt | sed 's/"/\&quot;/g')</p>"
@@ -49,6 +61,7 @@ jobs:
           git push
 
       - name: Post to Mastodon
+        if: ${{ !hashFiles('skip.txt') }}
         run: |
           STATUS=$(cat pretty_commit.txt)
           curl -X POST "https://fosstodon.org/api/v1/statuses" \
