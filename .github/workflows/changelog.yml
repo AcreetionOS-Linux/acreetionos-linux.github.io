@@ -1,0 +1,44 @@
+name: AcreetionOS Changelog & Social Blast
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get last commit
+        run: echo "$(git log -1 --pretty=%B)" > commit.txt
+
+      - name: Rewrite commit for public
+        run: |
+          COMMIT=$(cat commit.txt | jq -R -s '.')
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.HF_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"inputs\": \"Rewrite this commit so it’s exciting and easy for non-developers: $COMMIT\"}" \
+            https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1)
+          echo $RESPONSE | jq -r '.[0].generated_text' > pretty_commit.txt
+
+      - name: Update changelog.html
+        run: |
+          DATE=$(date +"%Y-%m-%d %H:%M:%S")
+          ENTRY="<p><strong>$DATE:</strong> $(cat pretty_commit.txt)</p>"
+          echo $ENTRY >> changelog.html
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add changelog.html
+          git commit -m "Update changelog"
+          git push
+
+      - name: Post to Mastodon
+        run: |
+          curl -X POST "https://fosstodon.org/api/v1/statuses" \
+            -H "Authorization: Bearer ${{ secrets.MASTODON_ACCESS_TOKEN }}" \
+            -F "status=$(cat pretty_commit.txt)"
