@@ -38,10 +38,27 @@
             --storm-color: #61afef; /* Blue */
             --flasher-color: #f39c12; /* Orange for the flasher tool */
 
-            /* --- Documentation Viewer Palette --- */
+            /* --- Documentation Viewer Palette (Default Dark) --- */
+            --doc-sidebar-width: 250px;
             --doc-bg: #212121;
             --doc-content-bg: #2c2c2c;
-            --doc-link-color: #61afef;
+            --doc-text-color: var(--acreetion-text);
+            --doc-heading-color: var(--acreetion-text-bright);
+            --doc-link-color: var(--acreetion-green);
+            --doc-control-bar-bg: #262626;
+
+            /* --- NEW: Light & Sepia Theme Variables --- */
+            --doc-bg-light: #f5f5f5;
+            --doc-content-bg-light: #ffffff;
+            --doc-text-color-light: #444444;
+            --doc-heading-color-light: #111111;
+            --doc-control-bar-bg-light: #e0e0e0;
+
+            --doc-bg-sepia: #f4e8d5;
+            --doc-content-bg-sepia: #fbf1e2;
+            --doc-text-color-sepia: #5b4636;
+            --doc-heading-color-sepia: #4a382b;
+            --doc-control-bar-bg-sepia: #e9decb;
 
             --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             --font-mono: 'Fira Code', monospace;
@@ -59,20 +76,19 @@
             animation: fadeIn 0.5s ease-in-out forwards;
         }
         
-        /* Fade Out Animation Class for page transitions */
-        body.fade-out {
-            animation: fadeOut 0.5s ease-in-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
+        body.fade-out { animation: fadeOut 0.5s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        
+        /* --- Announcement Bar --- */
+        .announcement-bar { background-color: var(--acreetion-panel-bg); border-bottom: 1px solid var(--acreetion-box-border); padding: 0.5rem 0; color: var(--acreetion-text-bright); overflow: hidden; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .announcement-content { display: inline-block; animation: marquee 45s linear infinite; font-size: 0.95rem; }
+        .announcement-bar:hover .announcement-content { animation-play-state: paused; }
+        .announcement-content > span { padding-right: 4rem; }
+        .announcement-bar .separator { margin: 0 1.5rem; color: var(--acreetion-box-border); }
+        .announcement-bar a { color: var(--acreetion-green); font-weight: bold; text-decoration: none; }
+        .announcement-bar a:hover { text-decoration: underline; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* --- HEADER --- */
         .page-header { background-color: var(--acreetion-panel-bg); border-bottom: 4px solid var(--acreetion-green); }
@@ -96,7 +112,7 @@
         .article-content a:not(.btn), .sidebar-box p a { color: var(--acreetion-green); text-decoration: none; font-weight: 500; }
         .article-content a:not(.btn):hover, .sidebar-box p a:hover { text-decoration: underline; }
         .article-content p, .article-content li { color: var(--acreetion-text); margin-bottom: 1rem; }
-        .article-content ul { padding-left: 20px; }
+        .article-content ul { padding-left: 20px; list-style-position: inside; }
         
         .article-logo-cluster {
             float: left;
@@ -125,7 +141,7 @@
         .sidebar-nav a.active { background-color: var(--acreetion-green); color: black; font-weight: 700; }
         .sidebar-box p { color: var(--acreetion-text); padding: 0 0.2rem 1rem; }
 
-        /* --- CODE BLOCKS & BUTTONS --- */
+        /* --- BUTTONS & CODE --- */
         code, pre { font-family: var(--font-mono); font-size: 0.9rem; }
         code { background-color: var(--acreetion-code-bg); border: 1px solid rgba(46, 204, 113, 0.2); padding: 0.2em 0.4em; border-radius: 3px; color: var(--acreetion-text-bright); }
         pre { background-color: var(--acreetion-panel-bg); border: 1px solid var(--acreetion-box-border); padding: 1em; overflow-x: auto; margin-top: 0.5rem; }
@@ -135,91 +151,75 @@
         .btn-gnome { background-color: var(--gnome-color); }
         .btn-storm { background-color: var(--storm-color); }
         .btn-flasher { background-color: var(--flasher-color); }
-
+        
         /* --- ACCENT COLORS --- */
         #about .box-header h2 { color: var(--acreetion-green); }
         #about h3 { color: var(--acreetion-green); }
+        #philosophy .box-header h2 { color: var(--storm-color); }
+        #philosophy h3 { color: var(--storm-color); }
         #easy-install .box-header h2 { color: var(--flasher-color); }
         #manual-downloads .box-header h2 { color: var(--acreetion-green); }
         #manual-downloads h3:first-of-type { margin-top: 0; }
         #manual-downloads .download-options-group { margin-bottom: 2rem; }
-        
-        /* --- MODAL OVERLAYS (for Docs Viewer & IRC) --- */
-        .modal-overlay { 
-            display: none; /* Controlled by JS */
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0,0,0,0.7); 
-            backdrop-filter: blur(8px); /* Add backdrop blur */
-            z-index: 1000; 
-            overflow-y: auto; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 1rem; 
-            opacity: 0; /* For fade in/out */
-            visibility: hidden; /* For proper hiding */
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-overlay.visible { 
-            display: flex; /* Or block depending on content */
-            opacity: 1; 
-            visibility: visible;
-        }
-        .modal-box { 
-            position: relative; 
-            cursor: default; 
-            background-color: var(--doc-content-bg); 
-            border: 1px solid var(--acreetion-box-border); 
-            padding: 2rem 3rem; 
-            max-width: 700px; /* Default modal width */
-        }
 
-        .modal-close-btn { 
-            position: absolute; 
-            top: 1rem; 
-            right: 1rem; 
-            background-color: var(--gnome-color); 
-            color: black; 
-            font-family: var(--font-sans); 
-            font-size: 1.5rem; 
-            font-weight: 700; 
-            border: none; 
-            border-radius: 50%; 
-            width: 40px; 
-            height: 40px; 
-            cursor: pointer; 
-            line-height: 40px; 
-            text-align: center; 
-            z-index: 1001; /* Ensure close button is above everything */
-            transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-        .modal-close-btn:hover {
-            background-color: #d15c64; /* Slightly darker red */
-            transform: scale(1.05);
-        }
-
+        /* --- MODAL OVERLAYS --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000; overflow-y: auto; align-items: center; justify-content: center; padding: 1rem; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .modal-overlay.visible { display: flex; opacity: 1; visibility: visible; }
+        .modal-box { position: relative; cursor: default; background-color: var(--doc-content-bg); border: 1px solid var(--acreetion-box-border); padding: 2rem 3rem; max-width: 700px; }
+        .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background-color: var(--gnome-color); color: black; font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; line-height: 40px; text-align: center; z-index: 1001; transition: background-color 0.2s ease, transform 0.2s ease; }
+        .modal-close-btn:hover { background-color: #d15c64; transform: scale(1.05); }
         .modal-box h2 { color: var(--acreetion-green); }
         
-        /* --- DOCUMENTATION VIEWER --- */
-        .doc-container { display: grid; grid-template-columns: 250px 1fr; gap: 2rem; width: 90%; max-width: 1400px; background-color: var(--doc-bg); border: 1px solid var(--acreetion-box-border); position: relative; cursor: default; }
-        .doc-sidebar { background-color: var(--acreetion-box-bg); padding: 1.5rem; }
+        /* --- DOCUMENTATION VIEWER: FULL SCREEN & THEMEABLE --- */
+        .modal-overlay#documentation-viewer { padding: 0; align-items: stretch; justify-content: stretch; }
+        .doc-container { display: grid; grid-template-areas: "sidebar main"; grid-template-columns: var(--doc-sidebar-width) 1fr; width: 100%; height: 100%; max-width: none; background-color: var(--doc-bg); border: none; position: relative; cursor: default; }
+        .doc-sidebar { grid-area: sidebar; background-color: var(--acreetion-box-bg); padding: 1.5rem; overflow-y: auto; }
         .doc-sidebar h3 { color: var(--acreetion-text-bright); border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; }
         .doc-sidebar ul { list-style: none; padding: 0; margin-top: 1rem; }
         .doc-sidebar a { display: block; color: var(--acreetion-text); text-decoration: none; padding: 0.5rem; border-radius: 3px; cursor: pointer; }
         .doc-sidebar a:hover { background-color: #3a3a3a; color: var(--acreetion-text-bright); }
         .doc-sidebar a.active { background-color: var(--acreetion-green); color: black; font-weight: 700; }
-        #doc-main-content { padding: 2rem 3rem; overflow-y: auto; max-height: 85vh; }
-        #doc-main-content h1, #doc-main-content h2, #doc-main-content h3 { color: var(--acreetion-text-bright); border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        #doc-main-content h1 { font-size: 2rem; }
-        #doc-main-content h2 { font-size: 1.5rem; margin-top: 2rem; }
-        #doc-main-content h3 { font-size: 1.2rem; margin-top: 1.5rem; }
-        #doc-main-content p, #doc-main-content li { color: var(--acreetion-text); }
-        #doc-main-content a { color: var(--doc-link-color); }
+        
+        .doc-main-view { grid-area: main; display: flex; flex-direction: column; overflow: hidden; background-color: var(--doc-content-bg); transition: background-color 0.3s ease; }
+        .doc-control-bar { padding: 0.75rem 2.5rem; background-color: var(--doc-control-bar-bg); border-bottom: 1px solid var(--acreetion-box-border); flex-shrink: 0; display: flex; align-items: center; gap: 1.5rem; transition: background-color 0.3s ease; }
+        .doc-control-bar .control-group { display: flex; align-items: center; gap: 0.5rem; }
+        .doc-control-bar .control-group-label { font-weight: 500; font-size: 0.9rem; color: var(--doc-heading-color); }
+        .doc-control-bar button { padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid var(--acreetion-box-border); cursor: pointer; background-color: var(--acreetion-box-bg); color: var(--acreetion-text-bright); }
+        .doc-control-bar button.active { background-color: var(--storm-color); color: black; border-color: var(--storm-color); }
+        #doc-read-btn { background-color: var(--acreetion-green); color: black; }
+        #doc-stop-btn { background-color: var(--gnome-color); color: black; }
+
+        .doc-nav-arrow { position: fixed; top: 50%; transform: translateY(-50%); z-index: 1002; background-color: rgba(0, 0, 0, 0.5); color: white; border: 1px solid var(--acreetion-box-border); border-radius: 50%; width: 50px; height: 50px; font-size: 2rem; cursor: pointer; transition: all 0.2s ease; }
+        .doc-nav-arrow:hover:not(:disabled) { background-color: var(--acreetion-green); color: black; }
+        .doc-nav-arrow:disabled { opacity: 0.2; cursor: not-allowed; }
+        #doc-prev-btn { left: calc(var(--doc-sidebar-width) + 2rem); }
+        #doc-next-btn { right: 2rem; }
+        
+        #doc-main-content { padding: 2rem 3rem; overflow-y: auto; height: 100%; transition: font-size 0.2s ease, color 0.3s ease; }
+        #doc-main-content h1, #doc-main-content h2, #doc-main-content h3 { color: var(--doc-heading-color); border-bottom: 1px solid var(--acreetion-box-border); padding-bottom: 0.5rem; margin-bottom: 1rem; transition: color 0.3s ease; }
+        #doc-main-content h1 { font-size: 2em; }
+        #doc-main-content h2 { font-size: 1.5em; margin-top: 2rem; }
+        #doc-main-content h3 { font-size: 1.2em; margin-top: 1.5rem; }
+        #doc-main-content p, #doc-main-content li { color: var(--doc-text-color); transition: color 0.3s ease; }
+        #doc-main-content a { color: var(--doc-link-color); transition: color 0.3s ease; }
         #doc-main-content ul { padding-left: 20px; }
         
+        /* THEME: Light */
+        .doc-main-view.theme-light { background-color: var(--doc-content-bg-light); }
+        .doc-main-view.theme-light .doc-control-bar { background-color: var(--doc-control-bar-bg-light); }
+        .doc-main-view.theme-light #doc-main-content p, .doc-main-view.theme-light #doc-main-content li { color: var(--doc-text-color-light); }
+        .doc-main-view.theme-light #doc-main-content h1, .doc-main-view.theme-light #doc-main-content h2, .doc-main-view.theme-light #doc-main-content h3 { color: var(--doc-heading-color-light); }
+        
+        /* THEME: Sepia */
+        .doc-main-view.theme-sepia { background-color: var(--doc-content-bg-sepia); }
+        .doc-main-view.theme-sepia .doc-control-bar { background-color: var(--doc-control-bar-bg-sepia); }
+        .doc-main-view.theme-sepia #doc-main-content p, .doc-main-view.theme-sepia #doc-main-content li { color: var(--doc-text-color-sepia); }
+        .doc-main-view.theme-sepia #doc-main-content h1, .doc-main-view.theme-sepia #doc-main-content h2, .doc-main-view.theme-sepia #doc-main-content h3 { color: var(--doc-heading-color-sepia); }
+
+        #doc-ai-footer { padding: 1rem 2.5rem; margin-top: auto; background-color: var(--doc-control-bar-bg); border-top: 1px solid var(--acreetion-box-border); flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s ease; }
+        #doc-ai-footer p { font-size: 0.9rem; color: var(--doc-text-color); margin: 0; }
+        #copy-ai-prompt-btn { background-color: var(--storm-color); color: black; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; min-width: 150px; }
+
         /* --- FOOTER & RESPONSIVE --- */
         .page-footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid var(--acreetion-box-border); color: #777; font-size: 0.9rem; }
         .page-footer p { color: #777; margin-bottom: 0.5rem; }
@@ -227,9 +227,11 @@
         .page-footer a:hover { text-decoration: underline; }
 
         @media (max-width: 1024px) {
-            .page-wrapper, .doc-container { grid-template-columns: 1fr; }
-            .sidebar, .doc-sidebar { order: -1; }
-            .doc-container { width: 95%; max-height: 95vh; }
+            .page-wrapper { grid-template-columns: 1fr; }
+            .sidebar { order: -1; }
+            .doc-container { grid-template-areas: "sidebar" "main"; grid-template-rows: auto 1fr; height: 100vh; }
+            .doc-sidebar { max-height: 40vh; }
+            .doc-nav-arrow { display: none; }
         }
         @media (max-width: 768px) {
             .header-content { flex-direction: column; gap: 1rem; }
@@ -241,16 +243,29 @@
 </head>
 <body>
 
+    <div class="announcement-bar">
+        <div class="announcement-content">
+            <span>
+                <span style="font-weight: bold; color: var(--acreetion-green);">We're on DistroWatch!</span> <a href="https://distrowatch.com/table.php?distribution=acreetionos" target="_blank" rel="noopener noreferrer">Check us out!</a>
+                <span class="separator">|</span>
+                <span style="font-weight: bold; color: var(--storm-color);">We're looking for developers!</span> Join our <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord server</a> to get involved!
+            </span>
+            <span>
+                <span style="font-weight: bold; color: var(--acreetion-green);">We're on DistroWatch!</span> <a href="https://distrowatch.com/table.php?distribution=acreetionos" target="_blank" rel="noopener noreferrer">Check us out!</a>
+                <span class="separator">|</span>
+                <span style="font-weight: bold; color: var(--storm-color);">We're looking for developers!</span> Join our <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord server</a> to get involved!
+            </span>
+        </div>
+    </div>
+
     <header class="page-header">
         <div class="header-content">
             <a href="index.html" class="logo transition-link">
-                <!-- PERFORMANCE: Lazy load images that might be off-screen -->
                 <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img" loading="lazy" decoding="async">
                 <span class="logo-text">Acreetion<span>OS</span></span>
             </a>
             <nav class="main-nav">
-                <!-- MODIFIED: This now links directly to the selfhelp.html page -->
-                <a href="selfhelp.html" class="transition-link">Got a question? Try our Self-Help!</a>
+                <a href="selfhelp.html" class="transition-link">Self-Help</a>
                 <a href="#about">About</a>
                 <a href="#easy-install">Easy Install</a>
                 <a href="#manual-downloads">Downloads</a>
@@ -282,11 +297,26 @@
                         </div>
                         <p><strong>AcreetionOS</strong> is an approachable and user-friendly distribution based on the powerful <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">Arch Linux</a> core. We aim to make the Arch ecosystem accessible to a wider audience by providing a stable, pre-configured desktop experience.</p>
                         <p>This project is made possible by the incredible work of the Arch Linux developers. We simply add a layer of convenience and testing to an already fantastic base.</p>
-                        <h3>Core Principles</h3>
+                    </div>
+                </div>
+            </article>
+
+            <article id="philosophy" class="content-box">
+                <div class="box-header"><h2>Our Philosophy & How You Can Help</h2></div>
+                <div class="box-body">
+                    <div class="article-content">
+                        <h3>We Are Open & Independent</h3>
+                        <p>Everything related to AcreetionOS, including this website, is fully open-source. We are a small, passionate team of three full-time and one part-time developer. Our independence is key—we are self-hosting our infrastructure and want to avoid corporate overlords dictating our direction.</p>
+                        <p>To fund our project without compromising our values, we are exploring the creation of proprietary software for other operating systems. This allows our Linux-based work to remain free and open, forever.</p>
+                        
+                        <h3>How We Work</h3>
+                        <p>As a small team, we use a modern, centralized workflow that fits our needs. We use our <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord server</a> for community interaction and as a replacement for GitHub issues, keeping everything in one place. We also utilize Nextcloud for internal collaboration and are setting up a Discourse instance for community forums.</p>
+                        
+                        <h3>How You Can Contribute</h3>
+                        <p>We are actively looking for contributors and sponsors to help us grow. Scaling up takes time, and support from the community is crucial. We currently only have one download mirror and are looking for sponsors to help us expand our infrastructure.</p>
                         <ul>
-                            <li><strong>Stability:</strong> Unlike pure Arch, we hold back packages for a week of testing. This provides a buffer against potential upstream issues.</li>
-                            <li><strong>User-Friendly:</strong> We provide a graphical installer and sensible defaults to get you up and running quickly.</li>
-                            <li><strong>Arch Power:</strong> You retain full access to the AUR. AcreetionOS is still Arch Linux under the hood.</li>
+                            <li><strong>Developers:</strong> We welcome all contributors, including those who wish to contribute via AI-assisted tools. If you want to help, please join the Discord or email us at <a href="mailto:developers@acreetionos.org">developers@acreetionos.org</a>.</li>
+                            <li><strong>Sponsors:</strong> We are looking for sponsors to provide resources like mirrors, not to tell us what to do. If you can help, please get in touch.</li>
                         </ul>
                     </div>
                 </div>
@@ -295,8 +325,8 @@
             <article id="easy-install" class="content-box">
                 <div class="box-header"><h2>The Easy Way: AcreetionOS USB Flasher</h2></div>
                  <div class="box-body">
-                    <p style="color: var(--acreetion-text);">This is the <strong>recommended method for all users</strong>. Our utility makes creating a bootable USB drive simple. Download the flasher for your current OS, or if you want to do it manually grab an ISO file from the manual download section below to write to your USB stick.</p>
-                    <div class="download-options-group" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px;">
+                    <p>This is the <strong>recommended method for all users</strong>. Our utility makes creating a bootable USB drive simple. Download the flasher for your current OS, or grab an ISO file below to use your own tool.</p>
+                    <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px;">
                         <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS%20USB%20Flasher-1.0.0.AppImage" class="btn btn-flasher">Download Flasher for Linux (.AppImage)</a>
                         <a href="https://darrengames.ddns.net:1500/Flashing_Utility/dist/AcreetionOS_USB_Flasher_Setup_1.0.0.exe" class="btn btn-flasher">Download Flasher for Windows (.exe)</a>
                     </div>
@@ -306,18 +336,15 @@
             <article id="manual-downloads" class="content-box">
                 <div class="box-header"><h2>Manual Downloads (ISO Files)</h2></div>
                 <div class="box-body">
-                    <p style="color: var(--acreetion-text); margin-bottom: 1.5rem;">Use these links to download an ISO file directly. This is for users who want to use their own flashing tool (like BalenaEtcher, Rufus, etc.) or for other purposes.</p>
+                    <p>Use these links to download an ISO file directly. This is for users who want to use their own flashing tool (like BalenaEtcher, Rufus, etc.).</p>
                     
                     <h3 style="color: var(--acreetion-green);">Cinnamon Edition (Main)</h3>
-                    <p style="color: var(--acreetion-text);">The flagship AcreetionOS experience with the Cinnamon desktop. Stable, familiar, and powerful.</p>
                     <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
                         <a href="https://darrengames.ddns.net:1500/acreetion/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Direct)</a>
                         <a href="https://archive.org/download/acreetion-os-1.0-x-86-64/AcreetionOS-1.0-x86_64.iso" class="btn btn-cinnamon">Download Cinnamon ISO (Mirror)</a>
-                        <a href="https://darrengames.ddns.net:1500/AcreetionOS-1.0-x86_64.iso.torrent" class="btn btn-cinnamon">Download Cinnamon ISO (Torrent)</a>
                     </div>
 
                     <h3 style="color: var(--gnome-color);">GNOME Edition</h3>
-                    <p style="color: var(--acreetion-text);">A modern, minimalist workflow with the GNOME desktop.</p>
                     <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
                         <a href="https://darrengames.ddns.net:1500/acreetion/GNOME/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Direct)</a>
                         <a href="https://archive.org/download/acreetion-os-gnome-1.0-x-86-64/AcreetionOS-GNOME-1.0-x86_64.iso" class="btn btn-gnome">Download GNOME ISO (Mirror)</a>
@@ -325,7 +352,6 @@
                     </div>
 
                     <h3 style="color: var(--storm-color);">Sister Project: StormOS</h3>
-                     <p style="color: var(--acreetion-text);">A bleeding-edge sister project focused on gaming performance and experimental features.</p>
                     <div class="download-options-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
                         <a href="https://darrengames.ddns.net:1500/stormos/stormos-1.0.iso" class="btn btn-storm">Download StormOS ISO</a>
                         <a href="https://sourceforge.net/projects/hackman-linux/files/latest/download" class="btn btn-storm">Download StormOS ISO (Mirror)</a>
@@ -339,7 +365,7 @@
         <aside class="sidebar">
             <div id="specs" class="content-box sidebar-box">
                 <div class="box-header"><h2>System Information</h2></div>
-                <div class="box-body"><ul class="spec-list"><li><span class="spec-title">OS:</span> AcreetionOS</li><li><span class="spec-title">Base:</span> Arch Linux</li><li><span class="spec-title">DE (Main):</span> Cinnamon</li><li><span class="spec-title">DE (Alt):</span> GNOME</li><li><span class="spec-title">Kernel:</span> Rolling (Delayed)</li><li><span class="spec-title">Arch:</span> x86_64</li></ul></div>
+                <div class="box-body"><ul class="spec-list"><li><span class="spec-title">OS:</span> AcreetionOS</li><li><span class="spec-title">Base:</span> Arch Linux</li><li><span class="spec-title">DE (Main):</span> Cinnamon</li><li><span class="spec-title">DE (Alt):</span> GNOME</li><li><span class="spec-title">Arch:</span> x86_64</li></ul></div>
             </div>
             <div id="docs-sidebar" class="content-box sidebar-box" style="margin-top: 2rem;">
                 <div class="box-header"><h2>Documentation</h2></div>
@@ -355,13 +381,10 @@
             <div id="community" class="content-box sidebar-box" style="margin-top: 2rem;">
                 <div class="box-header"><h2>Community</h2></div>
                 <div class="box-body">
-                    <p>For more ways to get in touch, including bug reports and to see the full team, please see our <a href="contact.html" class="transition-link">Contact & Support page</a>.</p>
+                    <p>For support and bug reports, please see our <a href="contact.html" class="transition-link">Contact & Support page</a>.</p>
                     <ul class="sidebar-nav">
                         <li><a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">Discord Server</a></li>
                         <li><a href="https://github.com/AcreetionOS-Linux" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-                        <li><a href="https://bbs.archlinux.org/" target="_blank" rel="noopener noreferrer">Forums</a></li>
-                        <li><a href="https://lists.archlinux.org/mailman3/lists/" target="_blank" rel="noopener noreferrer">Mailing Lists</a></li>
-                        <li><a href="#" data-modal-target="#irc-viewer">IRC Channels</a></li>
                     </ul>
                 </div>
             </div>
@@ -369,121 +392,204 @@
     </div>
 
     <footer class="page-footer">
-        <p>AcreetionOS is an independent project that builds upon the solid foundation of Arch Linux. Visit <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">archlinux.org</a> to learn more about our base.</p>
-        <p>Explore our source code on <a href="https://github.com/AcreetionOS-Linux" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-        <p>Arch Linux™ is a trademark of Judd Vinet.</p>
-        <p>© 2025 AcreetionOS Project.</p>
+        <p>AcreetionOS is an independent project that builds upon Arch Linux. Visit <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">archlinux.org</a> to learn more.</p>
+        <p>© 2025 AcreetionOS Project. Arch Linux™ is a trademark of Judd Vinet.</p>
     </footer>
 
-    <!-- MODALS (Existing ones) -->
     <div id="documentation-viewer" class="modal-overlay">
+        <button class="modal-close-btn" title="Close Documentation">×</button>
+        <button id="doc-prev-btn" class="doc-nav-arrow" title="Previous Article">‹</button>
+        <button id="doc-next-btn" class="doc-nav-arrow" title="Next Article">›</button>
+
         <div class="doc-container">
-            <button class="modal-close-btn" title="Close Documentation">×</button>
             <aside class="doc-sidebar">
                 <h3>Documents</h3>
                 <ul id="doc-list"></ul>
             </aside>
-            <main id="doc-main-content"></main>
+            <div id="doc-main-view" class="doc-main-view">
+                <div id="doc-audio-controls" class="doc-control-bar">
+                    <div class="control-group">
+                        <button id="doc-read-btn">Read Aloud</button>
+                        <button id="doc-stop-btn">Stop</button>
+                    </div>
+                </div>
+                <div id="doc-display-settings" class="doc-control-bar">
+                    <div class="control-group">
+                        <span class="control-group-label">Font Size:</span>
+                        <button data-action="decrease-font">-</button>
+                        <button data-action="reset-font">A</button>
+                        <button data-action="increase-font">+</button>
+                    </div>
+                    <div class="control-group">
+                        <span class="control-group-label">Theme:</span>
+                        <button data-theme="dark" class="active">Dark</button>
+                        <button data-theme="light">Light</button>
+                        <button data-theme="sepia">Sepia</button>
+                    </div>
+                </div>
+                <main id="doc-main-content"></main>
+                <footer id="doc-ai-footer">
+                    <p>Need more details? Ask an AI.</p>
+                    <button id="copy-ai-prompt-btn">Learn More with AI</button>
+                </footer>
+            </div>
         </div>
     </div>
     <div id="irc-viewer" class="modal-overlay">
         <div class="modal-box">
             <button class="modal-close-btn" title="Close">×</button>
             <h2>Arch Linux IRC Channels</h2>
-            <p>Connect with the community in real-time on the Libera.Chat IRC network.</p>
-            <pre><code>Server: irc.libera.chat
-Port: 6697 (SSL)</code></pre>
-            <p>Once connected, you can join the main channels: <code>#archlinux</code> and <code>#archlinux-support</code>.</p>
+            <p>Connect on the Libera.Chat IRC network: <code>#archlinux</code> and <code>#archlinux-support</code>.</p>
             <a href="https://web.libera.chat/#archlinux" class="btn btn-cinnamon" target="_blank" rel="noopener noreferrer">Join #archlinux (Web Client)</a>
         </div>
     </div>
 
-    <!-- REMOVED: The entire Self-Help tool's HTML has been removed from this file. -->
-
-    <!-- JAVASCRIPT LOGIC -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- MAIN PAGE TRANSITION LOGIC ---
-            const transitionLinks = document.querySelectorAll('.transition-link');
-            transitionLinks.forEach(link => {
+            document.querySelectorAll('.transition-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const targetUrl = this.href;
                     document.body.classList.add('fade-out');
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 500); // Should match the animation duration
+                    setTimeout(() => { window.location.href = this.href; }, 500);
                 });
             });
 
-            // --- MAIN PAGE DATA STORE (for documentation modal) ---
+            // --- DOCS DATA ---
             const docs = [
-                {
-                    id: 'installation.md',
-                    title: 'Installation Guide',
-                    content: `# Installation Guide\n\nWelcome to AcreetionOS! This guide will walk you through the entire installation process using the recommended method.\n\n## Step 1: Get the Tools\n\nFirst, you need two things from our website:\n\n1.  The **AcreetionOS USB Flasher**.\n2.  The **AcreetionOS ISO file** for the edition you want (e.g., Cinnamon).\n\n## Step 2: Create a Bootable USB Drive\n\nUse the **AcreetionOS USB Flasher** to write the downloaded ISO file to a USB drive (8GB or larger is recommended). Our tool is designed to be straightforward and is the recommended way to create your installation media.\n\n## Step 3: Boot from the USB Drive\n\nRestart your computer and tell it to boot from the USB drive. You will likely need to press a special key like **F2, F10, F12, DEL, or ESC** during startup to open the boot menu.\n\n## Step 4: Follow the Guided Installer\n\nOnce you boot from the USB, the Calamares installer should start automatically. It will guide you through partitioning, selecting your keyboard layout, and creating a user account. Just follow the on-screen prompts.\n\n## Step 5: First Boot & Updates\n\nAfter the installation finishes, reboot your computer and remove the USB drive. You can now log into your new AcreetionOS desktop! You can update packages using **Pamac**, the graphical package manager, which also includes easy access to the AUR.\n\nCongratulations on your new AcreetionOS installation!`
-                },
-                 {
-                    id: 'philosophy.md',
-                    title: 'Project Philosophy',
-                    content: `# Project Philosophy\n\nAcreetionOS is guided by the same principles that make Arch Linux great, but with a focus on providing a stable and user-friendly desktop experience out-of-the-box.\n\n### What We Are\n\nAcreetionOS **is** an Arch Linux fork made for people to ease into the Arch Linux space. It'sdesigned to be a user-friendly entry point into the powerful Arch ecosystem, providing a stable, pre-configured experience that holds your hand just enough to get you started comfortably.\n\nWhile the Arch Wiki is an invaluable resource, we encourage new users to seek help first from our own community channels, like our Discord server. We are here to support you.`
-                },
-                {
-                    id: 'flavours.md',
-                    title: 'Our Flavours',
-                    content: `# Our Flavours\n\nAcreetionOS is offered in multiple editions, or "flavours", which share the same stable Arch Linux base but provide different desktop environments.\n\n## AcreetionOS Cinnamon\n\nThis is our main edition. It is an Arch Linux flavour with the Cinnamon desktop, offering a traditional, feature-rich experience that is comfortable and powerful.\n\n*   **Source Code:** You can find the source code on GitHub at [https://github.com/AcreetionOS-Linux/AcreetionOS](https://github.com/AcreetionOS-Linux/AcreetionOS).\n\n## AcreetionOS GNOME\n\nThis is our flavour for the GNOME desktop. It's perfect for users who enjoy a modern, minimalist workflow focused on gestures and simplicity.\n\n*   **Source Code:** You can find the source code on GitHub at [https://github.com/AcreetionOS-Linux/AcreetionOS-GNOME](https://github.com/AcreetionOS-Linux/AcreetionOS-GNOME).`
-                },
-                {
-                    id: 'development.md',
-                    title: 'Development Notes',
-                    content: `# Development Notes\n\nThis section contains important technical information for developers, testers, and advanced users who want to understand the inner workings of AcreetionOS.\n\n## Graphics Drivers\n\nProper graphics driver support is essential for a smooth desktop experience.\n\n### Mesa (Intel & AMD)\n\nThe AcreetionOS live ISO includes the open-source **Mesa** driver stack out of the box. This provides excellent support for most Intel and AMD GPUs and ensures that the system can boot on a wide variety of hardware without issue.\n\n### NVIDIA (Proprietary)\n\nDue to their proprietary nature, the official NVIDIA drivers are **not** included in the live environment. We highly recommend installing them immediately after the main OS installation is complete for the best performance on NVIDIA hardware.\n\nYou can install them easily using Pamac or by running the following command:\n\n<pre><code>sudo pacman -S nvidia-dkms</code></pre>\n\nUsing \`nvidia-dkms\` is recommended as it will automatically rebuild the driver when your kernel is updated, preventing boot issues.`
-                }
+                { id: 'installation.md', title: 'Installation Guide', content: `# Installation Guide\n\nWelcome to AcreetionOS! This guide will walk you through installing the OS using our recommended USB Flasher tool.\n\n## Step 1: Get the Tools\n\n1.  The **AcreetionOS USB Flasher**.\n2.  The **AcreetionOS ISO file** for your chosen edition.\n\n## Step 2: Create a Bootable USB\n\nUse the flasher to write the ISO to a USB drive (8GB+ recommended).\n\n## Step 3: Boot from USB\n\nRestart your PC and open the boot menu (usually F2, F12, DEL, or ESC). Select the USB drive.\n\n## Step 4: Follow the Installer\n\nThe Calamares installer will start automatically. Follow the on-screen prompts for partitioning and user setup.\n\n## Step 5: First Boot\n\nReboot, remove the USB, and log in. You can now update your system using the graphical package manager.` },
+                { id: 'philosophy.md', title: 'Project Philosophy', content: `# Project Philosophy\n\nAcreetionOS is an Arch Linux fork designed to be a user-friendly entry point into the Arch ecosystem. We provide a stable, pre-configured experience to get you started comfortably.\n\nWhile the Arch Wiki is an invaluable resource, we encourage new users to seek help from our community channels first.` },
+                { id: 'flavours.md', title: 'Our Flavours', content: `# Our Flavours\n\nAcreetionOS offers multiple editions ("flavours") with different desktop environments.\n\n## AcreetionOS Cinnamon\n\nOur main edition, offering a traditional, feature-rich experience.\n\n## AcreetionOS GNOME\n\nPerfect for users who enjoy a modern, minimalist workflow.` },
+                { id: 'development.md', title: 'Development Notes', content: `# Development Notes\n\n## Graphics Drivers\n\n### Mesa (Intel & AMD)\n\nThe live ISO includes the open-source Mesa drivers for broad hardware support.\n\n### NVIDIA (Proprietary)\n\nNVIDIA drivers are **not** included in the live environment. Install them after the OS installation for best performance:\n\n<pre><code>sudo pacman -S nvidia-dkms</code></pre>\n\nUsing \`nvidia-dkms\` is recommended as it rebuilds automatically on kernel updates.` }
             ];
 
-            // --- MAIN PAGE MODAL FUNCTIONS & SELECTORS ---
+            // --- MODAL & DOCS SELECTORS ---
             const mainPageModalTriggers = document.querySelectorAll('[data-modal-target]');
             const mainPageModals = document.querySelectorAll('.modal-overlay');
             const docViewer = document.getElementById('documentation-viewer');
             const docList = document.getElementById('doc-list');
             const docMainContent = document.getElementById('doc-main-content');
+            const docMainView = document.getElementById('doc-main-view');
+            const docPrevBtn = document.getElementById('doc-prev-btn');
+            const docNextBtn = document.getElementById('doc-next-btn');
+            const docReadBtn = document.getElementById('doc-read-btn');
+            const docStopBtn = document.getElementById('doc-stop-btn');
+            const copyAiPromptBtn = document.getElementById('copy-ai-prompt-btn');
+            const displaySettings = document.getElementById('doc-display-settings');
 
+            // --- STATE MANAGEMENT ---
+            let currentDocIndex = 0;
+            const synth = window.speechSynthesis;
+            let utterance;
+            let currentFontSize = 1; // 1 = 1em (default)
+
+            // --- CORE FUNCTIONS ---
             const openModal = (modal) => {
                 modal.classList.add('visible');
                 document.body.style.overflow = 'hidden';
             };
             const closeModal = (modal) => {
+                if (synth.speaking) synth.cancel();
                 modal.classList.remove('visible');
                 document.body.style.overflow = '';
             };
+            
+            const renderDoc = (index) => {
+                currentDocIndex = index;
+                const doc = docs[currentDocIndex];
+                if (!doc || typeof marked === 'undefined') return;
 
-            const renderDoc = (docId) => {
-                const doc = docs.find(d => d.id === docId);
-                if (!doc || typeof marked === 'undefined') return; // Ensure marked.js is loaded
-
+                if (synth.speaking) synth.cancel(); 
                 docMainContent.innerHTML = marked.parse(doc.content);
+                docMainContent.scrollTop = 0;
                 docList.querySelectorAll('a').forEach(link => {
-                    link.classList.toggle('active', link.dataset.docName === docId);
+                    link.classList.toggle('active', parseInt(link.dataset.docIndex) === index);
+                });
+                docPrevBtn.disabled = (currentDocIndex === 0);
+                docNextBtn.disabled = (currentDocIndex === docs.length - 1);
+            };
+            
+            const updateFontSize = () => {
+                docMainContent.style.fontSize = `${currentFontSize}em`;
+            };
+
+            // --- INITIALIZATION ---
+            const initDocViewer = () => {
+                // Populate sidebar
+                docList.innerHTML = '';
+                docs.forEach((doc, index) => {
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.textContent = doc.title;
+                    link.dataset.docIndex = index;
+                    docList.appendChild(document.createElement('li')).appendChild(link);
+                });
+
+                // EVENT LISTENERS
+                docList.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') {
+                        e.preventDefault();
+                        renderDoc(parseInt(e.target.dataset.docIndex, 10));
+                    }
+                });
+                
+                docPrevBtn.addEventListener('click', () => { if (currentDocIndex > 0) renderDoc(currentDocIndex - 1); });
+                docNextBtn.addEventListener('click', () => { if (currentDocIndex < docs.length - 1) renderDoc(currentDocIndex + 1); });
+
+                docReadBtn.addEventListener('click', () => {
+                    if (synth.paused) { synth.resume(); } 
+                    else if (synth.speaking) { synth.pause(); } 
+                    else {
+                        utterance = new SpeechSynthesisUtterance(docMainContent.innerText);
+                        utterance.onstart = () => docReadBtn.textContent = 'Pause';
+                        utterance.onpause = () => docReadBtn.textContent = 'Resume';
+                        utterance.onresume = () => docReadBtn.textContent = 'Pause';
+                        utterance.onend = () => docReadBtn.textContent = 'Read Aloud';
+                        synth.speak(utterance);
+                    }
+                });
+                docStopBtn.addEventListener('click', () => synth.cancel());
+
+                displaySettings.addEventListener('click', (e) => {
+                    const target = e.target.closest('button');
+                    if (!target) return;
+
+                    const action = target.dataset.action;
+                    const theme = target.dataset.theme;
+
+                    if (action === 'increase-font') currentFontSize += 0.1;
+                    if (action === 'decrease-font') currentFontSize -= 0.1;
+                    if (action === 'reset-font') currentFontSize = 1;
+                    updateFontSize();
+
+                    if (theme) {
+                        docMainView.classList.remove('theme-light', 'theme-sepia');
+                        if (theme !== 'dark') docMainView.classList.add(`theme-${theme}`);
+                        displaySettings.querySelectorAll('[data-theme]').forEach(btn => btn.classList.remove('active'));
+                        target.classList.add('active');
+                    }
+                });
+                
+                copyAiPromptBtn.addEventListener('click', () => {
+                    const prompt = `As a Linux systems expert, please elaborate on the following documentation article. Provide more technical details, background information, and context for a user who wants to learn more. Here is the article content:\n\n---\n\n${docs[currentDocIndex].content}`;
+                    navigator.clipboard.writeText(prompt).then(() => {
+                        const originalText = copyAiPromptBtn.textContent;
+                        copyAiPromptBtn.textContent = 'Prompt Copied!';
+                        window.open('https://aistudio.google.com/', '_blank');
+                        setTimeout(() => { copyAiPromptBtn.textContent = originalText; }, 2500);
+                    });
                 });
             };
 
-            // Initialize documentation modal
-            docList.innerHTML = '';
-            docs.forEach(doc => {
-                const a = document.createElement('a');
-                a.href = '#';
-                a.textContent = doc.title;
-                a.dataset.docName = doc.id;
-                docList.appendChild(document.createElement('li')).appendChild(a);
-            });
-
+            // Bind all modal triggers
             mainPageModalTriggers.forEach(trigger => {
                 trigger.addEventListener('click', (e) => {
                     e.preventDefault();
                     const modal = document.querySelector(trigger.dataset.modalTarget);
                     if (modal) {
                         if (modal === docViewer) {
-                            const specificDoc = trigger.dataset.docName;
-                            renderDoc(specificDoc || docs[0].id);
+                            const docId = trigger.dataset.docName || docs[0].id;
+                            renderDoc(docs.findIndex(d => d.id === docId));
                         }
                         openModal(modal);
                     }
@@ -491,21 +597,12 @@ Port: 6697 (SSL)</code></pre>
             });
 
             mainPageModals.forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) closeModal(modal); // Close if clicking on overlay itself
-                });
+                modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(modal); });
                 const closeBtn = modal.querySelector('.modal-close-btn');
                 if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
             });
 
-            docList.addEventListener('click', (e) => {
-                if (e.target.tagName === 'A') {
-                    e.preventDefault();
-                    renderDoc(e.target.dataset.docName);
-                }
-            });
-
-            // REMOVED: All JavaScript logic for the integrated Self-Help tool has been removed.
+            initDocViewer();
         });
     </script>
 </body>
