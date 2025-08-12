@@ -8,28 +8,40 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         :root {
-            /* AcreetionOS Green & Grey Theme */
-            --color-bg: #222831; /* Dark Grey Background */
-            --color-text: #EEEEEE; /* Light Grey Text */
-            --color-accent-green-primary: #64CC70; /* Vibrant Green Accent */
-            --color-accent-green-secondary: #4CAF50; /* Slightly Darker Green Accent */
-            --color-card-bg: rgba(40, 44, 52, 0.75); /* Transparent Darker Grey for Cards */
-            --color-card-border: rgba(100, 204, 112, 0.4); /* Transparent Green Border */
-            --color-shadow-accent: rgba(100, 204, 112, 0.3); /* Green Shadow */
-            --color-bg-grid: rgba(100, 204, 112, 0.07); /* Very Subtle Green Grid */
+            /* --- AcreetionOS Soft Dark Palette (No Blinding Whites) --- */
+            --acreetion-green: #2ecc71;
+            --acreetion-body-bg: #1c1c1c;
+            --acreetion-panel-bg: #111111;
+            --acreetion-box-bg: #2a2a2a;
+            --acreetion-box-border: #444444;
+            --acreetion-text-bright: #d1d1d1; /* Softer, non-blinding "white" */
+            --acreetion-text: #a9a9a9;       /* Softer grey for secondary text */
+            --acreetion-code-bg: rgba(46, 204, 113, 0.1);
+
+            /* --- Accent colors from the new theme --- */
+            --gnome-color: #e06c75; /* Red */
+            --storm-color: #61afef; /* Blue */
+
+            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'Fira Code', monospace;
         }
         
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--color-bg); color: var(--color-text);
-            line-height: 1.7; font-size: 17px; overflow-x: hidden; animation: fadeIn 1s ease-out forwards;
+            font-family: var(--font-sans);
+            background-color: var(--acreetion-body-bg); 
+            color: var(--acreetion-text-bright);
+            line-height: 1.7; 
+            font-size: 17px; 
+            overflow-x: hidden; 
+            animation: fadeIn 1s ease-out forwards;
         }
         #background-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background-image: linear-gradient(var(--color-bg-grid) 1px, transparent 1px), linear-gradient(90deg, var(--color-bg-grid) 1px, transparent 1px);
-            background-size: 40px 40px; animation: bg-pan 60s linear infinite;
+            background-image: linear-gradient(rgba(46, 204, 113, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(46, 204, 113, 0.07) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            animation: bg-pan 60s linear infinite;
         }
         @keyframes bg-pan { 0% { background-position: 0 0; } 100% { background-position: -400px -400px; } }
         
@@ -37,64 +49,128 @@
 
         .search-wrapper { display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 8vh 25px 80px 25px; }
         .search-logo { 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: clamp(2rem, 6vw, 4rem); /* Adjusted font size for longer name */
-            color: var(--color-text); 
+            font-family: var(--font-sans); /* Changed from Orbitron */
+            font-size: clamp(2rem, 6vw, 4rem); 
+            color: var(--acreetion-text-bright); 
             margin-bottom: 30px; 
             text-align: center; 
-            text-shadow: 0 0 10px rgba(255,255,255,0.2), 0 0 20px var(--color-accent-green-primary); 
-            line-height: 1.2; /* Adjust line height for multi-line title */
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.2), 0 0 20px var(--acreetion-green); 
+            line-height: 1.2; 
         }
         
         .search-form { position: relative; width: 100%; max-width: 700px; display: flex; align-items: center; margin-bottom: 40px; }
-        #searchInput { width: 100%; padding: 18px 70px 18px 25px; font-family: 'Fira Code', monospace; font-size: 1.2em; color: var(--color-text); background-color: var(--color-card-bg); border: 2px solid var(--color-card-border); border-radius: 50px; outline: none; transition: all .3s ease; }
-        #searchInput:focus { border-color: var(--color-accent-green-primary); box-shadow: 0 0 25px var(--color-shadow-accent); }
-        #searchButton { position: absolute; right: 0px; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: linear-gradient(135deg, var(--color-accent-green-secondary), var(--color-accent-green-primary)); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .3s ease;}
+        #searchInput { 
+            width: 100%; padding: 18px 70px 18px 25px; 
+            font-family: var(--font-mono); 
+            font-size: 1.2em; 
+            color: var(--acreetion-text-bright); 
+            background-color: var(--acreetion-box-bg); 
+            border: 2px solid var(--acreetion-box-border); 
+            border-radius: 50px; 
+            outline: none; 
+            transition: all .3s ease; 
+        }
+        #searchInput:focus { 
+            border-color: var(--acreetion-green); 
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.3); 
+        }
+        #searchButton { 
+            position: absolute; right: 0px; top: 50%; transform: translateY(-50%); 
+            width: 48px; height: 48px; 
+            background: var(--acreetion-green); /* Using single green for simplicity */
+            border: none; border-radius: 50%; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; 
+            transition: transform .3s ease;
+        }
         #searchButton:hover { transform: translateY(-50%) scale(1.1); }
         
         .results-wrapper { width: 100%; max-width: 900px; padding: 0 25px; display: flex; flex-direction: column; gap: 20px; }
         
         .result-item { 
-            background: var(--color-card-bg); 
-            border: 1px solid var(--color-card-border); 
+            background: var(--acreetion-box-bg); 
+            border: 1px solid var(--acreetion-box-border); 
             padding: 25px; 
             border-radius: 10px; 
             position: relative; 
             animation: fadeInResult 0.5s ease forwards; 
             transition: transform .3s ease, box-shadow .3s ease; 
-            cursor: pointer; /* Indicate clickable */
+            cursor: pointer; 
         }
         .is-chromium .result-item { backdrop-filter: blur(5px); }
         @keyframes fadeInResult { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .result-item:hover { transform: translateY(-5px); box-shadow: 0 8px 30px var(--color-shadow-accent); }
+        .result-item:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(46, 204, 113, 0.3); }
         
         .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .result-source-tag { font-family: 'Orbitron', sans-serif; font-size: 0.8em; padding: 4px 10px; border-radius: 5px; color: #fff; text-shadow: 0 0 5px rgba(0,0,0,0.5); }
-        .result-title-link { text-decoration: none; color: var(--color-accent-green-primary); }
+        .result-source-tag { 
+            font-family: var(--font-mono); /* Changed from Orbitron */
+            font-size: 0.8em; padding: 4px 10px; border-radius: 5px; 
+            color: #fff; /* White text on colored tag */
+            text-shadow: 0 0 5px rgba(0,0,0,0.5); 
+        }
+        .result-title-link { text-decoration: none; color: var(--acreetion-green); }
         .result-title { font-size: 1.25em; margin-bottom: 8px; line-height: 1.3; }
-        .result-item:hover .result-title-link { color: var(--color-text); text-decoration: underline; }
-        .result-snippet { font-size: 0.95em; color: var(--color-text); opacity: 0.8; }
-        .result-snippet .searchmatch { font-weight: bold; color: var(--color-accent-green-primary); background-color: rgba(100,204,112,0.1); } /* Green highlight for searchmatch */
+        .result-item:hover .result-title-link { color: var(--acreetion-text-bright); text-decoration: underline; }
+        .result-snippet { font-size: 0.95em; color: var(--acreetion-text); opacity: 0.8; }
+        .result-snippet .searchmatch { 
+            font-weight: bold; 
+            color: var(--acreetion-green); 
+            background-color: var(--acreetion-code-bg); 
+        } 
 
         .ai-controls { text-align: center; margin-bottom: 20px; }
-        .ai-button { font-family: 'Orbitron', sans-serif; font-size: 1em; padding: 10px 25px; border-radius: 50px; border: 2px solid var(--color-accent-green-secondary); color: var(--color-text); background: transparent; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
-        .ai-button:hover { background: var(--color-accent-green-secondary); color: white; border-color: var(--color-accent-green-secondary); }
+        .ai-button { 
+            font-family: var(--font-sans); /* Changed from Orbitron */
+            font-size: 1em; padding: 10px 25px; border-radius: 50px; 
+            border: 2px solid var(--acreetion-green); 
+            color: var(--acreetion-text-bright); 
+            background: transparent; cursor: pointer; transition: all 0.3s ease; 
+            display: inline-flex; align-items: center; gap: 8px; 
+        }
+        .ai-button:hover { 
+            background: var(--acreetion-green); 
+            color: var(--acreetion-body-bg); /* Dark text for contrast on bright green */
+            border-color: var(--acreetion-green); 
+        }
 
         /* General Modal Styles (shared with AI modal) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(34, 40, 49, 0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; animation: fadeIn 0.5s forwards; }
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(28, 28, 28, 0.8); /* Using body-bg with transparency */
+            z-index: 2000; display: flex; align-items: center; justify-content: center; 
+            opacity: 0; animation: fadeIn 0.5s forwards; 
+        }
         .is-chromium .modal-overlay { backdrop-filter: blur(10px); }
-        .modal-box { background: var(--color-card-bg); border: 1px solid var(--color-accent-green-primary); border-radius: 15px; max-width: 600px; width: 90%; padding: 30px; text-align: center; box-shadow: 0 0 50px var(--color-shadow-accent); position: relative; }
-        .modal-box h2 { font-family: 'Orbitron', sans-serif; font-size: 1.8em; margin-bottom: 15px; color: var(--color-accent-green-primary); }
+        .modal-box { 
+            background: var(--acreetion-box-bg); 
+            border: 1px solid var(--acreetion-green); 
+            border-radius: 15px; max-width: 600px; width: 90%; padding: 30px; 
+            text-align: center; 
+            box-shadow: 0 0 50px rgba(46, 204, 113, 0.3); 
+            position: relative; 
+        }
+        .modal-box h2 { 
+            font-family: var(--font-sans); /* Changed from Orbitron */
+            font-size: 1.8em; margin-bottom: 15px; 
+            color: var(--acreetion-green); 
+        }
         .modal-box p { margin-bottom: 15px; opacity: 0.9; line-height: 1.8; }
-        .modal-box strong { color: var(--color-accent-green-primary); }
-        .modal-button { margin-top: 20px; padding: 12px 20px; font-family: 'Orbitron', sans-serif; font-size: 1.1em; border: none; border-radius: 8px; background: var(--color-accent-green-primary); color: #fff; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; }
+        .modal-box strong { color: var(--acreetion-green); }
+        .modal-button { 
+            margin-top: 20px; padding: 12px 20px; 
+            font-family: var(--font-sans); /* Changed from Orbitron */
+            font-size: 1.1em; border: none; border-radius: 8px; 
+            background: var(--acreetion-green); 
+            color: var(--acreetion-body-bg); /* Dark text for contrast */
+            cursor: pointer; transition: all 0.3s ease; 
+            display: inline-flex; align-items: center; gap: 10px; 
+        }
         .modal-button:hover { transform: translateY(-3px); }
-        .countdown { margin-top: 20px; font-family: 'Fira Code', monospace; opacity: 0.7; font-size: 0.9em; }
+        .countdown { margin-top: 20px; font-family: var(--font-mono); opacity: 0.7; font-size: 0.9em; }
 
         /* Article Modal Specific Styles */
         .article-modal-box {
-            max-width: 800px; /* Wider for article content */
-            max-height: 90vh; /* Max height to allow scrolling */
+            max-width: 800px; 
+            max-height: 90vh; 
             display: flex;
             flex-direction: column;
             text-align: left;
@@ -106,25 +182,25 @@
         }
         .article-content {
             flex-grow: 1;
-            overflow-y: auto; /* Enable scrolling for long content */
-            padding-right: 15px; /* Space for scrollbar */
+            overflow-y: auto; 
+            padding-right: 15px; 
             line-height: 1.6;
             font-size: 0.95em;
         }
         .article-content::-webkit-scrollbar { width: 8px; }
-        .article-content::-webkit-scrollbar-track { background: var(--color-card-bg); border-radius: 10px; }
-        .article-content::-webkit-scrollbar-thumb { background: var(--color-accent-green-secondary); border-radius: 10px; }
-        .article-content::-webkit-scrollbar-thumb:hover { background: var(--color-accent-green-primary); }
+        .article-content::-webkit-scrollbar-track { background: var(--acreetion-box-bg); border-radius: 10px; }
+        .article-content::-webkit-scrollbar-thumb { background: var(--acreetion-green); border-radius: 10px; }
+        .article-content::-webkit-scrollbar-thumb:hover { background: var(--acreetion-green); }
 
         .article-content img {
-            max-width: 100%; /* Ensure images don't overflow */
+            max-width: 100%; 
             height: auto;
             display: block;
             margin: 15px auto;
             border-radius: 5px;
         }
         .article-content a {
-            color: var(--color-accent-green-primary);
+            color: var(--acreetion-green);
             text-decoration: none;
         }
         .article-content a:hover {
@@ -137,7 +213,7 @@
             background-color: rgba(0,0,0,0.1);
         }
         .article-content th, .article-content td {
-            border: 1px solid var(--color-card-border);
+            border: 1px solid var(--acreetion-box-border);
             padding: 8px;
             text-align: left;
         }
@@ -146,13 +222,13 @@
             padding: 5px 10px;
             border-radius: 4px;
             overflow-x: auto;
-            font-family: 'Fira Code', monospace;
+            font-family: var(--font-mono);
             font-size: 0.85em;
         }
         .article-content pre {
             display: block;
             margin: 15px 0;
-            white-space: pre-wrap; /* Wrap long lines in pre tags */
+            white-space: pre-wrap; 
             word-wrap: break-word;
         }
         .close-button {
@@ -162,31 +238,58 @@
             background: none;
             border: none;
             font-size: 1.8em;
-            color: var(--color-text);
+            color: var(--acreetion-text-bright);
             cursor: pointer;
             line-height: 1;
             padding: 5px;
             transition: color 0.2s ease;
         }
         .close-button:hover {
-            color: var(--color-accent-green-primary);
+            color: var(--acreetion-green);
         }
 
         .external-search-section { margin-top: 40px; }
-        .external-search-section h3 { font-family: 'Orbitron'; text-align: center; margin-bottom: 20px; opacity: 0.8; font-size: 1.4em; }
-        .external-link { display: flex; align-items: center; background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 10px; padding: 15px 20px; text-decoration: none; color: var(--color-text); transition: all 0.3s ease; }
+        .external-search-section h3 { 
+            font-family: var(--font-sans); /* Changed from Orbitron */
+            text-align: center; margin-bottom: 20px; opacity: 0.8; font-size: 1.4em; 
+        }
+        .external-link { 
+            display: flex; align-items: center; 
+            background: var(--acreetion-box-bg); 
+            border: 1px solid var(--acreetion-box-border); 
+            border-radius: 10px; padding: 15px 20px; 
+            text-decoration: none; 
+            color: var(--acreetion-text-bright); 
+            transition: all 0.3s ease; 
+            margin-bottom: 10px; /* Added spacing */
+        }
         .external-link.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(80%); }
-        .external-link:not(.disabled):hover { border-color: var(--color-accent-green-primary); }
-        .external-link .source-name { font-family: 'Orbitron'; font-size: 1.1em; flex-shrink: 0; margin-right: 20px; }
-        .external-link .query-display { flex-grow: 1; text-align: left; font-family: 'Fira Code', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.6; }
-        .external-link .action-btn { flex-shrink: 0; margin-left: 20px; padding: 10px 20px; background-color: var(--color-accent-green-secondary); color: white; border: none; border-radius: 8px; font-family: 'Orbitron'; transition: background-color 0.3s; }
-        .external-link:hover .action-btn { background-color: var(--color-accent-green-primary); }
-        .notice { text-align: center; padding: 60px 20px; font-size: 1.1em; font-family: 'Fira Code', monospace; opacity: 0.7; }
-        .notice-query { font-weight: bold; color: var(--color-accent-green-primary); } /* Green for noticed query */
+        .external-link:not(.disabled):hover { border-color: var(--acreetion-green); }
+        .external-link .source-name { 
+            font-family: var(--font-sans); /* Changed from Orbitron */
+            font-size: 1.1em; flex-shrink: 0; margin-right: 20px; 
+        }
+        .external-link .query-display { 
+            flex-grow: 1; text-align: left; 
+            font-family: var(--font-mono); 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.6; 
+        }
+        .external-link .action-btn { 
+            flex-shrink: 0; margin-left: 20px; 
+            padding: 10px 20px; 
+            background-color: var(--acreetion-green); /* Using main green */
+            color: var(--acreetion-body-bg); /* Dark text for contrast */
+            border: none; border-radius: 8px; 
+            font-family: var(--font-sans); /* Changed from Orbitron */
+            transition: background-color 0.3s; 
+        }
+        .external-link:hover .action-btn { background-color: var(--acreetion-green); }
+        .notice { text-align: center; padding: 60px 20px; font-size: 1.1em; font-family: var(--font-mono); opacity: 0.7; }
+        .notice-query { font-weight: bold; color: var(--acreetion-green); } 
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
     <script>
         (function() { document.documentElement.classList.add(navigator.userAgent.includes("Firefox") ? "is-firefox" : "is-chromium"); })();
     </script>
@@ -252,7 +355,7 @@
                          :key="result.pageid + result.sourceKey" 
                          class="result-item" 
                          :style="{animationDelay: index * 40 + 'ms'}"
-                         @click="openArticleModal(result)"> <!-- Added click handler -->
+                         @click="openArticleModal(result)"> 
                         <div class="result-header">
                             <span class="result-source-tag" :style="{ backgroundColor: SOURCES[result.sourceKey].color }">{{ SOURCES[result.sourceKey].name }}</span>
                         </div>
@@ -285,12 +388,9 @@
         setup() {
             // --- DATA SOURCES ---
             const SOURCES = {
-                // IMPORTANT: If Arch Wiki is blocking direct API, its type is set to 'external'.
-                // This means its search results won't appear in the main list, and clicking it
-                // will direct the user to an external search engine for the wiki.
-                arch: { name: 'Arch Wiki', type: 'external', searchDomain: 'wiki.archlinux.org', color: '#28A745' }, /* Green */
-                gentoo: { name: 'Gentoo Wiki', type: 'wiki', api: 'https://wiki.gentoo.org/api.php', color: '#3A8B5F' }, /* Darker Green */
-                microsoft: { name: 'Microsoft Docs', type: 'external', searchDomain: 'learn.microsoft.com', color: '#00A391' } /* Teal Green */
+                arch: { name: 'Arch Wiki', type: 'external', searchDomain: 'wiki.archlinux.org', color: '#2ecc71' }, // Acreetion Green
+                gentoo: { name: 'Gentoo Wiki', type: 'wiki', api: 'https://wiki.gentoo.org/api.php', color: '#e06c75' }, // Gnome Color (Red) for variety
+                microsoft: { name: 'Microsoft Docs', type: 'external', searchDomain: 'learn.microsoft.com', color: '#61afef' } // Storm Color (Blue)
             };
 
             // --- STATE MANAGEMENT ---
@@ -328,28 +428,24 @@
                     const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
                     if (!response.ok) {
                         console.error(`API for ${source.name} failed with status: ${response.status}`);
-                        // Optionally provide a more specific message if an API fails here
                         return [];
                     }
                     const data = await response.json();
                     return (data.query?.search || []).map(result => ({ ...result, sourceKey: source.key, pageUrl: `${new URL(source.api).origin}/index.php?title=${encodeURIComponent(result.title)}` }));
                 } catch (error) {
                     console.error(`Failed to fetch search results from ${source.name}:`, error);
-                    // This catch block will fire for network errors, CORS issues, timeouts, etc.
-                    // If "Anubis" is blocking, it's likely a CORS error or a network failure.
                     return [];
                 }
             };
 
             const fetchArticleContent = async (source, title) => {
-                // Using action=parse to get rendered HTML content
                 const url = `${source.api}?action=parse&page=${encodeURIComponent(title)}&format=json&prop=text&origin=*`;
                 try {
                     const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
                     if (!response.ok) throw new Error(`API for ${source.name} article failed with status: ${response.status}`);
                     const data = await response.json();
                     if (data.parse && data.parse.text) {
-                        return data.parse.text['*']; // The HTML content
+                        return data.parse.text['*']; 
                     }
                     return null;
                 } catch (error) {
@@ -369,7 +465,6 @@
                 hasSearched.value = true;
                 results.value = [];
 
-                // Only attempt to fetch results from 'wiki' type sources
                 const settledResults = await Promise.allSettled(wikiSources.value.map(s => fetchWikiResults(s, query)));
                 let combinedResults = settledResults.flatMap(res => (res.status === 'fulfilled' ? res.value : []));
                 combinedResults.sort((a, b) => (b.snippet.includes('searchmatch') ? 1 : 0) - (a.snippet.includes('searchmatch') ? 1 : 0));
@@ -428,12 +523,12 @@
 
             // --- Article Modal Methods ---
             const openArticleModal = async (result) => {
-                currentArticle.value = null; // Clear previous content
-                showArticleModal.value = true; // Show modal with loading state
+                currentArticle.value = null; 
+                showArticleModal.value = true; 
 
                 const source = SOURCES[result.sourceKey];
 
-                if (source.type === 'wiki') { // Only attempt to fetch content if it's a 'wiki' type source
+                if (source.type === 'wiki') { 
                     const content = await fetchArticleContent(source, result.title);
                     currentArticle.value = { 
                         title: result.title, 
@@ -443,11 +538,10 @@
                         external: false
                     };
                 } else if (source.type === 'external') {
-                    // For external sources, we cannot display content directly due to CORS/security
                     currentArticle.value = {
                         title: result.title,
                         content: '<p>Content from this external source cannot be displayed directly here due to security and cross-origin policy restrictions.</p><p>Please click the button below to view the article on its original site.</p>',
-                        url: result.pageUrl, // Use the pageUrl from the search result for the direct link
+                        url: result.pageUrl, 
                         source: source.name,
                         external: true
                     };
@@ -474,7 +568,7 @@
                 SOURCES, searchQuery, results, isLoading, hasSearched, infoMessage,
                 externalSources, performSearch, generateExternalUrl,
                 showAiModal, countdown, startAiProcess, proceedToAi,
-                showArticleModal, currentArticle, openArticleModal, closeArticleModal // Expose article modal state and methods
+                showArticleModal, currentArticle, openArticleModal, closeArticleModal 
             };
         }
     }).mount('#app');
