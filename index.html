@@ -8,20 +8,45 @@
     <!-- IMPORTANT: This adds the logo to your browser tab (favicon) -->
     <link rel="icon" type="image/png" sizes="32x32" href="acreetionoslogo.png">
 
-    <!-- PERFORMANCE: Preconnect to critical origins to speed up resource loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- PERFORMANCE: Preconnect to critical origins -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://darrengames.ddns.net">
 
-    <!-- PERFORMANCE: Asynchronously load fonts without render-blocking -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- PERFORMANCE: Preload local fonts for faster rendering -->
+    <link rel="preload" href="FreeSans.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="FreeSansBold.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="FreeMono.ttf" as="font" type="font/ttf" crossorigin>
     
     <!-- Markdown Parser Library - PERFORMANCE: deferred to not block rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 
     <!-- Consolidated Internal Stylesheet -->
     <style>
+        /* --- Define Self-Hosted GNU FreeFont Files --- */
+        @font-face {
+          font-family: 'GNU FreeSans';
+          font-style: normal;
+          font-weight: 400; /* Regular weight */
+          font-display: swap;
+          src: url('FreeSans.ttf') format('truetype');
+        }
+
+        @font-face {
+          font-family: 'GNU FreeSans';
+          font-style: normal;
+          font-weight: 700; /* Bold weight */
+          font-display: swap;
+          src: url('FreeSansBold.ttf') format('truetype');
+        }
+
+        @font-face {
+          font-family: 'GNU FreeMono';
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: url('FreeMono.ttf') format('truetype');
+        }
+
         :root {
             /* --- AcreetionOS Soft Dark Palette (No Blinding Whites) --- */
             --acreetion-green: #2ecc71;
@@ -60,8 +85,9 @@
             --doc-heading-color-sepia: #4a382b;
             --doc-control-bar-bg-sepia: #e9decb;
 
-            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'Fira Code', monospace;
+            /* --- UPDATED Font Variables to use GNU FreeFont --- */
+            --font-sans: 'GNU FreeSans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'GNU FreeMono', monospace;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
