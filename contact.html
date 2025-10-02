@@ -11,56 +11,70 @@
     <link rel="icon" type="image/png" sizes="32x32" href="acreetionoslogo.png">
 
     <!-- Fonts & Icons -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-    </style>
-    <!-- Using a simple, embedded SVG for icons to avoid external dependencies -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Internal Stylesheet -->
     <style>
         :root {
+            /* --- AcreetionOS Soft Dark Palette (from 404.html) --- */
             --acreetion-green: #2ecc71;
-            --acreetion-blue: #3498db;
-            --acreetion-orange: #f39c12;
+            --acreetion-body-bg: #111111;
+            --acreetion-panel-bg: #0a0a0a;
+            --acreetion-box-bg: #1c1c1c;
+            --acreetion-box-border: #333333;
+            --acreetion-text-bright: #e0e0e0;
+            --acreetion-text: #a0a0a0;
+            --acreetion-code-bg: rgba(46, 204, 113, 0.1);
+            --gnome-color: #e06c75; /* Red for errors/close buttons */
+            --storm-color: #61afef; /* Blue for info */
+            --flasher-color: #f39c12; /* Orange for warnings */
             --acreetion-purple: #9b59b6;
-            --acreetion-body-bg: #1c1c1c;
-            --acreetion-panel-bg: #111111;
-            --acreetion-box-bg: #2a2a2a;
-            --acreetion-box-border: #444444;
-            --acreetion-text-bright: #d1d1d1;
-            --acreetion-text: #a9a9a9;
+
             --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'Fira Code', monospace;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: var(--font-sans);
-            background-color: var(--acreetion-body-bg);
+            background-color: var(--acreetion-body-bg); /* Darker bg */
             color: var(--acreetion-text-bright);
             line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* Animation styles */
             opacity: 0;
             animation: fadeIn 0.5s ease-in-out forwards;
+            position: relative;
+            overflow-x: hidden; /* Prevent horizontal scroll from grid */
         }
 
         /* Fade Out Animation Class */
         body.fade-out {
             animation: fadeOut 0.5s ease-in-out forwards;
         }
+        #background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-image: 
+                linear-gradient(to right, rgba(46, 204, 113, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(46, 204, 113, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: pan-grid 90s linear infinite;
+            opacity: 0.3;
+        }
+        @keyframes pan-grid { 0% { background-position: 0 0; } 100% { background-position: -500px -500px; } }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; } to { opacity: 1; }
         }
+        body.fade-out { animation: fadeOut 0.5s ease-in-out forwards; }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
+        a { color: var(--acreetion-green); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
         /* --- HEADER --- */
         .page-header { background-color: var(--acreetion-panel-bg); border-bottom: 4px solid var(--acreetion-green); }
@@ -75,7 +89,7 @@
         .page-wrapper {
             flex-grow: 1;
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr 350px; /* Match index.html */
             gap: 2rem;
             max-width: 1400px;
             margin: 2rem auto;
@@ -86,15 +100,14 @@
 
         /* --- CONTENT BOX STYLE --- */
         .content-box { background-color: var(--acreetion-box-bg); border: 1px solid var(--acreetion-box-border); border-radius: 4px; }
-        .box-header { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--acreetion-box-border); background-color: #333; }
+        .box-header { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--acreetion-box-border); background-color: #222; }
         .box-header h2, .box-header h3 { font-size: 1.2rem; color: var(--acreetion-text-bright); font-weight: 700; display: flex; align-items: center; gap: 0.75rem; }
         .box-header .icon { width: 20px; height: 20px; fill: var(--acreetion-green); }
         .box-body { padding: 1.5rem; }
         .box-body p { color: var(--acreetion-text); margin-bottom: 1rem; }
-        .box-body a { color: var(--acreetion-green); text-decoration: none; font-weight: 500; }
-        .box-body a:hover { text-decoration: underline; }
+        .box-body a { font-weight: 500; }
         .box-body .btn { display: inline-block; background-color: var(--acreetion-green); color: black; padding: 0.6rem 1.2rem; border-radius: 4px; text-decoration: none; margin-right: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; font-weight: 700; transition: filter 0.2s; }
-        .box-body .btn:hover { filter: brightness(1.1); }
+        .box-body .btn:hover { filter: brightness(1.1); text-decoration: none; }
 
         /* --- CONTACT & RECOMMENDATION LISTS --- */
         .styled-list { list-style: none; padding: 0; }
@@ -112,7 +125,7 @@
             display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-radius: 4px;
             text-decoration: none; color: var(--acreetion-text-bright); transition: background-color 0.2s;
         }
-        .resource-list a:hover { background-color: #3a3a3a; }
+        .resource-list a:hover { background-color: #3a3a3a; text-decoration: none; }
         .resource-list .icon { width: 24px; height: 24px; fill: var(--acreetion-green); flex-shrink: 0; }
         .resource-list .resource-info { display: flex; flex-direction: column; }
         .resource-list .resource-title { font-weight: 700; }
@@ -121,8 +134,8 @@
         .nickname-list li { margin-bottom: 0.25rem; }
         .nickname-list strong { color: var(--acreetion-text-bright); }
         
-        #bug-reports .box-header h2, #bug-reports .icon { color: var(--acreetion-orange); fill: var(--acreetion-orange); }
-        #bug-reports .btn { background-color: var(--acreetion-orange); }
+        #bug-reports .box-header h2, #bug-reports .icon { color: var(--flasher-color); fill: var(--flasher-color); }
+        #bug-reports .btn { background-color: var(--flasher-color); }
         #credits .box-header h2, #credits .icon { color: var(--acreetion-purple); fill: var(--acreetion-purple); }
 
         /* MODAL OVERLAYS */
@@ -133,10 +146,15 @@
         .modal-box h2 { color: var(--acreetion-green); }
 
         /* --- FOOTER --- */
-        .page-footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid var(--acreetion-box-border); color: #777; font-size: 0.9rem; }
+        .page-footer { 
+            text-align: center; padding: 2rem; margin-top: auto; 
+            border-top: 1px solid var(--acreetion-box-border); 
+            color: #777; font-size: 0.9rem; 
+            background-color: var(--acreetion-panel-bg);
+            position: relative;
+            z-index: 1;
+        }
         .page-footer p { color: #777; margin-bottom: 0.5rem; }
-        .page-footer a { color: var(--acreetion-green); text-decoration: none; }
-        .page-footer a:hover { text-decoration: underline; }
         
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 1024px) { .page-wrapper { grid-template-columns: 1fr; } }
@@ -148,6 +166,8 @@
     </style>
 </head>
 <body>
+
+    <div id="background-grid"></div>
 
     <!-- SVG ICONS DEFINITION -->
     <svg width="0" height="0" style="position:absolute">
@@ -174,7 +194,7 @@
                 <span class="logo-text">Acreetion<span>OS</span></span>
             </a>
             <nav class="main-nav">
-                <a href="https://acreetionos.org" class="transition-link">Home</a>
+                <a href="index.html" class="transition-link">Home</a>
                 <a href="contact.html" class="active transition-link">Contact & Support</a>
             </nav>
         </div>
@@ -410,12 +430,9 @@
     </div>
 
     <footer class="page-footer">
-        <p>
-            AcreetionOS is an independent project that builds upon the solid foundation of Arch Linux.
-            <a href="https://github.com/AcreetionOS-Linux" target="_blank" rel="noopener noreferrer">Browse the Source Code on GitHub.</a>
-        </p>
-        <p>Arch Linux™ is a trademark of Judd Vinet. We are not affiliated with or endorsed by the Arch Linux project.</p>
-        <p>© 2025 AcreetionOS Project.</p>
+        <p>AcreetionOS is an independent project proudly built on the powerful and flexible foundation of <a href="https://archlinux.org" target="_blank" rel="noopener noreferrer">Arch Linux</a>. We are immensely grateful to the Arch community for their incredible work.</p>
+        <p>Follow our development on <a href="https://github.com/AcreetionOS-Linux" target="_blank" rel="noopener noreferrer">GitHub</a> and our self-hosted <a href="https://gitlab.acreetionos.org" target="_blank" rel="noopener noreferrer">GitLab</a>.</p>
+        <p>© 2025 AcreetionOS Project. Arch Linux™ is a trademark of Judd Vinet. We are not affiliated with the Arch Linux project.</p>
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
@@ -430,7 +447,7 @@
                     document.body.classList.add('fade-out');
                     setTimeout(() => {
                         window.location.href = targetUrl;
-                    }, 500); // Should match the animation duration
+                    }, 250); // Faster animation
                 });
             });
 
@@ -458,7 +475,6 @@
                 const closeBtn = modal.querySelector('.modal-close-btn');
                 if (closeBtn) 
                     closeBtn.addEventListener('click', () => closeModal(modal));
-                }
             });
         });
     </script>
