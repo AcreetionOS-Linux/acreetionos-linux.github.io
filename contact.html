@@ -138,6 +138,21 @@
         #bug-reports .btn { background-color: var(--flasher-color); }
         #credits .box-header h2, #credits .icon { color: var(--acreetion-purple); fill: var(--acreetion-purple); }
 
+        /* --- INTERACTIVE CONTACT TABS --- */
+        .contact-tabs .tab-header { display: flex; background-color: #222; border-bottom: 1px solid var(--acreetion-box-border); }
+        .contact-tabs .tab-link { background: none; border: none; color: var(--acreetion-text); padding: 1rem 1.5rem; cursor: pointer; font-size: 1rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; }
+        .contact-tabs .tab-link.active { color: var(--acreetion-text-bright); background-color: var(--acreetion-box-bg); border-bottom: 2px solid var(--acreetion-green); }
+        .contact-tabs .tab-link .icon { width: 18px; height: 18px; fill: currentColor; }
+        .contact-tabs .tab-content { display: none; }
+        .contact-tabs .tab-content.active { display: block; }
+
+        /* --- CONTACT FORM --- */
+        .contact-form { padding: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--acreetion-text-bright); }
+        .form-group input, .form-group textarea { width: 100%; background-color: var(--acreetion-panel-bg); border: 1px solid var(--acreetion-box-border); border-radius: 4px; padding: 0.75rem; color: var(--acreetion-text-bright); font-size: 1rem; }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+
         /* MODAL OVERLAYS */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto; align-items: center; justify-content: center; padding: 1rem; }
         .modal-overlay.visible { display: flex; }
@@ -162,6 +177,7 @@
             .header-content { flex-direction: column; gap: 1rem; }
             .main-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
             .main-nav a { margin-left: 0; }
+            .contact-tabs .tab-header { flex-direction: column; }
         }
     </style>
 </head>
@@ -224,72 +240,66 @@
                 </div>
             </div>
 
-            <!-- Team Contact Box -->
+            <!-- Interactive Contact Box -->
             <div class="content-box">
                 <div class="box-header">
                     <h2>
-                        <svg class="icon"><use xlink:href="#icon-team"/></svg>
-                        Meet the Team
+                        <svg class="icon"><use xlink:href="#icon-email"/></svg>
+                        Contact Us
                     </h2>
                 </div>
-                <div class="box-body">
-                    <p>We are fortunate enough to be able to work on AcreetionOS full-time. If you reach out and we don't answer right away, it is likely we just didn't see the notification. We will always do our best to get back to you within 24 hours.</p>
-                    <p>For project-level discussions like partnerships or other official matters, you can reach the team directly. <strong>Please do not use email for bug reports or general support.</strong></p>
-                    <ul class="styled-list">
-                        <li>
-                            <span class="list-item-title">Darren Clift</span>
-                            <span class="list-item-desc">AcreetionOS Main Developer, AcreetionOS GNOME Secondary Developer, Mirror Maintainer</span>
-                            <span class="list-item-contact"><strong>Email:</strong> <a href="mailto:cobra3282000@live.com">cobra3282000@live.com</a></span>
-                        </li>
-                        <li>
-                            <span class="list-item-title">Natalie Spiva</span>
-                            <span class="list-item-desc">AcreetionOS GNOME Main Developer, AcreetionOS Secondary Developer, Mirror Maintainer, Flasher, Fingerprint & Face ID Maintainer</span>
-                            <span class="list-item-contact"><strong>Email:</strong> <a href="mailto:natalie@acreetionos.org">natalie@acreetionos.org</a></span>
-                            <span class="list-item-contact"><strong>XMPP:</strong> <a href="xmpp:sprungles@xmpp.jp">sprungles@xmpp.jp</a> / <a href="xmpp:sprungles@queer-spark.org">sprungles@queer-spark.org</a></span>
-                        </li>
-                        <li>
-                            <span class="list-item-title">General Project Inquiries</span>
-                            <span class="list-item-desc">For partnerships and official communication</span>
-                            <span class="list-item-contact"><strong>Email:</strong> <a href="mailto:acreetionos@gmail.com">acreetionos@gmail.com</a></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-             <!-- Credits Box -->
-            <div id="credits" class="content-box">
-                <div class="box-header">
-                    <h2>
-                        <svg class="icon"><use xlink:href="#icon-heart"/></svg>
-                        Credits & Special Thanks
-                    </h2>
-                </div>
-                <div class="box-body">
-                    <p>This project stands on the shoulders of giants. We are immensely grateful to the following people and projects for their foundational work and collaboration.</p>
-                     <ul class="styled-list">
-                        <li>
-                            <span class="list-item-title">Core Technologies & Assets</span>
-                            <span class="list-item-desc">
-                                <strong>Arch Linux:</strong> For providing the powerful, flexible base that makes AcreetionOS possible. <br>
-                                <strong>ArchPenguin:</strong> For the original AcreetionOS logo concept.
-                            </span>
-                        </li>
-                        <li>
-                            <span class="list-item-title">Collaborators & Naming</span>
-                            <span class="list-item-desc">
-                                <strong>Ddubs:</strong> For coming up with the AcreetionOS name.
-                            </span>
-                        </li>
-                        <li>
-                            <span class="list-item-title">AI Assistants</span>
-                             <span class="list-item-desc">
-                                For their tireless help in development, we thank the teams behind 
-                                <a href="https://ai.google/" target="_blank" rel="noopener noreferrer">Google's Gemini/Gemma</a>, 
-                                <a href="https://claude.ai/" target="_blank" rel="noopener noreferrer">Anthropic's Claude</a>, and 
-                                <a href="https://openai.com/" target="_blank" rel="noopener noreferrer">OpenAI's ChatGPT</a>.
-                            </span>
-                        </li>
-                    </ul>
+                <div class="box-body" style="padding: 0;">
+                    <div class="contact-tabs">
+                        <div class="tab-header">
+                            <a href="https://discord.acreetionos.org" target="_blank" rel="noopener noreferrer" class="tab-link">
+                                <svg class="icon"><use xlink:href="#icon-discord"/></svg> Live Chat (Recommended)
+                            </a>
+                            <button class="tab-link active" data-tab="contact-form">
+                                <svg class="icon"><use xlink:href="#icon-email"/></svg> Secure Contact Form
+                            </button>
+                            <button class="tab-link" data-tab="team-directory">
+                                <svg class="icon"><use xlink:href="#icon-team"/></svg> Team Directory
+                            </button>
+                        </div>
+                        <div class="tab-content active" id="contact-form">
+                            <form class="contact-form">
+                                <p>For general questions or partnership inquiries. <strong>Not for bug reports.</strong></p>
+                                <div class="form-group">
+                                    <label for="name">Your Name</label>
+                                    <input type="text" id="name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Your Email</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">Message</label>
+                                    <textarea id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn">Send Message</button>
+                            </form>
+                        </div>
+                        <div class="tab-content" id="team-directory">
+                            <ul class="styled-list" style="padding: 1.5rem;">
+                                <li>
+                                    <span class="list-item-title">Darren Clift</span>
+                                    <span class="list-item-desc">AcreetionOS Main Developer, AcreetionOS GNOME Secondary Developer, Mirror Maintainer</span>
+                                    <span class="list-item-contact"><strong>Email:</strong> <a href="mailto:cobra3282000@live.com">cobra3282000@live.com</a></span>
+                                </li>
+                                <li>
+                                    <span class="list-item-title">Natalie Spiva</span>
+                                    <span class="list-item-desc">AcreetionOS GNOME Main Developer, AcreetionOS Secondary Developer, Mirror Maintainer, Flasher, Fingerprint & Face ID Maintainer</span>
+                                    <span class="list-item-contact"><strong>Email:</strong> <a href="mailto:natalie@acreetionos.org">natalie@acreetionos.org</a></span>
+                                    <span class="list-item-contact"><strong>XMPP:</strong> <a href="xmpp:sprungles@xmpp.jp">sprungles@xmpp.jp</a> / <a href="xmpp:sprungles@queer-spark.org">sprungles@queer-spark.org</a></span>
+                                </li>
+                                <li>
+                                    <span class="list-item-title">General Project Inquiries</span>
+                                    <span class="list-item-desc">For partnerships and official communication</span>
+                                    <span class="list-item-contact"><strong>Email:</strong> <a href="mailto:acreetionos@gmail.com">acreetionos@gmail.com</a></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -370,7 +380,7 @@
                     </h2>
                 </div>
                 <div class="box-body">
-                    <p>Join the conversation, get live support, and follow project development.</p>
+                    <p>Join the conversation, get live support, and follow project development. Our Discord support is proudly powered by Google's Gemini API for fast and intelligent assistance.</p>
                     <ul class="resource-list">
                         <li>
                             <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" rel="noopener noreferrer">
@@ -438,7 +448,7 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- PAGE TRANSITION LOGIC ---
+            // --- PAGE TRANSITION LOGIC (FASTER) ---
             const transitionLinks = document.querySelectorAll('.transition-link');
             transitionLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -447,7 +457,7 @@
                     document.body.classList.add('fade-out');
                     setTimeout(() => {
                         window.location.href = targetUrl;
-                    }, 250); // Faster animation
+                    }, 0); // REMOVED DELAY
                 });
             });
 
@@ -462,9 +472,7 @@
                 trigger.addEventListener('click', (e) => {
                     e.preventDefault();
                     const modal = document.querySelector(trigger.dataset.modalTarget);
-                    if (modal) {
-                        openModal(modal);
-                    }
+                    if (modal) openModal(modal);
                 });
             });
 
@@ -473,8 +481,38 @@
                     if (e.target === modal) closeModal(modal);
                 });
                 const closeBtn = modal.querySelector('.modal-close-btn');
-                if (closeBtn) 
-                    closeBtn.addEventListener('click', () => closeModal(modal));
+                if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
+            });
+
+            // --- CONTACT TABS LOGIC ---
+            const tabLinks = document.querySelectorAll('.tab-link[data-tab]');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const tab = link.dataset.tab;
+
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(tab).classList.add('active');
+                });
+            });
+
+            // --- CONTACT FORM LOGIC ---
+            const contactForm = document.querySelector('.contact-form');
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const submitButton = form.querySelector('button[type="submit"]');
+                submitButton.textContent = 'Message Sent!';
+                submitButton.style.backgroundColor = 'var(--storm-color)';
+                setTimeout(() => {
+                    form.reset();
+                    submitButton.textContent = 'Send Message';
+                    submitButton.style.backgroundColor = 'var(--acreetion-green)';
+                }, 3000);
             });
         });
     </script>
