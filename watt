@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# --- Configuration ---
+# 3 Watts in microwatts
+LIMIT_UW=3000000 
+
+# Path to the Intel RAPL package power limits.
+RAPL_PATH="/sys/class/powercap/intel-rapl:0"
+
+# Files for Long-Term (PL1) and Short-Term (PL2) Power Limits
+PL1_FILE="${RAPL_PATH}/constraint_0_power_limit_uw"
+PL2_FILE="${RAPL_PATH}/constraint_1_power_limit_uw"
+
+# --- Script Execution ---
+
+if [ ! -d "$RAPL_PATH" ]; then
+    echo "Error: Intel RAPL interface not found at $RAPL_PATH. Check if intel_rapl module is loaded."
+    exit 1
+fi
+
+echo "--- Enforcing 3W CPU Limit (3,000,000 microwatts) ---"
+
+# Set PL1 (Long-Term Limit)
+if [ -f "$PL1_FILE" ]; then
+    echo "$LIMIT_UW" | sudo tee "$PL1_FILE" > /dev/null
+    echo "PL1 (Long-Term Limit) set to 3W."
+else
+    echo "Warning: PL1 file not found."
+fi
+
+# Set PL2 (Short-Term Limit)
+if [ -f "$PL2_FILE" ]; then
+    echo "$LIMIT_UW" | sudo tee "$PL2_FILE" > /dev/null
+    echo "PL2 (Short-Term Limit) set to 3W."
+else
+    echo "Warning: PL2 file not found."
+fi
+
+echo "-----------------------------------------------------"
+
+# --- Verification Command ---
+echo "Verifying limits with cpupower (requires 'linux-tools' package):"
+# Note: constraint 0 is PL1, constraint 1 is PL2
+sudo cpupower powercap-info -p 0 -c 0
