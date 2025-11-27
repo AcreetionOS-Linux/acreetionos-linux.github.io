@@ -6,15 +6,22 @@
     <title>Self-Help Info Tool // AcreetionOS</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="acreetionoslogo.png">
+    <link rel="icon" type="image/webp" href="acreetionoslogo.webp">
 
     <!-- Vue.js Library -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <!-- Local fonts from repo root -->
+    <style>
+        @font-face { font-family: 'FreeSans'; src: url('FreeSans.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeSans'; src: url('FreeSansBold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeSans'; src: url('FreeSansOblique.ttf') format('truetype'); font-weight: 400; font-style: oblique; font-display: swap; }
+        @font-face { font-family: 'FreeSans'; src: url('FreeSansBoldOblique.ttf') format('truetype'); font-weight: 700; font-style: oblique; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('FreeMono.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('FreeMonoBold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('FreeMonoOblique.ttf') format('truetype'); font-weight: 400; font-style: oblique; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('FreeMonoBoldOblique.ttf') format('truetype'); font-weight: 700; font-style: oblique; font-display: swap; }
+    </style>
 
     <style>
         :root {
@@ -31,8 +38,8 @@
             --gnome-color: #e06c75; /* Red */
             --storm-color: #61afef; /* Blue */
 
-            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'FreeSans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'FreeMono', monospace;
         }
         
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -328,7 +335,7 @@
         <header class="page-header">
             <div class="header-content">
                 <a href="index.html" class="logo transition-link">
-                    <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img">
+                    <img src="acreetionoslogo.webp" alt="AcreetionOS Logo" class="logo-img" loading="lazy" decoding="async">
                     <span class="logo-text">Acreetion<span>OS</span></span>
                 </a>
                 <nav class="main-nav">
