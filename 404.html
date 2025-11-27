@@ -8,18 +8,14 @@
     <!-- IMPORTANT: This adds the logo to your browser tab (favicon) -->
     <link rel="icon" type="image/webp" href="acreetionoslogo.webp">
 
+    <!-- External fonts: Inter + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <!-- Consolidated Internal Stylesheet -->
     <style>
-        /* Local TTF fonts in repo root */
-        @font-face { font-family: 'FreeSans'; src: url('FreeSans.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeSans'; src: url('FreeSansBold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeSans'; src: url('FreeSansOblique.ttf') format('truetype'); font-weight: 400; font-style: oblique; font-display: swap; }
-        @font-face { font-family: 'FreeSans'; src: url('FreeSansBoldOblique.ttf') format('truetype'); font-weight: 700; font-style: oblique; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMono.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMonoBold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMonoOblique.ttf') format('truetype'); font-weight: 400; font-style: oblique; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMonoBoldOblique.ttf') format('truetype'); font-weight: 700; font-style: oblique; font-display: swap; }
-
+        /* Using external fonts: Inter + JetBrains Mono */
         :root {
             /* --- AcreetionOS Soft Dark Palette (No Blinding Whites) --- */
             --acreetion-green: #2ecc71; /* Main brand green */
@@ -35,8 +31,8 @@
             --gnome-color: #e06c75; /* Red for errors */
             --storm-color: #61afef; /* Blue for prompts/status */
             
-            --font-sans: 'FreeSans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'FreeMono', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
 
             /* AI Glow/Shadow */
             --ai-glow: 0 0 15px rgba(46, 204, 113, 0.6), 0 0 30px rgba(46, 204, 113, 0.3);

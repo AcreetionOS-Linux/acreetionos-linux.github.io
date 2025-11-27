@@ -11,17 +11,10 @@
     <!-- Vue.js Library -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <!-- Local fonts from repo root -->
-    <style>
-        @font-face { font-family: 'FreeSans'; src: url('FreeSans.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeSans'; src: url('FreeSansBold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeSans'; src: url('FreeSansOblique.ttf') format('truetype'); font-weight: 400; font-style: oblique; font-display: swap; }
-        @font-face { font-family: 'FreeSans'; src: url('FreeSansBoldOblique.ttf') format('truetype'); font-weight: 700; font-style: oblique; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMono.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMonoBold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMonoOblique.ttf') format('truetype'); font-weight: 400; font-style: oblique; font-display: swap; }
-        @font-face { font-family: 'FreeMono'; src: url('FreeMonoBoldOblique.ttf') format('truetype'); font-weight: 700; font-style: oblique; font-display: swap; }
-    </style>
+    <!-- External fonts: Inter + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -38,8 +31,8 @@
             --gnome-color: #e06c75; /* Red */
             --storm-color: #61afef; /* Blue */
 
-            --font-sans: 'FreeSans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'FreeMono', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
         
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
