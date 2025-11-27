@@ -6,10 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AcreetionOS // Migration</title>
     <link rel="icon" type="image/webp" href="acreetionoslogo.webp">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Local fonts: expects font files at /fonts/*.woff2 */
+        @font-face { font-family: 'FreeSans'; src: url('fonts/FreeSans-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeSans'; src: url('fonts/FreeSans-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeSans'; src: url('fonts/FreeSans-Oblique.woff2') format('woff2'); font-weight: 400; font-style: oblique; font-display: swap; }
+        @font-face { font-family: 'FreeSans'; src: url('fonts/FreeSans-BoldOblique.woff2') format('woff2'); font-weight: 700; font-style: oblique; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('fonts/FreeMono-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('fonts/FreeMono-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('fonts/FreeMono-Oblique.woff2') format('woff2'); font-weight: 400; font-style: oblique; font-display: swap; }
+        @font-face { font-family: 'FreeMono'; src: url('fonts/FreeMono-BoldOblique.woff2') format('woff2'); font-weight: 700; font-style: oblique; font-display: swap; }
+
         :root {
             --acreetion-green: #2ecc71;
             --acreetion-body-bg: #121212;
@@ -18,8 +25,8 @@
             --acreetion-box-border: #333333;
             --acreetion-text-bright: #e5e5e5;
             --acreetion-text: #b2b2b2;
-            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'FreeSans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'FreeMono', monospace;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
