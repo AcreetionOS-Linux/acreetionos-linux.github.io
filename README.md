@@ -25,7 +25,6 @@ We are an open-source project focused on learning, collaboration, and providing 
 
 - Darren Clift — core maintainer
 - Natalie Spiva — core maintainer
-- John Junkins — Web Developer / Mentor
 ## Community
 
 - Discord: https://discord.acreetionos.org (primary chat and support)
