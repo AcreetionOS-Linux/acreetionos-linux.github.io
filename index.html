@@ -5,10 +5,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AcreetionOS // An Arch-based Distribution</title>
+    <!-- Font Awesome 6.7.1 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
     <link rel="icon" type="image/webp" href="acreetionoslogo.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <link rel="dns-prefetch" href="https://darrengames.ddns.net">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <style>
@@ -169,6 +173,20 @@
             100% {
                 transform: scale(1);
             }
+        }
+
+        .icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .social-link .icon {
+            margin-right: 0.2rem;
         }
 
         @keyframes marquee {
@@ -635,23 +653,29 @@
 
 <body>
     <div class="announcement-bar">
-        <div class="announcement-content"><span><span style="font-weight: bold; color: var(--acreetion-green);">We're on
-                    DistroWatch!</span> <a href="https://distrowatch.acreetionos.org" target="_blank"
-                    rel="noopener noreferrer" class="social-link">Check us out!</a><span class="separator">|</span><span
-                    style="font-weight: bold; color: var(--storm-color);">We're looking for developers!</span> Join our
-                <a href="https://discord.acreetionos.org" target="_blank" rel="noopener noreferrer"
-                    class="social-link">Discord server</a> to get involved!<span class="separator">|</span><span
-                    style="font-weight: bold; color: var(--acreetion-green);">We are on FaceBook!</span> Join our<a
-                    href="https://facebook.acreetionos.org" target="_blank" rel="noopener noreferrer"
-                    class="social-link">Community!</a></span></div>
+        <div class="announcement-content"><span><span
+                    style="font-weight: bold; color: var(--acreetion-green);">DistroWatch:</span> <a
+                    href="https://distrowatch.acreetionos.org" target="_blank" rel="noopener noreferrer"
+                    class="social-link">Check us out!</a><span class="separator">|</span><span
+                    style="font-weight: bold; color: var(--storm-color);">Join us:</span>
+                <a href="https://discord.acreetionos.org" target="_blank" rel="noopener noreferrer" class="social-link"
+                    title="Discord"><i class="fa-brands fa-discord icon"></i></a>
+                <a href="https://facebook.acreetionos.org" target="_blank" rel="noopener noreferrer" class="social-link"
+                    title="Facebook"><i class="fa-brands fa-facebook icon"></i></a>
+                <a href="https://x.com/acreetionos" target="_blank" rel="noopener noreferrer" class="social-link"
+                    title="Twitter (X)"><i class="fa-brands fa-x-twitter icon"></i></a>
+                <a href="https://mastodon.social/@acreetionos" target="_blank" rel="noopener noreferrer"
+                    class="social-link" title="Mastodon"><i class="fa-brands fa-mastodon icon"></i></a>
+                <a href="https://bsky.app/profile/acreetionos.bsky.social" target="_blank" rel="noopener noreferrer"
+                    class="social-link" title="Bluesky"><i class="fa-brands fa-bluesky icon"></i></a></span></div>
     </div>
     <header class="page-header">
         <div class="header-content"><a href="index.html" class="logo"><img src="acreetionoslogo.webp" class="logo-img"
                     loading="lazy" decoding="async"><span class="logo-text">Acreetion<span>OS</span></span></a>
-            <nav class="main-nav"><a href="https://discord.acreetionos.org">Forum</a><a href="https://status.acreetionos.org">Server Status</a><a href="#about">About</a><a
-                    href="#manual-downloads">Downloads</a><a href="#" data-modal-target="#donate-modal">Donate</a><a
-                    href="https://wiki.acreetionos.org" target="_blank" rel="noopener noreferrer">Wiki</a><a
-                    href="contact.html">Contact & Support</a></nav>
+            <nav class="main-nav"><a href="https://discourse.acreetionos.org">Forum</a><a
+                    href="https://status.acreetionos.org">Server Status</a><a href="#manual-downloads">Downloads</a><a
+                    href="#" data-modal-target="#donate-modal">Donate</a><a href="https://wiki.acreetionos.org"
+                    target="_blank" rel="noopener noreferrer">Wiki</a><a href="contact.html">Contact & Support</a></nav>
         </div>
     </header>
     <div class="page-wrapper">
@@ -692,7 +716,8 @@
                             ensuring that our decisions are driven by our community, not by corporate interests.</p>
                         <p>Our team structure is driven by passion and circumstance. Darren and Natalie work on
                             AcreetionOS full-time due to life circumstances, dedicating their efforts to building and
-                            maintaining the distribution. We are united by a desire to learn and share knowledge. We strongly encourage
+                            maintaining the distribution. We are united by a desire to learn and share knowledge. We
+                            strongly encourage
                             contributions from everyone and are committed to training and assisting the community.
                             Whether you want to learn how to code or understand how an operating system works, this is a
                             project to learn and grow together.</p>
@@ -851,7 +876,7 @@
         <aside class="sidebar">
             <div id="specs" class="content-box sidebar-box">
                 <div class="box-header">
-                    <h2>System Information</h2>
+                    <h2><i class="fa-solid fa-circle-info icon"></i> System Information</h2>
                 </div>
                 <div class="box-body">
                     <ul class="spec-list">
@@ -868,7 +893,7 @@
             </div>
             <div id="community" class="content-box sidebar-box" style="margin-top: 2rem;">
                 <div class="box-header">
-                    <h2>Community &amp; Team</h2>
+                    <h2><i class="fa-solid fa-users icon"></i> Community &amp; Team</h2>
                 </div>
                 <div class="box-body">
                     <p>Join our community and get in touch with the team:</p>
@@ -878,16 +903,25 @@
                         <li><a href="https://github.com/AcreetionOS-Linux" target="_blank"
                                 rel="noopener noreferrer">GitHub
                                 Organization</a></li>
+                        <li><a href="https://x.com/acreetionos" target="_blank" rel="noopener noreferrer">Twitter (X)
+                                Profile</a></li>
+                        <li><a href="https://mastodon.social/@acreetionos" target="_blank"
+                                rel="noopener noreferrer">Mastodon Profile</a></li>
+                        <li><a href="https://bsky.app/profile/acreetionos.bsky.social" target="_blank"
+                                rel="noopener noreferrer">Bluesky Profile</a></li>
                     </ul>
-                    <h3 class="tech-detail-heading" style="margin-top: 1.5rem; font-size: 1rem;">Our Team</h3>
+                    <h3 class="tech-detail-heading" style="margin-top: 1.5rem; font-size: 1rem;"><i
+                            class="fa-solid fa-users icon"
+                            style="width: 1rem; height: 1rem; margin-right: 0.5rem; color: var(--acreetion-green);"></i>Community
+                        Links</h3>
                     <div class="team-members">
                         <div class="team-member">
                             <p class="team-member-name">Darren Clift</p><a href="https://github.com/cobra3282000"
                                 target="_blank" rel="noopener noreferrer" class="btn btn-storm">cobra3282000</a>
                         </div>
                         <div class="team-member">
-                            <p class="team-member-name">Natalie Spiva</p><a href="https://github.com/sprunglesonthehub"
-                                target="_blank" rel="noopener noreferrer" class="btn btn-storm">sprunglesonthehub</a>
+                            <p class="team-member-name">Natalie Spiva</p><a href="https://github.com/spivanatalie64"
+                                target="_blank" rel="noopener noreferrer" class="btn btn-storm">spivanatalie64</a>
                         </div>
                     </div>
                 </div>
@@ -943,7 +977,10 @@
             immensely
             grateful to the Arch community for their incredible work.</p>
         <p>Follow our development on <a href="https://github.com/AcreetionOS-Linux" target="_blank"
-                rel="noopener noreferrer">GitHub</a>.</p>
+                rel="noopener noreferrer">GitHub</a>, <a href="https://mastodon.social/@acreetionos" target="_blank"
+                rel="noopener noreferrer">Mastodon</a>, <a href="https://bsky.app/profile/acreetionos.bsky.social"
+                target="_blank" rel="noopener noreferrer">Bluesky</a>, and <a href="https://x.com/acreetionos"
+                target="_blank" rel="noopener noreferrer">Twitter (X)</a>.</p>
         <p>© 2025 AcreetionOS Project. Arch Linux™ is a trademark of Judd Vinet. We are not affiliated with the Arch
             Linux project.</p>
     </footer>
