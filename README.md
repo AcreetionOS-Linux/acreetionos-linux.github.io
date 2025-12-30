@@ -23,7 +23,7 @@ We are an open-source project focused on learning, collaboration, and providing 
 
 ## The Team
 
-- Darren Clift — core maintainer
+- Darren Clift — core maintainer ([cobra3282000](https://github.com/cobra3282000))
 - Natalie Spiva — core maintainer
 ## Community
 
