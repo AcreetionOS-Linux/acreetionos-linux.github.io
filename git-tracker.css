@@ -1,0 +1,59 @@
+body {
+    font-family: 'Roboto', 'Fira Code', monospace, sans-serif;
+    background: linear-gradient(135deg, #232526 0%, #2ecc71 100%);
+    color: #e5e5e5;
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+.tracker-header {
+    text-align: center;
+    padding: 3rem 1rem 1.5rem 1rem;
+    background: rgba(46,204,113,0.15);
+    box-shadow: 0 4px 24px rgba(46,204,113,0.2);
+}
+.tracker-header h1 {
+    font-size: 3rem;
+    font-family: 'Fira Code', monospace;
+    color: #2ecc71;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 8px #222;
+}
+.tracker-header p {
+    font-size: 1.3rem;
+    color: #b2b2b2;
+    margin-bottom: 1.5rem;
+}
+.tracker-header .org-link {
+    color: #61afef;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #2ecc71;
+    transition: color 0.2s, border-bottom 0.2s;
+}
+.tracker-header .org-link:hover {
+    color: #2ecc71;
+    border-bottom: 2px solid #61afef;
+}
+#loading-status {
+    font-style: italic;
+    color: #f39c12;
+    margin-bottom: 1.5rem;
+}
+#graph-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 70vh;
+    margin: 2rem auto 0 auto;
+    background: rgba(34,34,34,0.95);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(46,204,113,0.15);
+    padding: 2rem;
+    overflow: auto;
+}
+@media (max-width: 900px) {
+    #graph-container { height: 50vh; padding: 1rem; }
+    .tracker-header h1 { font-size: 2.2rem; }
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcreetionOS Git Tracker</title>
+    <link rel="stylesheet" href="git-tracker.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Fira Code', monospace, sans-serif;
+            background: linear-gradient(135deg, #232526 0%, #2ecc71 100%);
+            color: #e5e5e5;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .tracker-header {
+            text-align: center;
+            padding: 3rem 1rem 1.5rem 1rem;
+            background: rgba(46,204,113,0.15);
+            box-shadow: 0 4px 24px rgba(46,204,113,0.2);
+        }
+        .tracker-header h1 {
+            font-size: 3rem;
+            font-family: 'Fira Code', monospace;
+            color: #2ecc71;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #222;
+        }
+        .tracker-header p {
+            font-size: 1.3rem;
+            color: #b2b2b2;
+            margin-bottom: 1.5rem;
+        }
+        .tracker-header .org-link {
+            color: #61afef;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #2ecc71;
+            transition: color 0.2s, border-bottom 0.2s;
+        }
+        .tracker-header .org-link:hover {
+            color: #2ecc71;
+            border-bottom: 2px solid #61afef;
+        }
+        #loading-status {
+            font-style: italic;
+            color: #f39c12;
+            margin-bottom: 1.5rem;
+        }
+        #graph-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 70vh;
+            margin: 2rem auto 0 auto;
+            background: rgba(34,34,34,0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(46,204,113,0.15);
+            padding: 2rem;
+            overflow: auto;
+        }
+        @media (max-width: 900px) {
+            #graph-container { height: 50vh; padding: 1rem; }
+            .tracker-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="tracker-header">
+        <h1>🌟 AcreetionOS Git Tracker 🌟</h1>
+        <p>Visualize, explore, and be inspired by the entire <a href="https://github.com/AcreetionOS-Linux" class="org-link" target="_blank">AcreetionOS-Linux</a> organization.</p>
+        <div id="loading-status">Loading repository data...</div>
+    </div>
+    <div id="graph-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@gitgraph/js"></script>
+    <script src="git-tracker.js"></script>
+</body>
+</html>
