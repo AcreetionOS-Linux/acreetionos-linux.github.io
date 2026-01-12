@@ -6,54 +6,140 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
 }
-.tracker-header {
+.tracker-hero {
+    position: relative;
     text-align: center;
-    padding: 3rem 1rem 1.5rem 1rem;
-    background: rgba(46,204,113,0.15);
-    box-shadow: 0 4px 24px rgba(46,204,113,0.2);
+    padding: 4rem 1rem 2rem 1rem;
+    background: rgba(46,204,113,0.10);
+    box-shadow: 0 4px 32px rgba(46,204,113,0.18);
+    border-bottom: 2px solid #2ecc71;
+    overflow: hidden;
 }
-.tracker-header h1 {
-    font-size: 3rem;
+.tracker-title {
+    font-size: 3.2rem;
     font-family: 'Fira Code', monospace;
     color: #2ecc71;
     margin-bottom: 0.5rem;
     letter-spacing: 2px;
-    text-shadow: 0 2px 8px #222;
+    text-shadow: 0 2px 16px #222, 0 0 32px #2ecc71;
+    z-index: 2;
 }
-.tracker-header p {
-    font-size: 1.3rem;
+.tracker-subtitle {
+    font-size: 1.4rem;
     color: #b2b2b2;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    z-index: 2;
 }
-.tracker-header .org-link {
+.glow {
+    position: absolute;
+    top: 10%; left: 50%;
+    width: 600px; height: 200px;
+    background: radial-gradient(circle, #2ecc71 0%, transparent 70%);
+    filter: blur(60px);
+    opacity: 0.5;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+#repo-search {
+    padding: 0.8rem 1.2rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+    background: rgba(34,34,34,0.85);
+    color: #e5e5e5;
+    box-shadow: 0 2px 12px rgba(46,204,113,0.12);
+    margin-bottom: 1.5rem;
+    width: 320px;
+    max-width: 90vw;
+    outline: none;
+    transition: box-shadow 0.2s;
+}
+#repo-search:focus {
+    box-shadow: 0 0 0 2px #2ecc71;
+}
+.repo-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin: 2rem auto;
+    max-width: 1400px;
+}
+.repo-card {
+    background: rgba(34,34,34,0.95);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(46,204,113,0.18);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    min-width: 320px;
+    max-width: 400px;
+    flex: 1 1 320px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #2ecc71;
+    cursor: pointer;
+    animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) forwards;
+}
+.repo-card:hover {
+    transform: scale(1.04) translateY(-6px);
+    box-shadow: 0 16px 48px rgba(46,204,113,0.28);
+    border-color: #61afef;
+}
+.repo-card .repo-title {
+    font-size: 1.5rem;
+    font-family: 'Fira Code', monospace;
+    color: #2ecc71;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 8px #222;
+}
+.repo-card .repo-desc {
+    font-size: 1.1rem;
+    color: #b2b2b2;
+    margin-bottom: 1rem;
+}
+.repo-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    font-size: 1rem;
+    color: #e5e5e5;
+    margin-bottom: 0.5rem;
+}
+.repo-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(46,204,113,0.08);
+    border-radius: 6px;
+    padding: 0.2rem 0.7rem;
+    font-weight: 500;
+}
+.repo-link {
+    display: inline-block;
+    margin-top: 1rem;
     color: #61afef;
     font-weight: bold;
     text-decoration: none;
-    font-size: 1.1rem;
     border-bottom: 2px solid #2ecc71;
     transition: color 0.2s, border-bottom 0.2s;
 }
-.tracker-header .org-link:hover {
+.repo-link:hover {
     color: #2ecc71;
     border-bottom: 2px solid #61afef;
 }
-#loading-status {
-    font-style: italic;
+.loading-status {
+    text-align: center;
+    font-size: 1.1rem;
     color: #f39c12;
-    margin-bottom: 1.5rem;
+    margin: 2rem 0 3rem 0;
+    font-style: italic;
 }
-#graph-container {
-    width: 100%;
-    max-width: 1200px;
-    height: 70vh;
-    margin: 2rem auto 0 auto;
-    background: rgba(34,34,34,0.95);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(46,204,113,0.15);
-    padding: 2rem;
-    overflow: auto;
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 900px) {
-    #graph-container { height: 50vh; padding: 1rem; }
-    .tracker-header h1 { font-size: 2.2rem; }
+    .tracker-title { font-size: 2.2rem; }
+    .repo-card { min-width: 90vw; max-width: 98vw; padding: 1.2rem; }
+    .repo-list { gap: 1rem; }
 }

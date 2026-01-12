@@ -2,34 +2,57 @@ const graphContainer = document.getElementById("graph-container");
 const loadingStatus = document.getElementById("loading-status");
 const gitgraph = GitgraphJS.createGitgraph(graphContainer);
 
-const API_URL = "https://api.github.com/orgs/AcreetionOS-Linux/repos";
+const repoList = document.getElementById('repo-list');
+const repoSearch = document.getElementById('repo-search');
 
-async function fetchReposAndRender() {
-    loadingStatus.textContent = "Fetching organization repositories...";
+const API_URL = 'https://api.github.com/orgs/AcreetionOS-Linux/repos';
+
+let allRepos = [];
+
+function createRepoCard(repo) {
+    return `<div class="repo-card" onclick="window.open('${repo.html_url}', '_blank')">
+        <div class="repo-title">${repo.name}</div>
+        <div class="repo-desc">${repo.description ? repo.description : 'No description provided.'}</div>
+        <div class="repo-meta">
+            <span title="Stars">⭐ ${repo.stargazers_count}</span>
+            <span title="Forks">🍴 ${repo.forks_count}</span>
+            <span title="Open Issues">🐞 ${repo.open_issues_count}</span>
+            <span title="Language">💻 ${repo.language ? repo.language : 'N/A'}</span>
+        </div>
+        <a class="repo-link" href="${repo.html_url}" target="_blank">View on GitHub</a>
+    </div>`;
+}
+
+function renderRepos(repos) {
+    if (repos.length === 0) {
+        repoList.innerHTML = '<div class="loading-status">No repositories found.</div>';
+        return;
+    }
+    repoList.innerHTML = repos.map(createRepoCard).join('');
+}
+
+function filterRepos() {
+    const query = repoSearch.value.toLowerCase();
+    const filtered = allRepos.filter(repo =>
+        repo.name.toLowerCase().includes(query) ||
+        (repo.description && repo.description.toLowerCase().includes(query))
+    );
+    renderRepos(filtered);
+}
+
+async function fetchRepos() {
+    loadingStatus.textContent = 'Loading organization repositories...';
     try {
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const repos = await response.json();
-        loadingStatus.textContent = `Found ${repos.length} repositories. Fetching commit data...`;
-        // For demo: just show repo names in graph
-        renderGraph(repos);
-        loadingStatus.textContent = "AcreetionOS-Linux organization repositories loaded.";
+        allRepos = await response.json();
+        renderRepos(allRepos);
+        loadingStatus.textContent = `Showing ${allRepos.length} repositories.`;
     } catch (error) {
-        console.error("Error fetching organization data:", error);
-        loadingStatus.textContent = `Error: ${error.message}.`;
+        loadingStatus.textContent = `Error: ${error.message}`;
     }
 }
 
-function renderGraph(repos) {
-    gitgraph.clear();
-    repos.forEach((repo, idx) => {
-        const branch = gitgraph.branch({ name: repo.name });
-        branch.commit({
-            subject: repo.description || "No description",
-            author: repo.owner.login,
-            style: idx % 2 === 0 ? "normal" : "highlight"
-        });
-    });
-}
+repoSearch.addEventListener('input', filterRepos);
 
-fetchReposAndRender();
+fetchRepos();

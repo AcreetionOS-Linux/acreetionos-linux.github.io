@@ -17,67 +17,102 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-        .tracker-header {
+        .tracker-hero {
             text-align: center;
-            padding: 3rem 1rem 1.5rem 1rem;
-            background: rgba(46,204,113,0.15);
-            box-shadow: 0 4px 24px rgba(46,204,113,0.2);
+            padding: 4rem 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
-        .tracker-header h1 {
-            font-size: 3rem;
+        .tracker-hero .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            animation: glow-animation 6s infinite;
+            z-index: -1;
+        }
+        @keyframes glow-animation {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1); }
+            100% { transform: translate(-50%, -50%) scale(0); }
+        }
+        .tracker-title {
+            font-size: 3.5rem;
             font-family: 'Fira Code', monospace;
             color: #2ecc71;
-            margin-bottom: 0.5rem;
-            letter-spacing: 2px;
+            margin: 0;
             text-shadow: 0 2px 8px #222;
         }
-        .tracker-header p {
-            font-size: 1.3rem;
+        .tracker-subtitle {
+            font-size: 1.5rem;
             color: #b2b2b2;
-            margin-bottom: 1.5rem;
+            margin: 1rem 0;
         }
-        .tracker-header .org-link {
-            color: #61afef;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 1.1rem;
-            border-bottom: 2px solid #2ecc71;
-            transition: color 0.2s, border-bottom 0.2s;
-        }
-        .tracker-header .org-link:hover {
-            color: #2ecc71;
-            border-bottom: 2px solid #61afef;
-        }
-        #loading-status {
-            font-style: italic;
-            color: #f39c12;
-            margin-bottom: 1.5rem;
-        }
-        #graph-container {
+        #repo-search {
             width: 100%;
+            max-width: 600px;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            margin: 1rem 0;
+            box-shadow: 0 4px 24px rgba(46,204,113,0.2);
+        }
+        #repo-list {
             max-width: 1200px;
-            height: 70vh;
-            margin: 2rem auto 0 auto;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .repo-card {
             background: rgba(34,34,34,0.95);
             border-radius: 16px;
+            padding: 1.5rem;
             box-shadow: 0 8px 32px rgba(46,204,113,0.15);
-            padding: 2rem;
-            overflow: auto;
+            transition: transform 0.2s;
+        }
+        .repo-card:hover {
+            transform: translateY(-5px);
+        }
+        .repo-card h3 {
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem 0;
+            color: #2ecc71;
+        }
+        .repo-card p {
+            font-size: 1rem;
+            color: #b2b2b2;
+            margin: 0;
+        }
+        .loading-status {
+            font-style: italic;
+            color: #f39c12;
+            text-align: center;
+            margin: 2rem 0;
         }
         @media (max-width: 900px) {
-            #graph-container { height: 50vh; padding: 1rem; }
-            .tracker-header h1 { font-size: 2.2rem; }
+            .tracker-title { font-size: 2.5rem; }
+            .tracker-subtitle { font-size: 1.2rem; }
+            #repo-search { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="tracker-header">
-        <h1>🌟 AcreetionOS Git Tracker 🌟</h1>
-        <p>Visualize, explore, and be inspired by the entire <a href="https://github.com/AcreetionOS-Linux" class="org-link" target="_blank">AcreetionOS-Linux</a> organization.</p>
-        <div id="loading-status">Loading repository data...</div>
+    <div class="tracker-hero">
+        <div class="glow"></div>
+        <h1 class="tracker-title">AcreetionOS Git Tracker</h1>
+        <p class="tracker-subtitle">Explore every project, every contributor, every commit.<br>Welcome to the heart of AcreetionOS-Linux!</p>
+        <input type="text" id="repo-search" placeholder="Search repositories..." autocomplete="off">
     </div>
-    <div id="graph-container"></div>
-    <script src="https://cdn.jsdelivr.net/npm/@gitgraph/js"></script>
+    <div id="repo-list" class="repo-list"></div>
+    <div id="loading-status" class="loading-status">Loading organization data...</div>
     <script src="git-tracker.js"></script>
 </body>
 </html>
