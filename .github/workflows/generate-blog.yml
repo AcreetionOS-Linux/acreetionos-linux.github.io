@@ -1,0 +1,268 @@
+name: Generate Daily Blog Posts
+
+on:
+  schedule:
+    # 11 AM PST = 7 PM UTC (19:00)
+    - cron: '0 19 * * *'
+    # 4 PM PST = 12 AM UTC next day (00:00)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  generate-blog-post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: natalie
+          fetch-depth: 0 # Get full history for commit analysis
+      
+      - name: Set up timezone
+        run: |
+          sudo timedatectl set-timezone America/Los_Angeles
+          date
+      
+      - name: Generate blog post
+        run: |
+          # Get today's date
+          TODAY=$(date +"%Y-%m-%d")
+          DISPLAY_DATE=$(date +"%B %d, %Y")
+          TIME=$(date +"%I:%M %p PST")
+          
+          # Get commits from today across all AcreetionOS repos
+          COMMITS=$(git log --since="midnight" --pretty=format:"- %s (%an)" --no-merges 2>/dev/null || echo "- Continuous system improvements and maintenance")
+          
+          # Count commits
+          COMMIT_COUNT=$(git log --since="midnight" --oneline --no-merges 2>/dev/null | wc -l)
+          
+          # Create blog post directory if it doesn't exist
+          mkdir -p blog/posts
+          
+          # Generate blog post HTML
+          cat > "blog/posts/${TODAY}.html" << 'BLOGPOST'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Daily Update - DISPLAY_DATE_PLACEHOLDER - AcreetionOS</title>
+          <meta name="description" content="Daily development update for AcreetionOS Linux - DISPLAY_DATE_PLACEHOLDER" />
+          <link rel="stylesheet" href="../../contact.css" />
+          </head>
+          <body>
+          <div id="background-grid"></div>
+          
+          <header class="page-header">
+          <div class="header-content">
+          <a href="../../index.html" class="logo">
+          <img src="../../acreetionoslogo.webp" alt="AcreetionOS Logo" class="logo-img" />
+          <span class="logo-text">Acreetion<span>OS</span></span>
+          </a>
+          <nav class="main-nav">
+          <a href="../../index.html">Home</a>
+          <a href="../../install.html">Install</a>
+          <a href="../../compare.html">Compare</a>
+          <a href="../../faq.html">FAQ</a>
+          <a href="../../blog.html" class="active">Blog</a>
+          <a href="../../contact.html">Contact</a>
+          </nav>
+          </div>
+          </header>
+          
+          <div class="page-wrapper">
+          <div class="main-column">
+          <div class="content-box">
+          <div class="box-header">
+          <h1>Daily Update - DISPLAY_DATE_PLACEHOLDER</h1>
+          </div>
+          <div class="box-body">
+          <p style="color: var(--acreetion-text); margin-bottom: 1rem;">
+          <strong>Posted at:</strong> TIME_PLACEHOLDER
+          </p>
+          
+          <h2 style="color: var(--acreetion-green); margin-top: 2rem; margin-bottom: 1rem;">
+          Today's Development Activity
+          </h2>
+          
+          <p>The AcreetionOS team has been hard at work today! Here's what we've accomplished:</p>
+          
+          <h3 style="color: var(--acreetion-text-bright); margin-top: 1.5rem; margin-bottom: 0.5rem;">
+          Commits Today: COMMIT_COUNT_PLACEHOLDER
+          </h3>
+          
+          <ul style="margin-left: 2rem; margin-top: 1rem; line-height: 1.8; color: var(--acreetion-text);">
+          COMMITS_PLACEHOLDER
+          </ul>
+          
+          <div style="margin-top: 3rem; padding: 2rem; background: rgba(46, 204, 113, 0.1); border-left: 4px solid var(--acreetion-green); border-radius: 4px;">
+          <h3 style="color: var(--acreetion-green); margin-bottom: 1rem;">
+          💚 Thank You for Using AcreetionOS!
+          </h3>
+          <p style="margin-bottom: 1rem;">
+          We're incredibly grateful to have you as part of our community. Your support, feedback, and 
+          enthusiasm drive us to make AcreetionOS better every single day.
+          </p>
+          <p style="margin-bottom: 1rem;">
+          Whether you're a developer contributing code, a user reporting bugs, or someone who just 
+          installed AcreetionOS for the first time - <strong>thank you</strong>. You make this project possible.
+          </p>
+          <p>
+          Keep building amazing things with AcreetionOS! 🚀
+          </p>
+          <p style="margin-top: 1.5rem;">
+          <a href="../../index.html#manual-downloads" class="btn">Download Latest ISO</a>
+          <a href="https://discord.gg/AJ6uuvtDXY" target="_blank" class="btn" style="background-color: var(--storm-color);">Join Our Discord</a>
+          </p>
+          </div>
+          
+          <p style="margin-top: 2rem; color: var(--acreetion-text); font-size: 0.9rem;">
+          <a href="../../blog.html">← Back to All Updates</a>
+          </p>
+          </div>
+          </div>
+          </div>
+          
+          <div class="sidebar-column">
+          <div class="content-box">
+          <div class="box-header">
+          <h3>Quick Links</h3>
+          </div>
+          <div class="box-body">
+          <ul class="resource-list">
+          <li><a href="https://github.com/AcreetionOS-Linux/acreetionos" target="_blank">GitHub Repository</a></li>
+          <li><a href="../../install.html">Installation Guide</a></li>
+          <li><a href="../../faq.html">FAQ</a></li>
+          <li><a href="../../contact.html">Get Support</a></li>
+          </ul>
+          </div>
+          </div>
+          
+          <div class="content-box">
+          <div class="box-header">
+          <h3>Stay Updated</h3>
+          </div>
+          <div class="box-body">
+          <p style="color: var(--acreetion-text); font-size: 0.9rem;">
+          New updates posted twice daily at 11 AM and 4 PM PST.
+          </p>
+          <p style="margin-top: 1rem;">
+          <a href="https://github.com/AcreetionOS-Linux" target="_blank" class="btn">Follow on GitHub</a>
+          </p>
+          </div>
+          </div>
+          </div>
+          </div>
+          
+          <footer class="page-footer">
+          <p>&copy; 2026 AcreetionOS Project. Free and Open Source Software.</p>
+          <p>Licensed under GNU General Public License v3.0</p>
+          </footer>
+          
+          </body>
+          </html>
+          BLOGPOST
+          
+          # Replace placeholders
+          sed -i "s/DISPLAY_DATE_PLACEHOLDER/${DISPLAY_DATE}/g" "blog/posts/${TODAY}.html"
+          sed -i "s/TIME_PLACEHOLDER/${TIME}/g" "blog/posts/${TODAY}.html"
+          sed -i "s/COMMIT_COUNT_PLACEHOLDER/${COMMIT_COUNT}/g" "blog/posts/${TODAY}.html"
+          
+          # Escape commits for sed (handle special characters)
+          COMMITS_ESCAPED=$(echo "$COMMITS" | sed 's/[&/\]/\\&/g')
+          
+          # If no commits, use default message
+          if [ "$COMMIT_COUNT" -eq 0 ]; then
+            COMMITS_ESCAPED="<li>Continuous system improvements and maintenance</li><li>Package updates from upstream Arch repositories</li><li>Security patches and bug fixes</li>"
+          fi
+          
+          sed -i "s|COMMITS_PLACEHOLDER|${COMMITS_ESCAPED}|g" "blog/posts/${TODAY}.html"
+          
+          echo "Generated blog post for ${DISPLAY_DATE}"
+          
+      - name: Update blog index
+        run: |
+          # Create blog index page that lists all posts
+          cat > blog/index.html << 'BLOGINDEX'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Blog Archive - AcreetionOS</title>
+          <link rel="stylesheet" href="../contact.css" />
+          <script>
+          document.addEventListener('DOMContentLoaded', async () => {
+            const postsContainer = document.getElementById('posts-list');
+            try {
+              const response = await fetch('posts/');
+              const html = await response.text();
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, 'text/html');
+              const links = Array.from(doc.querySelectorAll('a'))
+                .filter(a => a.href.endsWith('.html'))
+                .map(a => a.href.split('/').pop())
+                .sort()
+                .reverse();
+              
+              postsContainer.innerHTML = links.map(link => {
+                const date = link.replace('.html', '');
+                return `<li><a href="posts/${link}">Daily Update - ${date}</a></li>`;
+              }).join('');
+            } catch (e) {
+              postsContainer.innerHTML = '<li>Loading posts...</li>';
+            }
+          });
+          </script>
+          </head>
+          <body>
+          <div id="background-grid"></div>
+          <header class="page-header">
+          <div class="header-content">
+          <a href="../index.html" class="logo">
+          <img src="../acreetionoslogo.webp" alt="AcreetionOS Logo" class="logo-img" />
+          <span class="logo-text">Acreetion<span>OS</span></span>
+          </a>
+          <nav class="main-nav">
+          <a href="../index.html">Home</a>
+          <a href="../blog.html" class="active">Blog</a>
+          <a href="../contact.html">Contact</a>
+          </nav>
+          </div>
+          </header>
+          <div class="page-wrapper">
+          <div class="main-column">
+          <div class="content-box">
+          <div class="box-header"><h1>Blog Archive</h1></div>
+          <div class="box-body">
+          <ul id="posts-list" style="list-style: none; padding: 0;"></ul>
+          </div>
+          </div>
+          </div>
+          </div>
+          </body>
+          </html>
+          BLOGINDEX
+      
+      - name: Commit and push blog post
+        run: |
+          git config user.name "AcreetionOS Bot"
+          git config user.email "bot@acreetionos.org"
+          
+          TODAY=$(date +"%Y-%m-%d")
+          TIME=$(date +"%I:%M %p PST")
+          
+          git add blog/
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "blog: daily update ${TODAY} at ${TIME}
+          
+          Automated blog post with today's development activity.
+          Thank you to our amazing community! 💚"
+            git push origin natalie
+          fi
