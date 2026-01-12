@@ -91,6 +91,7 @@ Disallow: /
 # Allow all other legitimate crawlers (DuckDuckGo, Yandex, Baidu, etc.)
 User-agent: *
 Disallow:
+Allow: /
 
-# Sitemap location (if you have one)
-# Sitemap: https://acreetionos.org/sitemap.xml
+# Sitemap location
+Sitemap: https://acreetionos.org/sitemap.xml
