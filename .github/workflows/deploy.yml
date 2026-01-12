@@ -35,17 +35,9 @@ jobs:
       - name: Prepare deployment directory
         run: |
           mkdir -p _deploy
-          # Copy only production files (exclude tests, node_modules, CI configs)
+          # Copy only production files (exclude node_modules and .git)
           rsync -av --exclude='node_modules' \
-                    --exclude='tests' \
-                    --exclude='.github' \
                     --exclude='.git' \
-                    --exclude='package*.json' \
-                    --exclude='playwright.config.js' \
-                    --exclude='*.log' \
-                    --exclude='playwright-report' \
-                    --exclude='test-results' \
-                    --exclude='.gitignore' \
                     ./ _deploy/
 
       - name: Minify HTML
