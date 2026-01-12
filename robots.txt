@@ -1,76 +1,7 @@
-# AcreetionOS Website - Selective Crawler Policy
-# Block Microsoft and Google crawlers, allow others
+# AcreetionOS Website - Search Engine Optimization Policy
+# Allow all major search engines, block AI training bots only
 
-# Block all Google crawlers
-User-agent: Googlebot
-Disallow: /
-
-User-agent: Googlebot-Image
-Disallow: /
-
-User-agent: Googlebot-News
-Disallow: /
-
-User-agent: Googlebot-Video
-Disallow: /
-
-User-agent: Google-Extended
-Disallow: /
-
-User-agent: GoogleOther
-Disallow: /
-
-User-agent: AdsBot-Google
-Disallow: /
-
-User-agent: AdsBot-Google-Mobile
-Disallow: /
-
-User-agent: Mediapartners-Google
-Disallow: /
-
-User-agent: FeedFetcher-Google
-Disallow: /
-
-# Block all Microsoft/Bing crawlers
-User-agent: Bingbot
-Disallow: /
-
-User-agent: BingPreview
-Disallow: /
-
-User-agent: msnbot
-Disallow: /
-
-User-agent: msnbot-media
-Disallow: /
-
-User-agent: MSNBot-NewsBlogs
-Disallow: /
-
-User-agent: adidxbot
-Disallow: /
-
-# Block known bad bots and scrapers
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: DotBot
-Disallow: /
-
-User-agent: MJ12bot
-Disallow: /
-
-User-agent: BLEXBot
-Disallow: /
-
-User-agent: PetalBot
-Disallow: /
-
-User-agent: GPTBot
+# Block AI training bots
 Disallow: /
 
 User-agent: ChatGPT-User
