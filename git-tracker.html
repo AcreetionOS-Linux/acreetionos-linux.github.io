@@ -157,6 +157,135 @@
             margin-bottom: 2rem;
         }
 
+        .git-history-timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .git-commit-entry {
+            position: relative;
+            padding: 1rem 0 1rem 4rem;
+            border-left: 2px solid var(--acreetion-green);
+            margin-left: 1.5rem;
+        }
+
+        .git-commit-entry:last-child {
+            border-left: 2px solid transparent;
+        }
+
+        .git-commit-dot {
+            position: absolute;
+            left: -6px;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background-color: var(--acreetion-green);
+            border-radius: 50%;
+            border: 2px solid var(--acreetion-body-bg);
+            box-shadow: 0 0 0 2px var(--acreetion-green);
+        }
+
+        .git-commit-card {
+            background-color: var(--acreetion-panel-bg);
+            border: 1px solid var(--acreetion-box-border);
+            padding: 1rem;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        .git-commit-card:hover {
+            border-color: var(--acreetion-green);
+        }
+
+        .git-commit-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .git-commit-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .git-commit-author-info {
+            flex: 1;
+        }
+
+        .git-commit-author {
+            color: var(--acreetion-green);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .git-commit-time {
+            color: var(--acreetion-text);
+            font-size: 0.8rem;
+        }
+
+        .git-commit-sha-badge {
+            font-family: var(--font-mono);
+            background-color: var(--acreetion-code-bg);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            color: var(--storm-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .git-commit-sha-badge:hover {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-color: var(--acreetion-green);
+            text-decoration: none;
+        }
+
+        .git-commit-message {
+            color: var(--acreetion-text-bright);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .git-commit-repo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background-color: rgba(97, 175, 239, 0.1);
+            border: 1px solid rgba(97, 175, 239, 0.3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            color: var(--storm-color);
+            font-weight: 500;
+        }
+
+        .git-commit-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--acreetion-text);
+        }
+
+        .git-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .git-stat-additions {
+            color: var(--acreetion-green);
+        }
+
+        .git-stat-deletions {
+            color: #e74c3c;
+        }
+
         .commits-list {
             list-style: none;
             padding: 0;
@@ -389,17 +518,17 @@
             </div>
         </div>
 
-        <!-- Recent Commits -->
+        <!-- Git Commit History -->
         <div class="content-box">
             <div class="box-header">
-                <h2><i class="fa-solid fa-code-commit"></i> Recent Commits</h2>
+                <h2><i class="fa-solid fa-code-branch"></i> Git Commit History</h2>
             </div>
             <div class="box-body">
                 <div id="commitsLoading" class="loading">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Loading recent commits...
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading git history...
                 </div>
                 <div id="commitsContent" style="display: none;">
-                    <ul class="commits-list" id="commitsList"></ul>
+                    <div class="git-history-timeline" id="gitHistoryTimeline"></div>
                 </div>
                 <div id="commitsError" style="display: none;"></div>
             </div>
@@ -616,8 +745,8 @@
             }
         }
 
-        // Load recent commits
-        async function loadRecentCommits() {
+        // Load git commit history with visual timeline
+        async function loadGitHistory() {
             try {
                 document.getElementById('commitsLoading').style.display = 'block';
                 document.getElementById('commitsContent').style.display = 'none';
@@ -625,9 +754,10 @@
 
                 const allCommits = [];
                 
+                // Fetch commits from all repositories
                 for (const repo of REPOS) {
                     try {
-                        const commits = await fetchGitHubData(`repos/${GITHUB_ORG}/${repo}/commits?per_page=10`);
+                        const commits = await fetchGitHubData(`repos/${GITHUB_ORG}/${repo}/commits?per_page=20`);
                         commits.forEach(commit => {
                             allCommits.push({ ...commit, repo });
                         });
@@ -636,36 +766,54 @@
                     }
                 }
 
-                // Sort by date and take top 15
+                // Sort by date (most recent first) and take top 30
                 allCommits.sort((a, b) => new Date(b.commit.author.date) - new Date(a.commit.author.date));
-                const recentCommits = allCommits.slice(0, 15);
+                const recentCommits = allCommits.slice(0, 30);
 
-                const commitsList = document.getElementById('commitsList');
-                commitsList.innerHTML = '';
+                const timeline = document.getElementById('gitHistoryTimeline');
+                timeline.innerHTML = '';
 
-                recentCommits.forEach(commit => {
-                    const li = document.createElement('li');
-                    li.className = 'commit-item';
+                // Create visual timeline entries
+                recentCommits.forEach((commit, index) => {
+                    const entry = document.createElement('div');
+                    entry.className = 'git-commit-entry';
                     
                     const avatarUrl = commit.author?.avatar_url || 'https://github.com/identicons/default.png';
                     const authorName = commit.commit.author.name;
+                    const authorLogin = commit.author?.login || 'unknown';
                     const message = commit.commit.message.split('\n')[0];
+                    const fullMessage = commit.commit.message;
                     const sha = commit.sha.substring(0, 7);
+                    const fullSha = commit.sha;
                     const date = formatDate(commit.commit.author.date);
+                    const repoName = commit.repo;
 
-                    li.innerHTML = `
-                        <img src="${avatarUrl}" alt="${authorName}" class="commit-avatar">
-                        <div class="commit-details">
-                            <div class="commit-message">${message}</div>
-                            <div class="commit-meta">
-                                <span class="commit-author">${authorName}</span> committed 
-                                <a href="https://github.com/${GITHUB_ORG}/${commit.repo}/commit/${commit.sha}" 
-                                   target="_blank" rel="noopener noreferrer" class="commit-sha">${sha}</a>
-                                to <strong>${commit.repo}</strong> ${date}
+                    // Create commit card HTML
+                    entry.innerHTML = `
+                        <div class="git-commit-dot"></div>
+                        <div class="git-commit-card">
+                            <div class="git-commit-header">
+                                <img src="${avatarUrl}" alt="${authorName}" class="git-commit-avatar">
+                                <div class="git-commit-author-info">
+                                    <div class="git-commit-author">${authorName} (@${authorLogin})</div>
+                                    <div class="git-commit-time">${date}</div>
+                                </div>
+                                <a href="https://github.com/${GITHUB_ORG}/${repoName}/commit/${fullSha}" 
+                                   target="_blank" rel="noopener noreferrer" 
+                                   class="git-commit-sha-badge" 
+                                   title="${fullSha}">
+                                   <i class="fa-solid fa-code-commit"></i> ${sha}
+                                </a>
+                            </div>
+                            <div class="git-commit-message">${escapeHtml(message)}</div>
+                            <div class="git-commit-repo">
+                                <i class="fa-brands fa-github"></i>
+                                <span>${repoName}</span>
                             </div>
                         </div>
                     `;
-                    commitsList.appendChild(li);
+                    
+                    timeline.appendChild(entry);
                 });
 
                 document.getElementById('commitsLoading').style.display = 'none';
@@ -674,8 +822,15 @@
                 document.getElementById('commitsLoading').style.display = 'none';
                 document.getElementById('commitsError').style.display = 'block';
                 document.getElementById('commitsError').className = 'error';
-                document.getElementById('commitsError').textContent = 'Failed to load recent commits. Please try again later.';
+                document.getElementById('commitsError').textContent = 'Failed to load git history. Please try again later.';
             }
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Load top contributors
@@ -745,7 +900,7 @@
             await Promise.all([
                 loadRepoStats(),
                 loadCommitActivity(),
-                loadRecentCommits(),
+                loadGitHistory(),
                 loadContributors()
             ]);
 
@@ -757,7 +912,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadRepoStats();
             loadCommitActivity();
-            loadRecentCommits();
+            loadGitHistory();
             loadContributors();
         });
     </script>
