@@ -134,6 +134,72 @@ body {
     margin: 2rem 0 3rem 0;
     font-style: italic;
 }
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(34,34,34,0.85);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+.modal-content {
+    background: #232526;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(46,204,113,0.28);
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+    color: #e5e5e5;
+    position: relative;
+    animation: fadeInUp 0.5s cubic-bezier(.23,1.01,.32,1) forwards;
+}
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #2ecc71;
+    color: #232526;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 8px #222;
+}
+.modal-close:hover {
+    background: #61afef;
+    color: #fff;
+}
+.modal-section {
+    margin-bottom: 1.5rem;
+}
+.modal-section h3 {
+    color: #2ecc71;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    font-family: 'Fira Code', monospace;
+}
+.modal-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.modal-section li {
+    margin-bottom: 0.5rem;
+    color: #b2b2b2;
+    font-size: 1rem;
+}
+.modal-section a {
+    color: #61afef;
+    text-decoration: underline;
+}
+.modal-section a:hover {
+    color: #2ecc71;
+}
 @keyframes fadeInUp {
     0% { opacity: 0; transform: translateY(40px); }
     100% { opacity: 1; transform: translateY(0); }
