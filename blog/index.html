@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blog Archive - AcreetionOS</title>
+<link rel="stylesheet" href="../contact.css" />
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const postsContainer = document.getElementById('posts-list');
+  try {
+    const response = await fetch('posts/');
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const links = Array.from(doc.querySelectorAll('a'))
+      .filter(a => a.href.endsWith('.html'))
+      .map(a => a.href.split('/').pop())
+      .sort()
+      .reverse();
+    
+    postsContainer.innerHTML = links.map(link => {
+      const date = link.replace('.html', '');
+      return `<li><a href="posts/${link}">Daily Update - ${date}</a></li>`;
+    }).join('');
+  } catch (e) {
+    postsContainer.innerHTML = '<li>Loading posts...</li>';
+  }
+});
+</script>
+</head>
+<body>
+<div id="background-grid"></div>
+<header class="page-header">
+<div class="header-content">
+<a href="../index.html" class="logo">
+<img src="../acreetionoslogo.webp" alt="AcreetionOS Logo" class="logo-img" />
+<span class="logo-text">Acreetion<span>OS</span></span>
+</a>
+<nav class="main-nav">
+<a href="../index.html">Home</a>
+<a href="../blog.html" class="active">Blog</a>
+<a href="../contact.html">Contact</a>
+</nav>
+</div>
+</header>
+<div class="page-wrapper">
+<div class="main-column">
+<div class="content-box">
+<div class="box-header"><h1>Blog Archive</h1></div>
+<div class="box-body">
+<ul id="posts-list" style="list-style: none; padding: 0;"></ul>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
