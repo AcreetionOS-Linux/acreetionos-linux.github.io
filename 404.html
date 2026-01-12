@@ -6,17 +6,16 @@
     <title>AI Protocol Mismatch // AcreetionOS 404</title>
 
     <!-- IMPORTANT: This adds the logo to your browser tab (favicon) -->
-    <link rel="icon" type="image/png" sizes="32x32" href="acreetionoslogo.png">
+    <link rel="icon" type="image/webp" href="acreetionoslogo.webp">
 
-    <!-- PERFORMANCE: Preconnect to critical origins to speed up resource loading -->
+    <!-- External fonts: Inter + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- PERFORMANCE: Asynchronously load fonts without render-blocking -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    
     <!-- Consolidated Internal Stylesheet -->
     <style>
+        /* Using external fonts: Inter + JetBrains Mono */
         :root {
             /* --- AcreetionOS Soft Dark Palette (No Blinding Whites) --- */
             --acreetion-green: #2ecc71; /* Main brand green */
@@ -32,8 +31,8 @@
             --gnome-color: #e06c75; /* Red for errors */
             --storm-color: #61afef; /* Blue for prompts/status */
             
-            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
 
             /* AI Glow/Shadow */
             --ai-glow: 0 0 15px rgba(46, 204, 113, 0.6), 0 0 30px rgba(46, 204, 113, 0.3);
@@ -249,7 +248,7 @@
     <header class="page-header">
         <div class="header-content">
             <a href="index.html" class="logo transition-link">
-                <img src="acreetionoslogo.png" alt="AcreetionOS Logo" class="logo-img" loading="lazy" decoding="async">
+                <img src="acreetionoslogo.webp" alt="AcreetionOS Logo" class="logo-img" loading="lazy" decoding="async">
                 <span class="logo-text">Acreetion<span>OS</span></span>
             </a>
             <nav class="main-nav">

@@ -2,101 +2,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AcreetionOS // Migration</title>
-    <link rel="icon" type="image/webp" href="acreetionoslogo.webp">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --acreetion-green: #2ecc71;
-            --acreetion-body-bg: #121212;
-            --acreetion-panel-bg: #1a1a1a;
-            --acreetion-box-bg: #222222;
-            --acreetion-box-border: #333333;
-            --acreetion-text-bright: #e5e5e5;
-            --acreetion-text: #b2b2b2;
-            --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-mono: 'Fira Code', monospace;
-        }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--acreetion-body-bg);
-            color: var(--acreetion-text-bright);
-            line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-        }
-        .migration-box {
-            background-color: var(--acreetion-box-bg);
-            border: 1px solid var(--acreetion-box-border);
-            padding: 3rem;
-            max-width: 600px;
-        }
-        .migration-box h1 {
-            font-family: var(--font-mono);
-            font-size: 2rem;
-            color: var(--acreetion-green);
-            margin-bottom: 1rem;
-        }
-        .migration-box p {
-            color: var(--acreetion-text);
-            margin-bottom: 1.5rem;
-        }
-        #countdown {
-            font-weight: bold;
-            color: var(--acreetion-green);
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AcreetionOS // Migrated</title>
+  <link rel="icon" type="image/webp" href="acreetionoslogo.webp">
+  <meta http-equiv="refresh" content="2;url=index.html">
+  <style>body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#e5e5e5;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}a{color:#2ecc71}</style>
 </head>
 <body>
-    <div class="migration-box">
-        <h1>We've Moved!</h1>
-        <p>Our codebase has been migrated from GitLab to GitHub to better streamline our development process.</p>
-        <p>You will be redirected to our new GitHub organization shortly.</p>
-        <p>Redirecting in <span id="countdown">4</span> seconds...</p>
-        <div class="progress-bar-container">
-            <div class="progress-bar"></div>
-        </div>
-        <button id="cancel-button" class="btn">Cancel</button>
-    </div>
-
-    <script>
-        let countdown = 4;
-        let interval;
-
-        const countdownElement = document.getElementById('countdown');
-        const progressBar = document.querySelector('.progress-bar');
-        const cancelButton = document.getElementById('cancel-button');
-
-        const startCountdown = () => {
-            interval = setInterval(() => {
-                countdown--;
-                countdownElement.textContent = countdown;
-                const progressWidth = (4 - countdown) / 4 * 100;
-                progressBar.style.width = progressWidth + '%';
-
-                if (countdown <= 0) {
-                    clearInterval(interval);
-                    window.location.href = 'https://github.acreetionos.org';
-                }
-            }, 1000);
-        };
-
-        const stopCountdown = () => {
-            clearInterval(interval);
-            countdownElement.textContent = 'canceled';
-        };
-
-        cancelButton.addEventListener('click', stopCountdown);
-
-        startCountdown();
-    </script>
+  <div>
+    <h1>Moved</h1>
+    <p>This page was migrated — redirecting you back. <a href="index.html">Go now</a></p>
+  </div>
 </body>
 </html>
